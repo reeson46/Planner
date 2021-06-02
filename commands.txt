@@ -1,0 +1,6 @@
+# Reset migrations
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+
+# Visualize database connetions
+python manage.py graph_models -a > my_project.dot
+python manage.py graph_models -a -g -o my_project_visualized.png

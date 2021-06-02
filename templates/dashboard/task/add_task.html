@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Task{% endblock %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card card-body">
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ task_form.as_p }}
+        <div id="items">
+          <input class="sub-input" placeholder="Subtask"></input>
+          {{ formset.as_p }}
+        </div>
+        <input tabindex="-1" type="submit" name="Submit" value="{{button_value}}">
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
