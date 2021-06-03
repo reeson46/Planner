@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from planner.apps.task.models import Task, Subtask
 from .forms import SubtaskForm, TaskForm
-from django.forms import fields, inlineformset_factory
+from django.forms import inlineformset_factory
+from django.http import JsonResponse
 
 
 def dashboard(request):
@@ -37,45 +38,54 @@ def dashboard(request):
 
 def add_task(request):
     task = Task()
-    task_form = TaskForm(instance=task, initial={'created_by': request.user})
+    task_form = TaskForm(instance=task, initial={"created_by": request.user})
 
-    SubtaskInlineFormSet = inlineformset_factory(Task, Subtask, form=SubtaskForm, extra=0)
+    SubtaskInlineFormSet = inlineformset_factory(
+        Task, Subtask, form=SubtaskForm, extra=0
+    )
     formset = SubtaskInlineFormSet(instance=task)
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         task_form = TaskForm(request.POST)
         if task_form.is_valid():
             created_task = task_form.save(commit=False)
             formset = SubtaskInlineFormSet(request.POST, instance=created_task)
-            
+
             if formset.is_valid():
                 created_task.save()
                 formset.save()
-                return redirect('dashboard:home')
+                return redirect("dashboard:home")
 
-    context = {'task_form': task_form, "formset": formset, "button_value": "Add"}
+    context = {"task_form": task_form, "formset": formset, "button_value": "Add"}
     return render(request, "dashboard/task/add_task.html", context)
 
 
 def update_task(request, pk):
     task = Task.objects.get(id=pk)
+
     task_form = TaskForm(instance=task)
 
-    SubtaskInlineFormSet = inlineformset_factory(Task, Subtask, form=SubtaskForm, extra=0)
+    SubtaskInlineFormSet = inlineformset_factory(
+        Task, Subtask, form=SubtaskForm, extra=0, can_delete=False
+    )
     formset = SubtaskInlineFormSet(instance=task)
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         task_form = TaskForm(request.POST, instance=task)
         if task_form.is_valid():
             created_task = task_form.save(commit=False)
             formset = SubtaskInlineFormSet(request.POST, instance=created_task)
-            
+
             if formset.is_valid():
                 created_task.save()
                 formset.save()
-                return redirect('dashboard:home')
+                return redirect("dashboard:home")
 
-    context = {'task_form': task_form, "formset": formset, "button_value": "Add"}
+    context = {
+        "task_form": task_form,
+        "formset": formset,
+        "button_value": "Update",
+    }
     return render(request, "dashboard/task/add_task.html", context)
 
 
@@ -90,5 +100,16 @@ def delete_task(request, pk):
     return render(request, "dashboard/task/delete_task.html", context)
 
 
-def test(request):
-    return render(request, 'dashboard/test.html')
+def delete_subtask(request):
+    
+    if request.POST.get("action") == 'post':
+        sub_id = request.POST.get('subtask_id')
+        subtask = Subtask.objects.get(pk=sub_id)
+        task_id = subtask.task.id
+        subtask.delete()
+        latest_sub = Subtask.objects.order_by('-id')[0]
+        import ipdb; ipdb.set_trace()
+        latest_sub_id = latest_sub.id
+        
+
+        return JsonResponse({'task_id': task_id, 'latest_sub_id': latest_sub_id, 'message': 'deleted'})

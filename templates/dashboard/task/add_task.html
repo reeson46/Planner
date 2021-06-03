@@ -10,14 +10,34 @@
         {% csrf_token %}
         {{ task_form.as_p }}
         <div id="items">
-          <input class="sub-input" placeholder="Subtask"></input>
-          {{ formset.as_p }}
+
+          <input class="sub-input card mb-2" placeholder="Subtask"></input>
+
+          {{formset.management_form }}
+          {% for field in formset %}
+
+          <div class="row">
+            {{field}}
+            <input type="button" value="delete" class="delete col-sm-2 btn btn-sm" />
+          </div>
+          {% endfor %}
+          {% for hidden in formset.hidden_fields %}
+          {{ hidden }}
+          {% endfor %}
+
+
         </div>
+
         <input tabindex="-1" type="submit" name="Submit" value="{{button_value}}">
       </form>
     </div>
   </div>
 </div>
+<script>
 
+
+
+
+</script>
 
 {% endblock %}
