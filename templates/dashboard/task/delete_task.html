@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Task{% endblock %}
+{% block title %}Delete Task{% endblock %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
     <div class="card card-body">
       <p>Are you sure you want to delete "{{ task.category}} - {{ task }}"?</p>
 
-      <form action="{% url 'dashboard:delete_task' task.id %}" method="POST">
+      <form action="{% url 'task:delete_task' task.id %}" method="POST">
 
         {% csrf_token %}
         <a class="btn btn-warning" href="{% url 'dashboard:home' %}">No</a>

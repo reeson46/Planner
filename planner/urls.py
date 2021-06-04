@@ -5,5 +5,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("planner.apps.dashboard.urls", namespace="dashboard")),
     path("account/", include("planner.apps.account.urls", namespace="account")),
-    path('task/', include('planner.apps.task.urls', namespace="task")),
+    path("task/", include("planner.apps.task.urls", namespace="task")),
 ]

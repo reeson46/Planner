@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{% if update %}
+Update Task
+{% else %}
+Create Task
+{% endif %}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card card-body">
+      
+      <form action="">
+        {% for field in form %}
+          {{ field.label_tag }}
+          {{ field }}
+          <br>
+        {% endfor %}
+      </form>
+
+      {% if update %}
+      <input type="text" class="card" id="name" placeholder="Name" value="{{task.name}}">
+      <br>
+      <textarea class="card" name="description" id="description" cols="30" rows="5" placeholder="Description">{{ task.description }}</textarea>
+      <br>
+      {% else %}
+      <input type="text" class="card" id="name" placeholder="Name">
+      <br>
+      <textarea class="card" name="description" id="description" cols="30" rows="5" placeholder="Description"></textarea>
+      <br>
+      {% endif %}
+
+      <div id="subtask-div">
+        <input type="text" id="subtask-input" class="card" placeholder="Subtask">
+        <br>
+
+        {% if update %}
+          {% for sub in task.subtask.all %}
+
+          <div class="row">
+            <input type="text" class="card subtask col-sm" value="{{sub.name}}" disabled>
+            <button type="button" class="btn btn-sm col-sm" id="delete-existing-subtask" data-index="{{ sub.id }}">Delete</button>
+          </div>
+          
+          {% endfor %}
+        {% endif %}
+      </div>
+      <br>
+      <div class="row" id="create-button">
+       <button type="button" class="btn btn-success  btn-sm" id="create-task">{{ button }}</button>
+      </div>
+    
+  </div>
+</div>
+<script>
+  var CREATE_TASK_URL = '{% url "task:create_task" %}';
+  var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
+  var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
+  var UPDATE = '{{ update }}';
+  var TASK_ID = '{{ task.id }}';
+  var CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+<script src="{% static 'task/js/task.js' %}" data-rel-js>></script>
+{% endblock %}

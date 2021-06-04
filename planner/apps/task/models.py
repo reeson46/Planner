@@ -1,23 +1,9 @@
+import uuid
+
 from django.db import models
-from django.db.models.deletion import RESTRICT
 from django.utils.translation import gettext_lazy as _
 
 from planner.apps.account.models import UserAccount
-
-
-# class Status(models.Model):
-#     name = models.CharField(
-#         max_length=250,
-#         help_text=_("Enter a status, e.g. Planned, In progres,..."),
-#         unique=True,
-#     )
-
-#     class Meta:
-#         verbose_name = _("Status")
-#         verbose_name_plural = _("Statuses")
-
-#     def __str__(self):
-#         return self.name
 
 
 class Category(models.Model):
@@ -49,8 +35,11 @@ class Task(models.Model):
         ("Testing", "Testing"),
         ("Completed", "Completed"),
     )
-    category = models.ForeignKey(Category, on_delete=models.RESTRICT)
-    status = models.CharField(max_length=50, choices=STATUS)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    category = models.ForeignKey(
+        Category, related_name="category", on_delete=models.RESTRICT
+    )
+    status = models.CharField(max_length=50, choices=STATUS, default="Planned")
     name = models.CharField(max_length=250, blank=True)
     created_by = models.ForeignKey(UserAccount, on_delete=models.RESTRICT)
     description = models.TextField(max_length=500, blank=True)
@@ -68,7 +57,7 @@ class Task(models.Model):
 
 class Subtask(models.Model):
     name = models.CharField(max_length=250, blank=True)
-    task = models.ForeignKey(Task, related_name="subtasks", on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, related_name="subtask", on_delete=models.CASCADE)
     is_complete = models.BooleanField(default=False)
 
     class Meta:

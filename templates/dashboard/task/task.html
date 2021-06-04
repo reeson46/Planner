@@ -15,28 +15,26 @@
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
 
-      <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, minus, quos accusamus
-        ipsum
-        praesentium illum facere, ipsam suscipit quis id eveniet repellendus itaque quia reprehenderit ab!
-        Maxime
-        quis hic sapiente.</p>
+      <p class="card-text">{{ task.description}}</p>
+      {% if task.subtask.all|length != 0 %}
         <hr>
-      {% for subtask in subtasks %}
-      {% if task.id == subtask.task.id %}
-        <h6 class="card-subtitle fw-light subtask">{{ subtask.name }}</h6>
       {% endif %}
+      {% for subtask in task.subtask.all %}
+
+        <h6 class="card-subtitle fw-light subtask">{{ subtask.name }}</h6>
+
       {% endfor %}
     </div>
     <div class="card-footer">
-      <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on {{ task.date_created }}</h6>
-      <h7 class="card-subtitle fw-light">Updated on {{ task.date_updated }}</h7>
+      <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on 
+      {{ task.date_created }}</h6>
       <hr>
       <div class="row">
         <div class="col-sm-4 text-center">
-          <a href="{% url 'dashboard:delete_task' task.id %}" class="btn btn-danger">Delete</a>
+          <a href="{% url 'task:delete_task' task.id %}" class="btn btn-danger">Delete</a>
         </div>
         <div class="col-sm-4 text-center">
-          <a href="{% url 'dashboard:update_task' task.id %}" class="btn btn-info">Update</a>
+          <a href="{% url 'task:update_task' task.id %}" class="btn btn-info">Update</a>
         </div>
       </div>
     </div>
