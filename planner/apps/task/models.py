@@ -1,5 +1,4 @@
-import uuid
-
+from planner.apps.dashboard.models import Board
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -35,13 +34,13 @@ class Task(models.Model):
         ("Testing", "Testing"),
         ("Completed", "Completed"),
     )
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    board = models.ForeignKey(Board, related_name="task", on_delete=models.CASCADE)
     category = models.ForeignKey(
         Category, related_name="category", on_delete=models.RESTRICT
     )
     status = models.CharField(max_length=50, choices=STATUS, default="Planned")
     name = models.CharField(max_length=250, blank=True)
-    created_by = models.ForeignKey(UserAccount, on_delete=models.RESTRICT)
+    created_by = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)

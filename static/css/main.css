@@ -44,6 +44,7 @@ body{
     background-color: #7CD1C0;
 }
 
+
 /* Status hr lines */
 hr.new1,
 hr.new2,
@@ -67,9 +68,8 @@ hr.new4{
 }
 
 
-
 /* Task */
-#task-col{
+.task-col{
     overflow-y: scroll;
     max-height: 75vh;
 }

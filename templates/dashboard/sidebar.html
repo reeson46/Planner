@@ -1,0 +1,60 @@
+<ul class="sidebar-nav">
+  <div class="container p-0 selected-item">
+    <li class="fs-4 mt-2"><a href="{% url 'task:new_task' %}">
+        <span class="align-middle">New Task
+      </a>
+    </li>
+  </div>
+  <hr>
+  <div class="container p-0">
+    <li class="fs-4 mt-2 selected-item"><a href="{% url 'dashboard:new_board' %}">
+        <span class="align-middle">New Board
+      </a>
+    </li>
+    {% for board in boards %}
+    <div class="d-flex justify-content-between selected-item board-item">
+      <li class="fs-5">
+        <a href="{% url 'dashboard:view_board' board.id %}">
+          <span class="align-middle">&nbsp;&nbsp;- &nbsp;{{ board.name }}</span>
+        </a>
+      </li>
+      <li class="me-2">
+        <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
+            class="bi bi-x-lg board-delete-icon" viewBox="0 0 16 16">
+            <path
+              d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
+          </svg>
+        </a>
+      </li>
+    </div>
+    {% endfor %}
+  </div>
+  <hr>
+  <div class="container p-0">
+    <li class="fs-4 mt-2 selected-item"><a href="#">
+        <span class="align-middle">New Category
+      </a>
+    </li>
+    <!--
+    {% for board in boards %}
+    <div class="d-flex justify-content-between selected-item board-item">
+      <li class="fs-5">
+        <a href="{% url 'dashboard:view_board' board.id %}">
+          <span class="align-middle">&nbsp;&nbsp;- &nbsp;{{ board.name }}</span>
+        </a>
+      </li>
+      <li class="me-2">
+        <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
+            class="bi bi-x-lg board-delete-icon" viewBox="0 0 16 16">
+            <path
+              d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
+          </svg>
+        </a>
+      </li>
+    </div>
+    {% endfor %}
+  </div>
+  -->
+
+
+</ul>

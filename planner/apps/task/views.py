@@ -22,16 +22,16 @@ def create_task(request):
     if request.POST.get("action") == "post":
         update = request.POST.get("update")
 
-        category_id = request.POST.get("category")
-        category = Category.objects.get(pk=category_id)
+        # category_id = request.POST.get("category")
+        category = Category.objects.get(pk=request.POST.get("category"))
 
         status = request.POST.get("status")
         name = request.POST.get("name")
 
         description = request.POST.get("description")
 
-        user_id = request.user.id
-        user = UserAccount.objects.get(pk=user_id)
+        # user_id = request.user.id
+        user = UserAccount.objects.get(pk=request.user.id)
 
         subtasks = request.POST.getlist("subtasks[]")
 
@@ -43,16 +43,16 @@ def create_task(request):
                 description=description,
                 created_by=user,
             )
-            task_id = task.id
-            created_task = Task.objects.get(pk=task_id)
+            # task_id = task.id
+            created_task = Task.objects.get(pk=task.id)
 
             for sub in subtasks:
-                Subtask.objects.get_or_create(name=sub, task=created_task)
+                Subtask.objects.create(name=sub, task=created_task)
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
-            task_id = request.POST.get("task_id")
-            task = Task.objects.get(pk=task_id)
+            # task_id = request.POST.get("task_id")
+            task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category
             task.status = status
             task.name = name

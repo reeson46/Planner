@@ -6,7 +6,7 @@ app_name = "dashboard"
 
 urlpatterns = [
     path("", views.dashboard, name="home"),
-    # path("update_task/<str:pk>/", views.update_task, name="update_task"),
-    # path("delete_task/<str:pk>/", views.delete_task, name="delete_task"),
-    # path('delete_subtask/', views.delete_subtask, name="delete_subtask"),
+    path("new_board/", views.new_board, name="new_board"),
+    path("view_board/<str:pk>/", views.view_board, name="view_board"),
+    #path('rename_board/<str:pk>/', views.rename_board, name="rename_board"),
 ]
