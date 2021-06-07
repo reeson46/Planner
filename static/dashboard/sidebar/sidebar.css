@@ -60,3 +60,7 @@
 .board-delete-icon:hover{
     fill: red;
 }
+
+.board-item-selected{
+    background: #3b424970;
+}

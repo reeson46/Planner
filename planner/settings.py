@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "planner.apps.task",
     "planner.apps.account",
-    "planner.apps.dashboard",
+    "planner.apps.dashboard.apps.DashboardConfig",
 ]
 
 MIDDLEWARE = [

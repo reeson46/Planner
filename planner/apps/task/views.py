@@ -48,6 +48,7 @@ def create_task(request):
 
             for sub in subtasks:
                 Subtask.objects.create(name=sub, task=created_task)
+                
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
@@ -60,7 +61,10 @@ def create_task(request):
             task.save()
 
             for sub in subtasks:
-                Subtask.objects.get_or_create(name=sub, task=task)
+                if Subtask.objects.filter(name=sub, task=task).exists():
+                    pass
+                else:
+                    Subtask.objects.create(name=sub, task=task)
 
             response = JsonResponse({"message": "Task Updated!"})
 

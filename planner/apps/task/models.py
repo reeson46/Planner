@@ -39,7 +39,7 @@ class Task(models.Model):
         Category, related_name="category", on_delete=models.RESTRICT
     )
     status = models.CharField(max_length=50, choices=STATUS, default="Planned")
-    name = models.CharField(max_length=250, blank=True)
+    name = models.CharField(max_length=250)
     created_by = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
