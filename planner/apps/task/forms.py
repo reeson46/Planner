@@ -7,6 +7,7 @@ class TaskForm(ModelForm):
     class Meta:
         model = Task
         fields = [
+            "board",
             "category",
             "status",
         ]
@@ -14,17 +15,28 @@ class TaskForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
 
+        self.label_suffix = ""
+
+        self.fields["board"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light",
+            }
+        )
+        self.fields["board"].empty_label = None
+
         self.fields["category"].widget.attrs.update(
             {
-                "class": "card",
+                "class": "card bg-dark text-light",
             }
         )
         self.fields["category"].empty_label = None
+
         self.fields["status"].widget.attrs.update(
             {
-                "class": "card",
+                "class": "card bg-dark text-light",
             }
         )
+
 
 class CategoryForm(ModelForm):
     class Meta:

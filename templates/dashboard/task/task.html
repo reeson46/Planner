@@ -1,31 +1,25 @@
 <div class="card text-white task shadow" id="panelsStayOpen-heading{{ task.id }}">
   <div class="card-header task-extend" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}"
-      aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ task.id }}">
-   
+    aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ task.id }}">
 
-      <h4 class="card-title">{{ task.category }}</h4>
+    <h4 class="card-subtitle">{{ task.name }}</h5>
 
-      <h5 class="card-subtitle">{{ task.name }}</h5>
-
-    
   </div>
   <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse show"
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
-
-      <p class="card-text">{{ task.description}}</p>
-      {% if task.subtask.all|length != 0 %}
+      {% if task.description %}
+        <div class="card-text">{{ task.description}}</div>
         <hr>
       {% endif %}
+
       {% for subtask in task.subtask.all %}
-
-        <h6 class="card-subtitle fw-light subtask">{{ subtask.name }}</h6>
-
-      {% endfor %}
+      <li class="card-subtitle fw-light subtask">{{ subtask.name }}</li>      {% endfor %}
+  
     </div>
     <div class="card-footer">
-      <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on 
-      {{ task.date_created }}</h6>
+      <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on
+        {{ task.date_created }}</h6>
       <hr>
       <div class="row">
         <div class="col-sm-4 text-center">

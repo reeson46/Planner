@@ -1,5 +1,8 @@
+from planner.apps.dashboard.models import Board
+from planner.apps.dashboard.views import dashboard
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from planner.apps.dashboard.dashboard import Dashboard
 
 from planner.apps.account.models import UserAccount
 
@@ -19,10 +22,13 @@ def new_task(request):
 
 
 def create_task(request):
+    dashboard = Dashboard(request)
+
     if request.POST.get("action") == "post":
         update = request.POST.get("update")
 
-        # category_id = request.POST.get("category")
+        board = Board.objects.get(pk=dashboard.get_active_board_id())
+
         category = Category.objects.get(pk=request.POST.get("category"))
 
         status = request.POST.get("status")
@@ -30,13 +36,13 @@ def create_task(request):
 
         description = request.POST.get("description")
 
-        # user_id = request.user.id
         user = UserAccount.objects.get(pk=request.user.id)
 
         subtasks = request.POST.getlist("subtasks[]")
 
         if update == "False":
             task = Task.objects.create(
+                board=board,
                 category=category,
                 status=status,
                 name=name,
@@ -52,7 +58,6 @@ def create_task(request):
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
-            # task_id = request.POST.get("task_id")
             task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category
             task.status = status

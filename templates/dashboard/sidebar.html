@@ -1,6 +1,4 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'dashboard/sidebar/css/sidebar.css' %}">
-
 <ul class="sidebar-nav">
   <li class="container hovered-nav-item">
     <div class="fs-4 mt-2"><a href="{% url 'task:new_task' %}">
@@ -55,6 +53,8 @@
     {% endfor %}
   </div>
 
+  <hr>
+  
 </ul>
 
 <script>

@@ -8,62 +8,86 @@ Create Task
 {% endif %}
 {% endblock %}
 
-
-
 {% block content %}
-<div class="row">
-  <div class="col-md-6">
-    <div class="card card-body">
-      
-      <form action="">
+<style>
+  #new-task {
+    background: #454545;
+  }
+</style>
+
+<div class="container">
+  <div class="card card-body shadow" id="new-task">
+
+    <form action="">
+      <div class="row">
         {% for field in form %}
-          {{ field.label_tag }}
+        <div class="col-2">
+          <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
           {{ field }}
-          <br>
+        </div>
         {% endfor %}
-      </form>
+      </div>
+    </form>
+    <br>
+
+    {% if update %}
+    <label class="text-white mb-1" for="id_name">Name</label>
+    <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="{{task.name}}">
+    <br>
+    <label class="text-white mb-1" for="id_description">Description</label>
+    <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
+      placeholder="Enter description">{{ task.description }}</textarea>
+    <br>
+    {% else %}
+    <label class="text-white mb-1" for="id_name">Name</label>
+    <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name">
+    <br>
+    <label class="text-white mb-1" for="id_description">Description</label>
+    <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
+      placeholder="Enter description">{{ task.description }}</textarea>
+    <br>
+    {% endif %}
+
+    <div id="subtask-div">
+      <label class="text-white mb-1" for="subtask-lb">Subtasks</label>
+      <input type="text-sub" id="subtask-input" class="card subtask-lb bg-dark text-light" placeholder="Enter subtask">
+      <br>
 
       {% if update %}
-      <input type="text" class="card" id="name" placeholder="Name" value="{{task.name}}">
-      <br>
-      <textarea class="card" name="description" id="description" cols="30" rows="5" placeholder="Description">{{ task.description }}</textarea>
-      <br>
-      {% else %}
-      <input type="text" class="card" id="name" placeholder="Name">
-      <br>
-      <textarea class="card" name="description" id="description" cols="30" rows="5" placeholder="Description"></textarea>
-      <br>
+      {% for sub in task.subtask.all %}
+
+      <div class="row">
+        <input type="text-sub" class="card subtask col-sm bg-dark text-light" value="{{sub.name}}" disabled>
+        <button type="button" class="btn btn-sm col-sm" id="delete-existing-subtask"
+          data-index="{{ sub.id }}">Delete</button>
+      </div>
+
+      {% endfor %}
       {% endif %}
+    </div>
+    <br>
+    <div class="row" id="create-button">
+      <button type="submit" class="btn btn-success btn-sm" id="create-task">{{ button }}</button>
+    </div>
 
-      <div id="subtask-div">
-        <input type="text" id="subtask-input" class="card" placeholder="Subtask">
-        <br>
-
-        {% if update %}
-          {% for sub in task.subtask.all %}
-
-          <div class="row">
-            <input type="text" class="card subtask col-sm" value="{{sub.name}}" disabled>
-            <button type="button" class="btn btn-sm col-sm" id="delete-existing-subtask" data-index="{{ sub.id }}">Delete</button>
-          </div>
-          
-          {% endfor %}
-        {% endif %}
-      </div>
-      <br>
-      <div class="row" id="create-button">
-       <button type="button" class="btn btn-success  btn-sm" id="create-task">{{ button }}</button>
-      </div>
-    
   </div>
-</div>
-<script>
-  var CREATE_TASK_URL = '{% url "task:create_task" %}';
-  var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
-  var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
-  var UPDATE = '{{ update }}';
-  var TASK_ID = '{{ task.id }}';
-  var CSRF_TOKEN = '{{ csrf_token }}';
-</script>
-<script src="{% static 'task/js/task.js' %}" data-rel-js></script>
-{% endblock %}
+
+  <script>
+    var CREATE_TASK_URL = '{% url "task:create_task" %}';
+    var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
+    var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
+    var UPDATE = '{{ update }}';
+    var TASK_ID = '{{ task.id }}';
+    var CSRF_TOKEN = '{{ csrf_token }}';
+  </script>
+  <script src="{% static 'task/js/task.js' %}" data-rel-js></script>
+
+<style>
+.required-field{
+  border: 1px orange solid;
+
+}
+</style>
+
+
+  {% endblock %}

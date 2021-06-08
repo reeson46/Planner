@@ -16,6 +16,21 @@
 
 $(document).ready(function () {
 
+  // Prevent clicking on CREATE/UPDATE button if the "name" field is empty
+  $('button[type="submit"]').attr('disabled', true);
+  $('#id_name').addClass('required-field')
+  $('input[type="text"]').on('keyup', function () {
+    if ($(this).val() != '') {
+      $('button[type="submit"]').attr('disabled', false);
+      $('#id_name').removeClass('required-field')
+    } 
+    else {
+      $('button[type="submit"]').attr('disabled', true);
+      $('#id_name').addClass('required-field')
+      
+    }
+  });
+
   // Add Subtask
   $("#subtask-div").keypress(function (e) {
     if (e.which === 13) {
@@ -24,7 +39,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         $('#subtask-div').append(
-          '<div class="row"><input type="text" class="card subtask col-sm" value="' + $('#subtask-input').val() + '" disabled><button type="button" class="btn btn-sm col-sm" id="delete-subtask">Delete</button></div>'
+          '<div class="row"><input type="text-sub" class="card subtask col-sm bg-dark text-light" value="' + $('#subtask-input').val() + '" disabled><button type="button" class="btn btn-sm col-sm" id="delete-subtask">Delete</button></div>'
         )
 
         $('#subtask-input').val("");
@@ -58,10 +73,10 @@ $(document).ready(function () {
     stat = $("select[name='status'").children("option:selected").val();
 
     // Store Name
-    n = $("#name").val()
+    n = $("#id_name").val()
 
     // Store Description
-    d = $("#description").val()
+    d = $("#id_description").val()
 
     // Store all subtask
     subs = [];
@@ -76,7 +91,7 @@ $(document).ready(function () {
       url: CREATE_TASK_URL,
       data: {
         update: UPDATE,
-        task_id : TASK_ID,
+        task_id: TASK_ID,
         category: cat,
         status: stat,
         name: n,
@@ -101,13 +116,13 @@ $(document).ready(function () {
   });
 
   // Delete existing Subtask
-  $("#subtask-div").on('click', "#delete-existing-subtask", function (e){
+  $("#subtask-div").on('click', "#delete-existing-subtask", function (e) {
     e.preventDefault()
 
     sub_id = $(this).data('index')
 
     $(this).parent('div').remove();
-    
+
     $.ajax({
       type: "POST",
       url: DELETE_EXISTING_TASK,
@@ -120,7 +135,7 @@ $(document).ready(function () {
 
       success: function (json) {
         //alert(json.message)
-        
+
       },
 
       error: function (xhr, errmsg, err) {
