@@ -6,7 +6,8 @@ from planner.apps.account.models import UserAccount
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=250, unique=True)
+    name = models.CharField(max_length=250)
+    created_by = models.ForeignKey(UserAccount, related_name='category', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Category")
@@ -36,7 +37,7 @@ class Task(models.Model):
     )
     board = models.ForeignKey(Board, related_name="task", on_delete=models.CASCADE)
     category = models.ForeignKey(
-        Category, related_name="category", on_delete=models.RESTRICT
+        Category, related_name="category", on_delete=models.CASCADE
     )
     status = models.CharField(max_length=50, choices=STATUS, default="Planned")
     name = models.CharField(max_length=250)

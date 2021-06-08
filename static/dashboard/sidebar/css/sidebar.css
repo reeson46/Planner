@@ -49,7 +49,17 @@
     color: white;
 }
 
-.sidebar-nav .selected-item:hover{
+.sidebar-nav .hovered-nav-item:hover{
+    background: #3b4249 ;
+}
+
+.sidebar-nav .hovered-nav-item .board-link, 
+.category-link:hover{
+    cursor: pointer;
+}
+
+.board-selected,
+.category-selected{
     background: #3b4249 ;
 }
 
@@ -59,8 +69,4 @@
 
 .board-delete-icon:hover{
     fill: red;
-}
-
-.board-item-selected{
-    background: #3b424970;
 }

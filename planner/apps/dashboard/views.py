@@ -3,13 +3,14 @@ from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 from .models import Board
 from .forms import BoardForm
-from planner.apps.task.models import Task
+from planner.apps.task.models import Category, Task
 from .dashboard import Dashboard
 
 
 def dashboard(request):
     user = request.user
     boards = user.board.all()
+    categories = user.category.all()
 
     # make the session
     dashboard = Dashboard(request)
@@ -20,21 +21,47 @@ def dashboard(request):
         # grab the first board from the Board model
         first_board = boards.first()
 
+        # if there is no active category
+        if not dashboard.active_category_check():
+
+            # set active category as ALL (-1)
+            dashboard.set_active_category_id(category_id=-1)
+
+            highlighted_category = -1    
+
         # save the board id as "active board" into the session
         dashboard.set_active_board_id(board_id=first_board.id)
 
+        highlighted_board = first_board.id
+
         # and set the first board as active
         active_board = first_board
+
+        tasks = active_board.task.all()
 
     # but if there is already "active board" in the session
     else:
         # grab the id from the session
         active_board_id = dashboard.get_active_board_id()
+        highlighted_board = active_board_id
 
         # and use it to get the board from Board model
         active_board = boards.get(pk=active_board_id)
-    
-    tasks = active_board.task.all()
+
+        # get the category id
+        active_category_id = dashboard.get_active_category_id()
+
+        highlighted_category = active_category_id
+
+        # if the active category is ALL
+        if dashboard.get_active_category_id() == -1:
+
+            # get all the tasks
+            tasks = active_board.task.all()
+        else:
+            # get only the tasks associated with active category
+            tasks = active_board.task.filter(category=active_category_id)
+
 
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
@@ -56,6 +83,9 @@ def dashboard(request):
         "total_testing": total_testing,
         "total_completed": total_completed,
         'boards': boards,
+        'categories': categories,
+        'highlighted_board': highlighted_board,
+        'highlighted_category': highlighted_category,
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -93,36 +123,6 @@ def rename_board(request, pk):
     }
     return render(request, 'dashboard/new_board.html', context)
 
-def view_board(request, pk):
-    board = Board.objects.get(id=pk)
-
-    planned = board.task.filter(status="Planned")
-    in_progress = board.task.filter(status="In Progress")
-    testing = board.task.filter(status="Testing")
-    completed = board.task.filter(status="Completed")
-
-    total_planned = planned.count()
-    total_inprogress = in_progress.count()
-    total_testing = testing.count()
-    total_completed = completed.count()
-
-    user = request.user
-    boards = user.board.all()
-
-    context = {
-        "planned": planned,
-        "in_progress": in_progress,
-        "testing": testing,
-        "completed": completed,
-        "total_planned": total_planned,
-        "total_inprogress": total_inprogress,
-        "total_testing": total_testing,
-        "total_completed": total_completed,
-        'boards': boards,
-    }
-
-    return render(request, "dashboard/dashboard.html", context)
-
 def set_active_board(request):
     dashboard = Dashboard(request)
 
@@ -130,5 +130,14 @@ def set_active_board(request):
         board_id = int(request.POST.get('board_id'))
         dashboard.set_active_board_id(board_id=board_id)
 
-
         return JsonResponse({'message': 'Active board set!'})
+
+
+def set_active_category(request):
+    dashboard = Dashboard(request)
+
+    if request.POST.get('action') == 'post':
+        category_id = int(request.POST.get('category_id'))
+        dashboard.set_active_category_id(category_id=category_id)
+
+        return JsonResponse({'message': 'Active category set!'})
