@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Task, Category
+from .models import Category, Task
 
 
 class TaskForm(ModelForm):
@@ -41,14 +41,14 @@ class TaskForm(ModelForm):
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ['name']
-    
+        fields = ["name"]
+
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
 
-        self.fields['name'].widget.attrs.update(
+        self.fields["name"].widget.attrs.update(
             {
-                'class': 'card',
+                "class": "card",
             }
         )
-        self.fields['name'].empty_label = None
+        self.fields["name"].empty_label = None

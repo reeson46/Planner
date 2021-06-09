@@ -1,21 +1,25 @@
 <div class="card text-white task shadow" id="panelsStayOpen-heading{{ task.id }}">
-  <div class="card-header task-extend" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}"
+  <div class="card-header task-extend" data-index="{{ task.id }}" value="{{task.extend_state}}" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}"
     aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ task.id }}">
 
     <h4 class="card-subtitle">{{ task.name }}</h5>
 
   </div>
-  <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse show"
+  <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% else %}""{% endif %}"
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
       {% if task.description %}
-        <div class="card-text">{{ task.description}}</div>
-        <hr>
+      <div class="card-text">{{ task.description}}</div>
+      <hr>
       {% endif %}
 
       {% for subtask in task.subtask.all %}
-      <li class="card-subtitle fw-light subtask">{{ subtask.name }}</li>      {% endfor %}
-  
+      <div class="d-flex justify-content-between">
+        <li class="card-subtitle fw-light subtask">{{ subtask.name }}</li> 
+        <input type="checkbox" class="custom-control-input" id="">
+      </div>
+      {% endfor %}
+
     </div>
     <div class="card-footer">
       <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on
@@ -32,4 +36,3 @@
     </div>
   </div>
 </div>
-

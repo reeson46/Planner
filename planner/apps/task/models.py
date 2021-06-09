@@ -1,13 +1,15 @@
-from planner.apps.dashboard.models import Board
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from planner.apps.account.models import UserAccount
+from planner.apps.dashboard.models import Board
 
 
 class Category(models.Model):
     name = models.CharField(max_length=250)
-    created_by = models.ForeignKey(UserAccount, related_name='category', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        UserAccount, related_name="category", on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name = _("Category")
@@ -46,6 +48,7 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    extend_state = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = _("Task")

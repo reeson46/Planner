@@ -7,7 +7,6 @@
     overflow-y: hidden;
 }
 
-
 /* Main content */
 #page-content-wrapper{
     width: 100%;
@@ -58,8 +57,7 @@
     cursor: pointer;
 }
 
-.board-selected,
-.category-selected{
+.item-selected{
     background: #3b4249 ;
 }
 
@@ -67,6 +65,3 @@
     background-color: white;
 }
 
-.board-delete-icon:hover{
-    fill: red;
-}

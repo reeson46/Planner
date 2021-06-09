@@ -1,57 +1,58 @@
+{% load static %}
+<div class="row accordion reload-board">
 
-  <div class="row accordion">
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <h2 class="text-secondary font-monospace text-center">Planned {{ total_planned }}</h2>
+    <hr class="new1">
 
-    <div class="col-lg">
-      <h2 class="text-secondary font-monospace text-center">Planned {{ total_planned }}</h2>
-      <hr class="new1">
+    <div class="p-3 task-col">
 
-      <div class="p-3 task-col">
+      {% for task in planned %}
+      {% include 'dashboard/task/task.html' %}
+      {% endfor %}
 
-        {% for task in planned %}
-        {% include 'dashboard/task/task.html' %}
-        {% endfor %}
-
-      </div>
-    </div>
-
-    <div class="col-lg">
-      <h2 class="text-primary font-monospace text-center">In Progress {{ total_inprogress }}</h2>
-      <hr class="new2">
-
-      <div class="p-3 task-col">
-
-        {% for task in in_progress %}
-        {% include 'dashboard/task/task.html' %}
-        {% endfor %}
-
-      </div>
-    </div>
-
-    <div class="col-lg">
-
-      <h2 class="text-danger font-monospace text-center">Testing {{ total_testing }}</h2>
-      <hr class="new3">
-
-      <div class="p-3 task-col">
-
-        {% for task in testing %}
-        {% include 'dashboard/task/task.html' %}
-        {% endfor %}
-
-      </div>
-    </div>
-
-    <div class="col-lg">
-
-      <h2 class="text-success font-monospace text-center">Completed {{ total_completed }}</h2>
-      <hr class="new4">
-
-      <div class="p-3 task-col">
-
-        {% for task in completed %}
-        {% include 'dashboard/task/task.html' %}
-        {% endfor %}
-
-      </div>
     </div>
   </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12">
+    <h2 class="text-primary font-monospace text-center">In Progress {{ total_inprogress }}</h2>
+    <hr class="new2">
+
+    <div class="p-3 task-col">
+
+      {% for task in in_progress %}
+      {% include 'dashboard/task/task.html' %}
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12">
+
+    <h2 class="text-danger font-monospace text-center">Testing {{ total_testing }}</h2>
+    <hr class="new3">
+
+    <div class="p-3 task-col">
+
+      {% for task in testing %}
+      {% include 'dashboard/task/task.html' %}
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-6 col-sm-12">
+
+    <h2 class="text-success font-monospace text-center">Completed {{ total_completed }}</h2>
+    <hr class="new4">
+
+    <div class="p-3 task-col">
+
+      {% for task in completed %}
+      {% include 'dashboard/task/task.html' %}
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+  <script src="{% static 'task/js/task.js' %}"></script>

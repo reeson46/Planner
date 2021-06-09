@@ -10,7 +10,7 @@ class SubtaskTabularInline(admin.TabularInline):
 class TaskAdminConfig(admin.ModelAdmin):
     model = Task
     search_fields = (
-        'board',
+        "board",
         "status",
         "category",
         "name",
@@ -18,7 +18,7 @@ class TaskAdminConfig(admin.ModelAdmin):
         "tags",
     )
     list_filter = (
-        'board',
+        "board",
         "status",
         "category",
         "name",
@@ -26,7 +26,7 @@ class TaskAdminConfig(admin.ModelAdmin):
         "tags",
     )
     list_display = (
-        'board',
+        "board",
         "category",
         "name",
         "created_by",

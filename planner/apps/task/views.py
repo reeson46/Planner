@@ -1,17 +1,30 @@
-from planner.apps.dashboard.models import Board
-from planner.apps.dashboard.views import dashboard
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from planner.apps.dashboard.dashboard import Dashboard
 
 from planner.apps.account.models import UserAccount
+from planner.apps.dashboard.dashboard import Dashboard
+from planner.apps.dashboard.models import Board
 
 from .forms import TaskForm
 from .models import Category, Subtask, Task
 
 
 def new_task(request):
-    form = TaskForm()
+    dashboard = Dashboard(request)
+    user = request.user
+    categories = user.category.all()
+
+    if dashboard.get_active_category_id() == -1:
+        active_category = categories.first()
+    else:
+        active_category = categories.get(pk=dashboard.get_active_category_id())
+
+    form = TaskForm(
+        initial={
+            "board": dashboard.get_active_board_id,
+            "category": active_category.id,
+        }
+    )
     context = {
         "form": form,
         "button_value": "Create",
@@ -54,7 +67,7 @@ def create_task(request):
 
             for sub in subtasks:
                 Subtask.objects.create(name=sub, task=created_task)
-                
+
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
@@ -106,3 +119,14 @@ def delete_subtask(request):
         subtask.delete()
 
         return JsonResponse({"message": "Subtask Deleted"})
+
+def set_task_extend_state(request):
+    if request.POST.get('action') == 'post':
+        task_id = request.POST.get('task_id')
+        new_state = request.POST.get('task_extend_state')
+
+        task = Task.objects.get(pk=task_id)
+        task.extend_state = new_state
+        task.save()
+
+        return JsonResponse({'message': 'Task extend state updated!'})

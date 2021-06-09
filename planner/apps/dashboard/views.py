@@ -1,10 +1,9 @@
-
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
-from .models import Board
-from .forms import BoardForm
-from planner.apps.task.models import Category, Task
+
 from .dashboard import Dashboard
+from .forms import BoardForm
+from .models import Board
 
 
 def dashboard(request):
@@ -12,9 +11,9 @@ def dashboard(request):
     boards = user.board.all()
     categories = user.category.all()
 
-    # make the session
+    # make the session instance
     dashboard = Dashboard(request)
-    
+
     # if there is no active board in the session
     if not dashboard.active_board_check():
 
@@ -27,7 +26,7 @@ def dashboard(request):
             # set active category as ALL (-1)
             dashboard.set_active_category_id(category_id=-1)
 
-            highlighted_category = -1    
+            highlighted_category = -1
 
         # save the board id as "active board" into the session
         dashboard.set_active_board_id(board_id=first_board.id)
@@ -62,7 +61,6 @@ def dashboard(request):
             # get only the tasks associated with active category
             tasks = active_board.task.filter(category=active_category_id)
 
-
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
@@ -82,29 +80,26 @@ def dashboard(request):
         "total_inprogress": total_inprogress,
         "total_testing": total_testing,
         "total_completed": total_completed,
-        'boards': boards,
-        'categories': categories,
-        'highlighted_board': highlighted_board,
-        'highlighted_category': highlighted_category,
+        "boards": boards,
+        "categories": categories,
+        "highlighted_board": highlighted_board,
+        "highlighted_category": highlighted_category,
     }
 
     return render(request, "dashboard/dashboard.html", context)
 
 
 def new_board(request):
-    form = BoardForm(initial={'created_by': request.user})
+    form = BoardForm(initial={"created_by": request.user})
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = BoardForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('dashboard:home')
+            return redirect("dashboard:home")
 
-    context = {
-        'form': form,
-        'button': 'Create'
-    }
-    return render(request, 'dashboard/new_board.html', context)
+    context = {"form": form, "button": "Create"}
+    return render(request, "dashboard/new_board.html", context)
 
 
 def rename_board(request, pk):
@@ -115,29 +110,27 @@ def rename_board(request, pk):
         form = BoardForm(request.POST, instance=board)
         if form.is_valid():
             form.save()
-            return redirect('dashboard:home')
-    
-    context = {
-        'form': form,
-        'button': 'Update'
-    }
-    return render(request, 'dashboard/new_board.html', context)
+            return redirect("dashboard:home")
+
+    context = {"form": form, "button": "Update"}
+    return render(request, "dashboard/new_board.html", context)
+
 
 def set_active_board(request):
     dashboard = Dashboard(request)
 
-    if request.POST.get('action') == 'post':
-        board_id = int(request.POST.get('board_id'))
+    if request.POST.get("action") == "post":
+        board_id = int(request.POST.get("board_id"))
         dashboard.set_active_board_id(board_id=board_id)
 
-        return JsonResponse({'message': 'Active board set!'})
+        return JsonResponse({"message": "Active board set!"})
 
 
 def set_active_category(request):
     dashboard = Dashboard(request)
 
-    if request.POST.get('action') == 'post':
-        category_id = int(request.POST.get('category_id'))
+    if request.POST.get("action") == "post":
+        category_id = int(request.POST.get("category_id"))
         dashboard.set_active_category_id(category_id=category_id)
 
-        return JsonResponse({'message': 'Active category set!'})
+        return JsonResponse({"message": "Active category set!"})

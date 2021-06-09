@@ -1,21 +1,30 @@
 $(document).ready(function () {
-
-  // ALL ABOUT ACTIVE BOARD
+  // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
   // on page refresh, highligh the active board
-  $('.active-board[value="' + HIGHLIGHTED_BOARD + '"]').addClass('board-selected');
+  $('.active-board[value="' + HIGHLIGHTED_BOARD + '"]').addClass('item-selected');
 
   // keep the selected board highlighted
   $('.board-link').click(function () {
-
-    $('.board-link').parent().removeClass('board-selected');
-    $(this).parent().addClass('board-selected');
+    $('.board-link').parent().removeClass('item-selected');
+    $(this).parent().addClass('item-selected');
   });
+
+  // on page refresh, highligh the active category
+  $('.active-category[value="' + HIGHLIGHTED_CATEGORY + '"]').addClass('item-selected');
+
+  // keep the selected category highlighted
+  $('.category-link').click(function () {
+    $('.category-link').parent().removeClass('item-selected');
+    $(this).parent().addClass('item-selected');
+  });
+
+  
+  // ALL ABOUT ACTIVE BOARD
 
   // POST selected board id
   $(".board-link").click(function (e) {
     e.preventDefault();
-
     board_id = $(this).attr('value');
 
     $.ajax({
@@ -30,6 +39,7 @@ $(document).ready(function () {
 
       success: function (json) {
         $(".reload-board").load(" .reload-board > *");
+        
       },
 
       error: function (xhr, errmsg, err) {
@@ -42,23 +52,10 @@ $(document).ready(function () {
 
   // ALL ABOUT ACTIVE CATEGORY
 
-  // on page refresh, highligh the active category
-  $('.active-category[value="' + HIGHLIGHTED_CATEGORY + '"]').addClass('category-selected');
-
-  // keep the selected category highlighted
-  $('.category-link').click(function () {
-
-    $('.category-link').parent().removeClass('category-selected');
-
-    $(this).parent().addClass('category-selected');
-  });
-
   // POST selected category id
   $(".category-link").click(function (e) {
     e.preventDefault();
-
     category_id = $(this).attr('value');
-    console.log(category_id)
 
     $.ajax({
       type: "POST",
@@ -72,6 +69,7 @@ $(document).ready(function () {
 
       success: function (json) {
         $(".reload-board").load(" .reload-board > *");
+        
       },
 
       error: function (xhr, errmsg, err) {

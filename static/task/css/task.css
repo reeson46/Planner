@@ -1,0 +1,30 @@
+/* Task */
+.task-col{
+    overflow-y: scroll;
+    max-height: 75vh;
+}
+
+.task{
+    background-color: #454545;
+}
+
+.task-extend:hover {
+    cursor: pointer;
+    background-color: #5d5c66;
+}
+
+.task:not(:last-child){
+    margin-bottom: 1rem
+}
+
+.task:last-child{
+    margin-bottom: 0;
+}
+
+.subtask:not(:last-child){
+    margin-bottom: 1rem
+}
+
+.subtask:last-child{
+    margin-bottom: 0;
+}

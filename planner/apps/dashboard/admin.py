@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from .models import Board
+
 
 class BoardAdminConfig(admin.ModelAdmin):
     model = Board
@@ -15,5 +17,6 @@ class BoardAdminConfig(admin.ModelAdmin):
         "name",
         "created_by",
     )
+
 
 admin.site.register(Board, BoardAdminConfig)
