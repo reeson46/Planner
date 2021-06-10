@@ -10,78 +10,93 @@ Create Task
 
 {% block content %}
 <style>
-#new-task {
-    background: #454545;
-    width: 750px;
-}
+  #new-task-wrapper {
+    width: 700px;
+  }
 
-.required-field {
+
+  .required-field {
     border: 1px orange solid;
-}
+  }
 </style>
 
-<div class="container">
-  <div class="card card-body shadow" id="new-task">
-
-    <form action="">
-      <div class="row">
-        {% for field in form %}
-        <div class="col-2">
-          <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
-          {{ field }}
+<div class="d-flex justify-content-center">
+  <div class="row mt-4" id="new-task-wrapper">
+    <div class="card card-body shadow form-bg">
+      <form action="">
+        {% if not update %}
+        <div class="row">
+          {% for field in form %}
+          {% if field != form.status %}
+          <div class="col-2">
+            <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+          {% endif %}
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="row">
+          {% for field in form %}
+          <div class="col-2">
+            <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </form>
+      <br>
+
+
+      <label class="text-white mb-1" for="id_name">Name</label>
+      <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="{{task.name}}">
+      <br>
+      <label class="text-white mb-1" for="id_description">Description</label>
+      <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
+        placeholder="Enter description">{{ task.description }}</textarea>
+      <br>
+
+
+      <div id="subtask-div">
+        <div class="row m-0">
+          <label class="text-white mb-1 p-0" for="subtask-lb">Subtasks</label>
+          <input type="text-sub" id="subtask-input" class="card subtask-lb bg-dark text-light col-10"
+            placeholder="Enter subtask">
+        </div>
+        <br>
+
+        {% if task.subtask.all|length != 0 %}
+        {% for sub in task.subtask.all %}
+
+        <div class="row m-0">
+          <input type="text-sub" class="card subtask bg-dark text-light col-10" value="{{sub.name}}" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
+            class="bi bi-x-lg delete-icon delete-existing-subtask col-2" data-index="{{ sub.id }}" viewBox="0 0 16 16">
+            <path
+              d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
+          </svg>
+        </div>
+
         {% endfor %}
-      </div>
-    </form>
-    <br>
-
-
-    <label class="text-white pb-1" for="id_name">Name</label>
-    <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="{{task.name}}">
-    <br>
-    <label class="text-white pb-1" for="id_description">Description</label>
-    <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
-      placeholder="Enter description">{{ task.description }}</textarea>
-    <br>
-    
-
-    <div id="subtask-div">
-      <div class="row m-0">
-      <label class="text-white pb-1" for="subtask-lb">Subtasks</label>
-      <input type="text-sub" id="subtask-input" class="card subtask-lb bg-dark text-light col-10" placeholder="Enter subtask">
+        {% endif %}
       </div>
       <br>
 
-      {% if task.subtask.all|length != 0 %}
-      {% for sub in task.subtask.all %}
-
-      <div class="row m-0">
-        <input type="text-sub" class="card subtask bg-dark text-light col-10" value="{{sub.name}}" disabled>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
-          class="bi bi-x-lg delete-icon delete-existing-subtask col-2" data-index="{{ sub.id }}" viewBox="0 0 16 16">
-          <path
-            d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
-        </svg>
-      </div>
-
-      {% endfor %}
-      {% endif %}
+      <button type="submit" class="btn btn-success btn-block fw500 w-100" id="create-task">{{ button }}</button>
+  
     </div>
-    <br>
-    <div class="row" id="create-button">
-      <button type="submit" class="btn btn-success btn-sm" id="create-task">{{ button }}</button>
-    </div>
-
   </div>
+</div>
 
-  <script>
-    var CREATE_TASK_URL = '{% url "task:create_task" %}';
-    var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
-    var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
-    var UPDATE = '{{ update }}';
-    var TASK_ID = '{{ task.id }}';
-    var CSRF_TOKEN = '{{ csrf_token }}';
-  </script>
-  <script src="{% static 'task/js/new_task.js' %}" data-rel-js></script>
+<script>
+  var CREATE_TASK_URL = '{% url "task:create_task" %}';
+  var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
+  var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
+  var UPDATE = '{{ update }}';
+  var TASK_ID = '{{ task.id }}';
+  var CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+<script src="{% static 'task/js/new_task.js' %}" data-rel-js></script>
 
-  {% endblock %}
+{% endblock %}

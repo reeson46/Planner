@@ -1,0 +1,26 @@
+/* Registration form styling */
+#register-wrapper {
+    width: 500px;
+}
+
+.form-bg {
+    background: #454545;
+}
+
+.link-decor {
+    text-decoration: none;
+}
+
+.link-decor:hover {
+    text-decoration: underline;
+}
+
+/* .reg-btn{
+    background-color: rgba(255, 166, 0, 0.575);
+    border: 1px solid rgba(255, 166, 0, 0.575);
+}
+
+.reg-btn:hover{
+    background-color: rgba(161, 105, 0, 0.575);
+    border: 1px solid rgba(161, 105, 0, 0.575);
+} */

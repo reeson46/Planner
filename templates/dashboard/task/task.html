@@ -5,7 +5,7 @@
     <h4 class="card-subtitle">{{ task.name }}</h5>
 
   </div>
-  <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% else %}""{% endif %}"
+  <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% endif %}"
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
       {% if task.description %}

@@ -120,3 +120,5 @@ GRAPH_MODELS = {
     "all_applications": True,
     "group_models": True,
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

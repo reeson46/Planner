@@ -7,6 +7,9 @@ from .models import Board
 
 
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return render(request, "dashboard/dashboard.html")
+
     user = request.user
     boards = user.board.all()
     categories = user.category.all()
@@ -66,20 +69,12 @@ def dashboard(request):
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
 
-    total_planned = planned.count()
-    total_inprogress = in_progress.count()
-    total_testing = testing.count()
-    total_completed = completed.count()
-
     context = {
+        "tasks": tasks,
         "planned": planned,
         "in_progress": in_progress,
         "testing": testing,
         "completed": completed,
-        "total_planned": total_planned,
-        "total_inprogress": total_inprogress,
-        "total_testing": total_testing,
-        "total_completed": total_completed,
         "boards": boards,
         "categories": categories,
         "highlighted_board": highlighted_board,

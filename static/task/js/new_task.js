@@ -33,7 +33,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         $('#subtask-div').append(
-          '<div class="row"><input type="text-sub" class="card subtask col-10 bg-dark text-light" value="' + $('#subtask-input').val() + '" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-x-lg delete-icon delete-subtask col-2" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></div>'
+          '<div class="row m-0"><input type="text-sub" class="card subtask bg-dark text-light col-10" value="' + $('#subtask-input').val() + '" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-x-lg delete-icon delete-subtask col-2" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></div>'
         )
 
         $('#subtask-input').val("");
@@ -57,7 +57,7 @@ $(document).ready(function () {
   });
 
   // Create task
-  $("#create-button").on('click', "#create-task", function (e) {
+  $(document).on('click', "#create-task", function (e) {
     e.preventDefault();
 
     // Store Category

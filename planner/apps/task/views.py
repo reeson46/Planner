@@ -23,6 +23,7 @@ def new_task(request):
         initial={
             "board": dashboard.get_active_board_id,
             "category": active_category.id,
+            "status": "Planned",
         }
     )
     context = {
@@ -120,13 +121,14 @@ def delete_subtask(request):
 
         return JsonResponse({"message": "Subtask Deleted"})
 
+
 def set_task_extend_state(request):
-    if request.POST.get('action') == 'post':
-        task_id = request.POST.get('task_id')
-        new_state = request.POST.get('task_extend_state')
+    if request.POST.get("action") == "post":
+        task_id = request.POST.get("task_id")
+        new_state = request.POST.get("task_extend_state")
 
         task = Task.objects.get(pk=task_id)
         task.extend_state = new_state
         task.save()
 
-        return JsonResponse({'message': 'Task extend state updated!'})
+        return JsonResponse({"message": "Task extend state updated!"})

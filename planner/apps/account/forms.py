@@ -1,0 +1,55 @@
+from django import forms
+from .models import UserAccount
+
+
+class RegistrationForm(forms.ModelForm):
+    user_name = forms.CharField(
+        label="Username", min_length=4, max_length=50, help_text="Required"
+    )
+    email = forms.EmailField(
+        label="Email",
+        max_length=100,
+        help_text="Required",
+        error_messages={"required": "Sorry, you will need an email"},
+    )
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Repeat password", widget=forms.PasswordInput)
+
+    class Meta:
+        model = UserAccount
+        fields = ["user_name", "email"]
+
+    def clean_username(self):
+        user_name = self.cleaned_data["user_name"].lower()
+        r = UserAccount.objects.filter(user_name=user_name)
+        if r.count():
+            raise forms.ValidationError("Username already exists")
+        return user_name
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd["password"] != cd["password2"]:
+            raise forms.ValidationError("Passwords do not match")
+        return cd["password2"]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if UserAccount.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already taken")
+        return email
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+
+        self.fields["user_name"].widget.attrs.update(
+            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter username"}
+        )
+        self.fields["email"].widget.attrs.update(
+            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter email"}
+        )
+        self.fields["password"].widget.attrs.update(
+            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter password"}
+        )
+        self.fields["password2"].widget.attrs.update(
+            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Repeat password"}
+        )

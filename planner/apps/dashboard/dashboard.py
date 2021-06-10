@@ -6,14 +6,13 @@ class Dashboard:
         if "dashboard" not in request.session:
             dashboard = self.session["dashboard"] = {}
 
-
         self.dashboard = dashboard
 
     ###
     # Active board
     ###
     def set_active_board_id(self, board_id):
-        
+
         self.dashboard["active_board"] = board_id
         self.session.modified = True
 

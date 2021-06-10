@@ -2,7 +2,7 @@
 <div class="row accordion reload-board">
 
   <div class="col-lg-3 col-md-6 col-sm-12">
-    <h2 class="text-secondary font-monospace text-center">Planned {{ total_planned }}</h2>
+    <h2 class="text-secondary font-monospace text-center">Planned {{ planned|length }}</h2>
     <hr class="new1">
 
     <div class="p-3 task-col">
@@ -15,7 +15,7 @@
   </div>
 
   <div class="col-lg-3 col-md-6 col-sm-12">
-    <h2 class="text-primary font-monospace text-center">In Progress {{ total_inprogress }}</h2>
+    <h2 class="text-primary font-monospace text-center">In Progress {{ in_progress|length }}</h2>
     <hr class="new2">
 
     <div class="p-3 task-col">
@@ -29,7 +29,7 @@
 
   <div class="col-lg-3 col-md-6 col-sm-12">
 
-    <h2 class="text-danger font-monospace text-center">Testing {{ total_testing }}</h2>
+    <h2 class="text-danger font-monospace text-center">Testing {{ testing|length }}</h2>
     <hr class="new3">
 
     <div class="p-3 task-col">
@@ -43,7 +43,7 @@
 
   <div class="col-lg-3 col-md-6 col-sm-12">
 
-    <h2 class="text-success font-monospace text-center">Completed {{ total_completed }}</h2>
+    <h2 class="text-success font-monospace text-center">Completed {{ completed|length }}</h2>
     <hr class="new4">
 
     <div class="p-3 task-col">
