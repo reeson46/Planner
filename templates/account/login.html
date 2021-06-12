@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+  <div class="row mt-4" id="login-wrapper">
+    <div class="card card-body shadow form-bg">
+      <form action="{% url 'account:login' %}" method='POST'>
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-dark" role="alert">
+          Username or Password not correct!
+        </div>
+        {% endif %}
+
+        <label class="text-white mb-1">{{ form.username.label }}</label>
+        {{ form.username }}
+
+        <label class="text-white mb-1">{{ form.password.label }}</label>
+        {{ form.password }}
+
+        <input type="hidden" name="next" value="{{ next }}">
+        <button class="btn btn-success btn-block py-2 mb-4 mt-4 fw500 w-100" type="submit" value="Log-in">Login</button>
+        <p class="text-center">
+          <a class="text-white-50 link-decor" href="{% url 'account:register' %}">Don't have an account?</a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

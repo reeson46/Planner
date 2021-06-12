@@ -14,7 +14,6 @@ Create Task
     width: 700px;
   }
 
-
   .required-field {
     border: 1px orange solid;
   }
@@ -24,27 +23,25 @@ Create Task
   <div class="row mt-4" id="new-task-wrapper">
     <div class="card card-body shadow form-bg">
       <form action="">
-        {% if not update %}
         <div class="row">
-          {% for field in form %}
-          {% if field != form.status %}
+
           <div class="col-2">
-            <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
-            {{ field }}
+            <label class="text-white mb-1">{{ form.board.label }}</label>
+            {{ form.board }}
+          </div>
+
+          <div class="col-2">
+            <label class="text-white mb-1">{{ form.category.label }}</label>
+            {{ form.category }}
+          </div>
+
+          {% if update %}
+          <div class="col-2">
+            <label class="text-white mb-1">{{ form.status.label }}</label>
+            {{ form.status }}
           </div>
           {% endif %}
-          {% endfor %}
         </div>
-        {% else %}
-        <div class="row">
-          {% for field in form %}
-          <div class="col-2">
-            <label class="text-white mb-1" for="{{ field.auto_id }}">{{ field.label }}</label>
-            {{ field }}
-          </div>
-          {% endfor %}
-        </div>
-        {% endif %}
       </form>
       <br>
 

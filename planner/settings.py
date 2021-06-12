@@ -115,6 +115,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Custom user model
 AUTH_USER_MODEL = "account.UserAccount"
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/account/login/'
 
 GRAPH_MODELS = {
     "all_applications": True,

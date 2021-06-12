@@ -1,8 +1,27 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
 from .models import UserAccount
 
 
-class RegistrationForm(forms.ModelForm):
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'card bg-dark text-light form-control mb-3',
+            'placeholder': 'Email address',
+            'id': 'login-username'
+        }
+    ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': "card bg-dark text-light form-control mb-3",
+            'placeholder': 'Password',
+            'id': 'login-password'
+        }
+    ))
+    
+
+class UserRegistrationForm(forms.ModelForm):
     user_name = forms.CharField(
         label="Username", min_length=4, max_length=50, help_text="Required"
     )
@@ -39,7 +58,7 @@ class RegistrationForm(forms.ModelForm):
         return email
 
     def __init__(self, *args, **kwargs):
-        super(RegistrationForm, self).__init__(*args, **kwargs)
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
         self.fields["user_name"].widget.attrs.update(
             {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter username"}

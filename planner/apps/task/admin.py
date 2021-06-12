@@ -35,7 +35,14 @@ class TaskAdminConfig(admin.ModelAdmin):
     )
     inlines = [SubtaskTabularInline]
 
+class CategoryAdminConfig(admin.ModelAdmin):
+    model = Category
+    list_display = (
+        'name',
+        'created_by'
+    )
 
-admin.site.register(Category)
+
+admin.site.register(Category, CategoryAdminConfig)
 admin.site.register(Task, TaskAdminConfig)
 admin.site.register(Tag)

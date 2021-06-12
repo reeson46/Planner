@@ -14,20 +14,24 @@ def new_task(request):
     user = request.user
     categories = user.category.all()
 
-    if dashboard.get_active_category_id() == -1:
-        active_category = categories.first()
+    if categories:
+        if dashboard.get_active_category_id() == -1:
+            active_category = categories.first()
+        else:
+            active_category = categories.get(pk=dashboard.get_active_category_id())
     else:
-        active_category = categories.get(pk=dashboard.get_active_category_id())
+        active_category = None
 
     form = TaskForm(
         initial={
             "board": dashboard.get_active_board_id,
-            "category": active_category.id,
+            "category": active_category,
             "status": "Planned",
-        }
+        }, 
+        user=user
     )
     context = {
-        "form": form,
+        'form': form,
         "button_value": "Create",
         "update": False,
         "button": "Create",
@@ -44,8 +48,13 @@ def create_task(request):
         board = Board.objects.get(pk=dashboard.get_active_board_id())
 
         category = Category.objects.get(pk=request.POST.get("category"))
+        
 
-        status = request.POST.get("status")
+        if request.POST.get("status") is None:
+            status = 'Planned'
+        else:
+            status = request.POST.get("status")
+
         name = request.POST.get("name")
 
         description = request.POST.get("description")
@@ -63,7 +72,7 @@ def create_task(request):
                 description=description,
                 created_by=user,
             )
-            # task_id = task.id
+
             created_task = Task.objects.get(pk=task.id)
 
             for sub in subtasks:
@@ -92,7 +101,7 @@ def create_task(request):
 
 def update_task(request, pk):
     task = Task.objects.get(pk=pk)
-    form = TaskForm(instance=task)
+    form = TaskForm(instance=task, user=request.user)
 
     context = {
         "form": form,

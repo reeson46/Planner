@@ -43,7 +43,7 @@
     {% for category in categories %}
     <li class="row hovered-nav-item active-category mb-1" value="{{ category.id }}">
       <div class="category-link fs-5 text-white col-9" value="{{ category.id }}">
-        {{ category.name }} <span class="nav-total-number">{% if category.task.all|length > 0 %} {{ category.task.all|length }}{% endif %}</span>
+        {{ category.name }} {% if category.task.all|length > 0 %}<span class="nav-total-number"> {{ category.task.all|length }}</span>{% endif %}
       </div>
       <a href="#" class="col-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
           class="bi bi-x-lg delete-icon" viewBox="0 0 16 16">
@@ -58,7 +58,11 @@
   <div class="container">
   {% if user.is_authenticated %}
   <p class="text-white">Hello, {{user.user_name }}</p>
+  <br>
+  <a href="{% url 'account:logout' %}">Logout</a>
   {% else %}
+    <a href="{% url 'account:login' %}">Login</a>
+    or
     <a href="{% url 'account:register' %}">Register</a>
 
   {% endif %}

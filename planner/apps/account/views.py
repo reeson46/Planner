@@ -5,8 +5,9 @@ from django.template.loader import render_to_string
 from django.contrib.auth import login
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_text
-from .forms import RegistrationForm
+from .forms import UserRegistrationForm
 from .token import account_activation_token
+from django.http import HttpResponse
 
 
 def account_register(request):
@@ -14,7 +15,7 @@ def account_register(request):
         return redirect('/')
 
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.email = form.cleaned_data["email"]
@@ -35,9 +36,9 @@ def account_register(request):
                 },
             )
             user.email_user(subject=subject, message=message)
-            return redirect('/')
+            return HttpResponse('Account activation email sent')
     else:
-        form = RegistrationForm()
+        form = UserRegistrationForm()
 
     return render(request, "account/registration/register.html", {"form": form})
 
