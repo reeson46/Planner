@@ -1,29 +1,46 @@
+function categoryCheck() {
+
+  if ($("#id_category option:first").html() != 'No Categories') {
+    $('button[type="submit"]').attr('disabled', false);
+    $('#id_category').removeClass('required-field')
+  } else {
+    $('button[type="submit"]').attr('disabled', true);
+    $('#id_category').addClass('required-field')
+  }
+}
+
 $(document).ready(function () {
 
   // Prevent clicking on CREATE/UPDATE button if the "name" field is empty
-    
-  if($('input[type="text"]').val() != ''){
+  // OR if the category shows "No Categories"
+
+  if ($('input[type="text"]').val() != '') {
     $('button[type="submit"]').attr('disabled', false);
     $('#id_name').removeClass('required-field')
-  }
-  else{
+    categoryCheck()
+  } else {
     $('button[type="submit"]').attr('disabled', true);
     $('#id_name').addClass('required-field')
+    categoryCheck()
   }
 
   $('input[type="text"]').on('keyup', function () {
     if ($(this).val() != '') {
       $('button[type="submit"]').attr('disabled', false);
       $('#id_name').removeClass('required-field')
-    } 
-    else {
+      categoryCheck()
+    } else {
       $('button[type="submit"]').attr('disabled', true);
       $('#id_name').addClass('required-field')
-      
+      categoryCheck()
     }
   });
-  
-  
+
+  $('.pop[rel=popover]').popover({
+    html: 'true',
+    placement: 'bottom'
+  })
+
   // Add Subtask
 
   $("#subtask-div").keypress(function (e) {
@@ -33,7 +50,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         $('#subtask-div').append(
-          '<div class="row m-0"><input type="text-sub" class="card subtask bg-dark text-light col-10" value="' + $('#subtask-input').val() + '" disabled><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-x-lg delete-icon delete-subtask col-2" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></div>'
+          '<div class="d-flex"><input type="text-sub" class="card subtask bg-dark text-light col-10" value="' + $('#subtask-input').val() + '" disabled><span class="delete-subtask delete-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></span></div>'
         )
 
         $('#subtask-input').val("");
@@ -47,7 +64,7 @@ $(document).ready(function () {
   });
 
   // Remove Subtask
-  $("#subtask-div").on('click', ".delete-subtask", function (e) {
+  $(document).on('click', ".delete-subtask", function (e) {
 
     e.preventDefault();
 
@@ -110,7 +127,7 @@ $(document).ready(function () {
   });
 
   // Delete existing Subtask
-  $("#subtask-div").on('click', ".delete-existing-subtask", function (e) {
+  $(document).on('click', ".delete-existing-subtask", function (e) {
     e.preventDefault()
 
     sub_id = $(this).data('index')

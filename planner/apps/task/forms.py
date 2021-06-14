@@ -29,7 +29,7 @@ class TaskForm(ModelForm):
         category_qs = Category.objects.filter(created_by=user)
 
         if not category_qs:
-            category_label = 'No categories'
+            category_label = 'No Categories'
         else:
             category_label = None
             

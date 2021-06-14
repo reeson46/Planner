@@ -59,7 +59,8 @@ def create_task(request):
 
         description = request.POST.get("description")
 
-        user = UserAccount.objects.get(pk=request.user.id)
+        #user = UserAccount.objects.get(pk=request.user.id)
+        user = request.user
 
         subtasks = request.POST.getlist("subtasks[]")
 
@@ -73,10 +74,8 @@ def create_task(request):
                 created_by=user,
             )
 
-            created_task = Task.objects.get(pk=task.id)
-
             for sub in subtasks:
-                Subtask.objects.create(name=sub, task=created_task)
+                Subtask.objects.create(name=sub, task=task.id)
 
             response = JsonResponse({"message": "Task Created!"})
 

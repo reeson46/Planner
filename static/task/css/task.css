@@ -1,4 +1,4 @@
-/* Task */
+/* Task Card */
 .task-col{
     overflow-y: scroll;
     max-height: 75vh;
@@ -27,4 +27,26 @@
 
 .subtask:last-child{
     margin-bottom: 0;
+}
+
+/* New/update task */
+.add-icon{
+    position: relative;
+    left: 10px;
+    display: inherit;
+}
+
+.add-icon svg:hover{
+    cursor: pointer;
+    fill: orangered;
+}
+
+.delete-icon{
+    position: relative;
+    left: 50px;
+}
+
+.delete-icon svg:hover{
+    cursor: pointer;
+    fill: orangered;
 }

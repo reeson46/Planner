@@ -1,3 +1,5 @@
+
+from planner.apps.task.models import Category
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 
@@ -45,15 +47,22 @@ def dashboard(request):
     else:
         # grab the id from the session
         active_board_id = dashboard.get_active_board_id()
-        highlighted_board = active_board_id
 
-        # and use it to get the board from Board model
-        active_board = boards.get(pk=active_board_id)
+        # if for some reason the "active board" has been deleted
+        if not boards.filter(pk=active_board_id).exists():
+
+            # get the last entry and set it as "active board"
+            active_board = boards.order_by('-id')[0]
+
+        else:
+            # else just get whichever is active
+            active_board = boards.get(pk=active_board_id)
 
         # get the category id
         active_category_id = dashboard.get_active_category_id()
 
         highlighted_category = active_category_id
+        highlighted_board = active_board.id
 
         # if the active category is ALL
         if dashboard.get_active_category_id() == -1:
@@ -84,17 +93,41 @@ def dashboard(request):
     return render(request, "dashboard/dashboard.html", context)
 
 
-def new_board(request):
-    form = BoardForm(initial={"created_by": request.user})
+def board_category(request):
 
-    if request.method == "POST":
-        form = BoardForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("dashboard:home")
+    dashboard = Dashboard(request)
 
-    context = {"form": form, "button": "Create"}
-    return render(request, "dashboard/new_board.html", context)
+    ###  For Adding  ###
+    if request.POST.get('action') == 'add':
+        # New Board
+        if request.POST.get('type') == 'board':
+            name = request.POST.get('name')
+            user = request.user
+            board = Board.objects.create(
+                name=name,
+                created_by=user
+            )
+
+            dashboard.set_active_board_id(board.id)
+            response = {
+                'message': 'Category "'+name+'" created',
+            }
+
+        # New Category
+        if request.POST.get('type') == 'category':
+            name = request.POST.get('name')
+            user = request.user
+            category = Category.objects.create(
+                name=name,
+                created_by=user
+            )
+
+            dashboard.set_active_category_id(category.id)
+            response = {
+                'message': 'Category "'+name+'" created',
+            }
+        
+        return JsonResponse(response)
 
 
 def rename_board(request, pk):

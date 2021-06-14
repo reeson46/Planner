@@ -1,8 +1,8 @@
-:root{
+:root {
     --hrheight: 7px;
 }
 
-body{
+body {
     background-color: #333;
 }
 
@@ -11,6 +11,7 @@ body{
     width: 8px;
     height: 18px;
 }
+
 ::-webkit-scrollbar-thumb {
     height: 6px;
     border: 4px solid rgba(0, 0, 0, 0);
@@ -18,29 +19,31 @@ body{
     background-color: rgba(255, 68, 0, 0.493);
 
 }
+
 ::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;
 }
+
 ::-webkit-scrollbar-corner {
     background-color: transparent;
 }
 
 /* Status */
-#total-tasks{
+#total-tasks {
     background-color: #127e91;
 }
 
-#tasks-finished{
+#tasks-finished {
     background-color: #4cb4c7;
 }
 
-#tasks-inprogress{
+#tasks-inprogress {
     background-color: #7abecc;
 }
 
-#tasks-created{
+#tasks-created {
     background-color: #7CD1C0;
 }
 
@@ -49,29 +52,41 @@ body{
 hr.new1,
 hr.new2,
 hr.new3,
-hr.new4{
+hr.new4 {
     border-radius: 5px;
     opacity: 1;
 }
 
-hr.new1{
-    border: var(--hrheight)  solid #6c757d; 
-}
-hr.new2{
-    border: var(--hrheight)  solid #0d6efd;   
-}
-hr.new3{
-    border: var(--hrheight)  solid red;
-}
-hr.new4{
-    border: var(--hrheight)  solid #198754;
+hr.new1 {
+    border: var(--hrheight) solid #6c757d;
 }
 
-/* Delete icon */
-.delete-icon:hover{
-    fill: red;
-    cursor: pointer;
+hr.new2 {
+    border: var(--hrheight) solid #0d6efd;
 }
 
+hr.new3 {
+    border: var(--hrheight) solid red;
+}
 
+hr.new4 {
+    border: var(--hrheight) solid #198754;
+}
 
+.popover {
+    background: none;
+    border: none;
+}
+.popover-body{
+    padding: 0;
+}
+
+.add-input:focus {
+    border-color: orange;
+    outline: none;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px orange;
+}
+
+.popover .popover-arrow {
+    visibility: hidden;
+}
