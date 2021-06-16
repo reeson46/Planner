@@ -56,9 +56,8 @@
     </li>
     {% for category in categories %}
     <li class="row hovered-nav-item active-category mb-1" value="{{ category.id }}">
-      <div class="category-link fs-5 text-white col-9" value="{{ category.id }}">
-        {{ category.name }} {% if category.task.all|length > 0 %}<span class="nav-total-number">
-          {{ category.task.all|length }}</span>{% endif %}
+      <div class="category-link fs-5 text-white col-9 total-tasks-number" value="{{ category.id }}">
+        {{ category.name }}
       </div>
     </li>
     {% endfor %}
@@ -85,5 +84,6 @@
   var CSRF_TOKEN = '{{ csrf_token }}';
   var HIGHLIGHTED_BOARD = '{{ highlighted_board }}';
   var HIGHLIGHTED_CATEGORY = '{{ highlighted_category }}';
+  var TOTAL_TASKS_PER_CATEGORY = '{{ total_tasks_per_category }}';
 </script>
 <script src="{% static 'dashboard/sidebar/js/sidebar.js' %}" data-rel-js></script>

@@ -49,9 +49,10 @@ def create_task(request):
         else:
             status = request.POST.get("status")
 
-        board = Board.objects.get(pk=dashboard.get_active_board_id)
-
+        board = Board.objects.get(pk=dashboard.get_active_board_id())
+        
         category = Category.objects.get(pk=request.POST.get("category"))
+        category.board.add(board)
 
         name = request.POST.get("name")
 
@@ -64,7 +65,8 @@ def create_task(request):
         update = request.POST.get("update")
 
         if update == "False":
-
+            
+            
             task = Task.objects.create(
                 board=board,
                 category=category,
@@ -80,6 +82,13 @@ def create_task(request):
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
+            
+            active_category = Category.objects.get(pk=dashboard.get_active_category_id())
+
+            # if the active category is not the same as request category
+            if active_category != category:
+                # add this board to this new category
+                category.board.add(board)
                 
             task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category

@@ -75,14 +75,16 @@ def dashboard(request):
             tasks = active_board.task.filter(category=active_category_id)
     
     total_tasks = active_board.task.all()
-
+    
     categories = active_board.category.all()
-    #import ipdb; ipdb.set_trace()
+
+    total_tasks_per_category = [len(category.task.filter(board=active_board)) for category in categories]
+
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
-    
+    #import ipdb; ipdb.set_trace()
     context = {
         "tasks": tasks,
         'total_tasks': total_tasks,
@@ -94,6 +96,7 @@ def dashboard(request):
         "completed": completed,
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
+        'total_tasks_per_category': total_tasks_per_category
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -124,18 +127,8 @@ def board_category(request):
         if request.POST.get('type') == 'category':
             name = request.POST.get('name')
             user = request.user
-
-            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-            selected_board = Board.objects.get(pk=request.POST.get("board"))
-
-            if active_board.id != selected_board.id:
-                board = selected_board
-            else:
-                board = active_board
-
             category = Category.objects.create(
                 name=name,
-                board=board,
                 created_by=user
             )
 

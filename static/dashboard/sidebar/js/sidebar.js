@@ -19,6 +19,13 @@ $(document).ready(function () {
     $(this).parent().addClass('item-selected');
   });
 
+  // SET TOTAL TASK NUMBER FOR EACH CATEGORY
+  var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
+  $('.total-tasks-number').each(function(i){
+    $(this).append(
+      '<span class="nav-total-number total-task-length">'+" "+ tasks[i]+'</span>'
+    );
+  });
   
   // ALL ABOUT ACTIVE BOARD
 

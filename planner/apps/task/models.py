@@ -7,7 +7,7 @@ from planner.apps.dashboard.models import Board
 
 class Category(models.Model):
     name = models.CharField(max_length=250)
-    board = models.ManyToManyField(Board, related_name='category')
+    board = models.ManyToManyField(Board, related_name='category', blank=True)
     created_by = models.ForeignKey(
         UserAccount, related_name="category", on_delete=models.CASCADE
     )
@@ -16,16 +16,6 @@ class Category(models.Model):
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
-    def __str__(self):
-        return self.name
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=250, blank=True)
-
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
 
     def __str__(self):
         return self.name
@@ -46,7 +36,6 @@ class Task(models.Model):
     name = models.CharField(max_length=250)
     created_by = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     extend_state = models.IntegerField(default=0)

@@ -15,8 +15,12 @@ class BoardAdminConfig(admin.ModelAdmin):
     )
     list_display = (
         "name",
+        'categories',
         "created_by",
     )
+
+    def categories(self, obj):
+        return "\n".join([a.name for a in obj.category.all()])
 
 
 admin.site.register(Board, BoardAdminConfig)

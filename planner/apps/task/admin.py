@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Subtask, Tag, Task
+from .models import Category, Subtask, Task
 
 
 class SubtaskTabularInline(admin.TabularInline):
@@ -15,7 +15,6 @@ class TaskAdminConfig(admin.ModelAdmin):
         "category",
         "name",
         "created_by",
-        "tags",
     )
     list_filter = (
         "board",
@@ -23,7 +22,6 @@ class TaskAdminConfig(admin.ModelAdmin):
         "category",
         "name",
         "created_by",
-        "tags",
     )
     list_display = (
         "board",
@@ -39,11 +37,9 @@ class CategoryAdminConfig(admin.ModelAdmin):
     model = Category
     list_display = (
         'name',
-        'board',
         'created_by'
     )
 
 
 admin.site.register(Category, CategoryAdminConfig)
 admin.site.register(Task, TaskAdminConfig)
-admin.site.register(Tag)
