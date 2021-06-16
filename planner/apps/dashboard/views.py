@@ -1,10 +1,9 @@
 
 from planner.apps.task.models import Category
 from django.http.response import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 
 from .dashboard import Dashboard
-from .forms import BoardForm
 from .models import Board
 
 
@@ -14,8 +13,7 @@ def dashboard(request):
 
     user = request.user
     boards = user.board.all()
-    categories = user.category.all()
-
+    
     # make the session instance
     dashboard = Dashboard(request)
 
@@ -53,10 +51,13 @@ def dashboard(request):
 
             # get the last entry and set it as "active board"
             active_board = boards.order_by('-id')[0]
-
         else:
             # else just get whichever is active
             active_board = boards.get(pk=active_board_id)
+        
+        dashboard.set_active_board_id(active_board.id)
+
+        
 
         # get the category id
         active_category_id = dashboard.get_active_category_id()
@@ -65,27 +66,32 @@ def dashboard(request):
         highlighted_board = active_board.id
 
         # if the active category is ALL
-        if dashboard.get_active_category_id() == -1:
+        if int(dashboard.get_active_category_id()) == -1:
 
             # get all the tasks
             tasks = active_board.task.all()
         else:
             # get only the tasks associated with active category
             tasks = active_board.task.filter(category=active_category_id)
+    
+    total_tasks = active_board.task.all()
 
+    categories = active_board.category.all()
+    #import ipdb; ipdb.set_trace()
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
-
+    
     context = {
         "tasks": tasks,
+        'total_tasks': total_tasks,
+        "boards": boards,
+        "categories": categories,
         "planned": planned,
         "in_progress": in_progress,
         "testing": testing,
         "completed": completed,
-        "boards": boards,
-        "categories": categories,
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
     }
@@ -97,9 +103,10 @@ def board_category(request):
 
     dashboard = Dashboard(request)
 
-    ###  For Adding  ###
+    ###  Adding  ###
     if request.POST.get('action') == 'add':
-        # New Board
+
+        # Add Board
         if request.POST.get('type') == 'board':
             name = request.POST.get('name')
             user = request.user
@@ -113,12 +120,22 @@ def board_category(request):
                 'message': 'Category "'+name+'" created',
             }
 
-        # New Category
+        # Add Category
         if request.POST.get('type') == 'category':
             name = request.POST.get('name')
             user = request.user
+
+            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+            selected_board = Board.objects.get(pk=request.POST.get("board"))
+
+            if active_board.id != selected_board.id:
+                board = selected_board
+            else:
+                board = active_board
+
             category = Category.objects.create(
                 name=name,
+                board=board,
                 created_by=user
             )
 
@@ -128,20 +145,45 @@ def board_category(request):
             }
         
         return JsonResponse(response)
+    
+    ### Renaming ###
+    if request.POST.get('action') == 'rename':
+        
+        # Rename Board
+        if request.POST.get('type') == 'board':
+            name = request.POST.get('name')
+            board = Board.objects.get(pk=request.POST.get('id')) 
+            board.name = name
+            board.save()
 
+            response = {'messafe': 'Board renamed', 'name': name}
 
-def rename_board(request, pk):
-    board = Board.objects.get(id=pk)
-    form = BoardForm(instance=board)
+            return JsonResponse(response)
+    
+    ### Deleteing ###
+    if request.POST.get('action') == 'delete':
+        
+        # Delete Board
+        if request.POST.get('type') == 'board':
+            import ipdb; ipdb.set_trace()
+            board = Board.objects.get(pk=request.POST.get('id'))
+            board.delete()
 
-    if request.method == "POST":
-        form = BoardForm(request.POST, instance=board)
-        if form.is_valid():
-            form.save()
-            return redirect("dashboard:home")
+            user = request.user
+            boards = user.board.all()
+            
+            # check is the active board is the same as the one we just deleted
+            if dashboard.get_active_board_id() == int(request.POST.get('id')):
+                # if so, then grab the last created board and set it as active
+                active_board = boards.order_by('-id')[0]
+            else:
+                active_board = boards.get(pk=dashboard.get_active_board_id())
 
-    context = {"form": form, "button": "Update"}
-    return render(request, "dashboard/new_board.html", context)
+        
+        response = {'message': 'Board deleted', 'active_board_id': active_board.id}
+
+        return JsonResponse(response)
+        
 
 
 def set_active_board(request):

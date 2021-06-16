@@ -6,8 +6,8 @@ $(document).ready(function () {
 
   // keep the selected board highlighted
   $('.board-link').click(function () {
-    $('.board-link').parent().removeClass('item-selected');
-    $(this).parent().addClass('item-selected');
+    $('.board-link').parent().parent().removeClass('item-selected');
+    $(this).parent().parent().addClass('item-selected');
   });
 
   // on page refresh, highligh the active category

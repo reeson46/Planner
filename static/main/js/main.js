@@ -16,26 +16,31 @@ function getCookie(name) {
 
 $(document).ready(function () {
 
-  // ### Global add new Board/Category ###
+  // ### Global add/rename Board/Category ###
 
   // getting the data
   type = ""
   sender = ""
   action = ""
+  id = 0
+  element = ""
 
-  $('.add-icon').on('click', function () {
+  // Any add/rename icon
+  $('.bs-icon').on('click', function () {
     type = $(this).data('type');
     sender = $(this).data('sender');
     action = $(this).data('action');
+    id = $(this).data('id');
+    element = $(this)
   });
 
   // make the popover
-  $('.add-icon').popover({
+  $('.bs-icon').popover({
     html: true,
     sanitize: false,
     placement: "bottom",
     content: function () {
-      return '<input class="card bg-dark text-light add-input" type="text" placeholder="' + $(this).data("placeholder") + '" />'
+      return '<input class="card bg-dark text-light add-input" type="text" placeholder="' + $(this).data("placeholder") + '" value="'+$(this).data("value")+'" />'
     },
     // focus the input
   }).on('shown.bs.popover', function () {
@@ -51,7 +56,11 @@ $(document).ready(function () {
 
           entered_name = $(this).val();
 
-          $('.add-icon').popover('hide');
+          // Grab Board
+          board = $("select[name='board'").children("option:selected").val();
+          console.log(board)
+
+          $('.bs-icon').popover('hide');
 
 
           // Post the data
@@ -61,15 +70,28 @@ $(document).ready(function () {
             data: {
               name: entered_name,
               type: type,
-              csrfmiddlewaretoken: getCookie('csrftoken'),
+              board: board,
+              id: id,
               action: action,
+              csrfmiddlewaretoken: getCookie('csrftoken'),
             },
             datatype: 'json',
 
             success: function (json) {
-              if (sender == 'new-task') {
-                $("[name=board]").load(" [name=board] > *");
-                $("[name=category]").load(" [name=category] > *");
+              if (sender == 'new-task' && action == 'add') {
+
+                if (type == 'category'){
+                  $("[name=category]").load(" [name=category] > *");
+                }
+                
+                if (type == 'board'){
+                  $("[name=board]").load(" [name=board] > *");
+                }
+
+              }
+
+              if (sender == 'sidebar' && action == 'rename'){
+                element.parent().prev().html(json.name)
               }
 
             },
@@ -84,23 +106,64 @@ $(document).ready(function () {
       }
     });
 
-    // Close the popover when pressing ESC
-    $(document).keyup(function (e) {
-      if (e.which === 27) {
-        $('.add-icon').popover('hide');
-      }
-    });
-
-
   });
 
-  // Close the popover click outside
-  $('body').on('click', function (e) {
-    $('.add-icon').each(function () {
+  // Close the popover on pressing ESC
+  $(document).keyup(function (e) {
+    if (e.which === 27) {
+      $('.bs-icon').popover('hide');
+    }
+  });
+
+  // Close the popover on click outside
+  $(document).on('click', function (e) {
+    $('.bs-icon').each(function () {
       if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
         $(this).popover('hide');
       }
     });
+  });
+
+
+  // ### Global deleting Board/Category ###
+
+  // Any delete icon
+  $('.del-icon').on('click', function () {
+    type = $(this).data('type');
+    sender = $(this).data('sender');
+    action = $(this).data('action');
+    id = $(this).data('id');
+    element = $(this);
+
+    console.log(type+sender+action+id)
+
+    // Post the data
+    $.ajax({
+      type: "POST",
+      url: 'http://localhost:8000/board_category/',
+      data: {
+        type: type,
+        id: id,
+        action: action,
+        csrfmiddlewaretoken: getCookie('csrftoken'),
+      },
+      datatype: 'json',
+
+      success: function (json) {
+        if (sender == 'sidebar' && action == 'delete'){
+          $(".reload-board").load(" .reload-board > *");
+          element.parent().parent().parent().remove()
+          $('.active-board[value="' + json.active_board_id + '"]').addClass('item-selected');
+        }
+
+      },
+
+      error: function (xhr, errmsg, err) {
+
+      },
+
+    });
+
   });
 
 });

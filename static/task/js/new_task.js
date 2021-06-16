@@ -77,19 +77,19 @@ $(document).ready(function () {
   $(document).on('click', "#create-task", function (e) {
     e.preventDefault();
 
-    // Store Category
+    // Grab Category
     cat = $("select[name='category'").children("option:selected").val();
 
-    // Store Status
+    // Grab Status
     stat = $("select[name='status'").children("option:selected").val();
 
-    // Store Name
+    // Grab Name
     n = $("#id_name").val()
 
-    // Store Description
+    // Grab Description
     d = $("#id_description").val()
 
-    // Store all subtask
+    // Grab all subtask
     subs = [];
     $(".subtask").each(function () {
       value = $(this).val()

@@ -8,7 +8,6 @@ class TaskForm(ModelForm):
     class Meta:
         model = Task
         fields = [
-            "board",
             "category",
             "status",
         ]
@@ -16,16 +15,8 @@ class TaskForm(ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
 
-        board_qs = Board.objects.filter(created_by=user)
         self.label_suffix = ""
-        self.fields['board'] = ModelChoiceField(queryset=board_qs)
-        self.fields["board"].empty_label = None
-        self.fields["board"].widget.attrs.update(
-            {
-                "class": "card bg-dark text-light",
-            }
-        )
-        
+
         category_qs = Category.objects.filter(created_by=user)
 
         if not category_qs:

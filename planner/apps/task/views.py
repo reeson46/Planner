@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
-from planner.apps.account.models import UserAccount
 from planner.apps.dashboard.dashboard import Dashboard
 from planner.apps.dashboard.models import Board
 
@@ -14,17 +13,18 @@ def new_task(request):
     user = request.user
     categories = user.category.all()
 
+    active_category_id = dashboard.get_active_category_id()
+
     if categories:
-        if dashboard.get_active_category_id() == -1:
+        if active_category_id == -1 or not categories.filter(pk=active_category_id).exists():
             active_category = categories.first()
         else:
-            active_category = categories.get(pk=dashboard.get_active_category_id())
+            active_category = categories.get(pk=active_category_id)
     else:
         active_category = None
 
     form = TaskForm(
         initial={
-            "board": dashboard.get_active_board_id,
             "category": active_category,
             "status": "Planned",
         }, 
@@ -43,28 +43,28 @@ def create_task(request):
     dashboard = Dashboard(request)
 
     if request.POST.get("action") == "post":
-        update = request.POST.get("update")
-
-        board = Board.objects.get(pk=dashboard.get_active_board_id())
-
-        category = Category.objects.get(pk=request.POST.get("category"))
         
-
         if request.POST.get("status") is None:
             status = 'Planned'
         else:
             status = request.POST.get("status")
 
+        board = Board.objects.get(pk=dashboard.get_active_board_id)
+
+        category = Category.objects.get(pk=request.POST.get("category"))
+
         name = request.POST.get("name")
 
         description = request.POST.get("description")
 
-        #user = UserAccount.objects.get(pk=request.user.id)
         user = request.user
 
         subtasks = request.POST.getlist("subtasks[]")
 
+        update = request.POST.get("update")
+
         if update == "False":
+
             task = Task.objects.create(
                 board=board,
                 category=category,
@@ -80,6 +80,7 @@ def create_task(request):
             response = JsonResponse({"message": "Task Created!"})
 
         if update == "True":
+                
             task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category
             task.status = status

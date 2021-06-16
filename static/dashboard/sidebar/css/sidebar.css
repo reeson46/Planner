@@ -48,9 +48,9 @@
     color: white;
 }
 
-.sidebar-nav .hovered-nav-item:hover{
+/* .sidebar-nav .hovered-nav-item:hover{
     background: #3b4249 ;
-}
+} */
 
 .sidebar-nav .hovered-nav-item .board-link, 
 .category-link:hover{
@@ -72,4 +72,24 @@
     border: 2px solid #666;
     color: #fff;
     text-align: center;
+}
+
+/* Rename/delete icon */
+.rename-icon-sidebar{
+    fill: rgb(2, 168, 2);
+}
+
+.rename-icon-sidebar:hover{
+    cursor: pointer;
+    fill: rgb(0, 243, 0);
+}
+
+.delete-icon-sidebar:hover{
+    cursor: pointer;
+    fill: orangered;
+}
+
+/* Board name */
+.board-link:hover{
+    text-decoration: underline;
 }

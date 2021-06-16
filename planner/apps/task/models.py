@@ -7,6 +7,7 @@ from planner.apps.dashboard.models import Board
 
 class Category(models.Model):
     name = models.CharField(max_length=250)
+    board = models.ManyToManyField(Board, related_name='category')
     created_by = models.ForeignKey(
         UserAccount, related_name="category", on_delete=models.CASCADE
     )
