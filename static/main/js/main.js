@@ -154,10 +154,36 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
+
+        // get all the data
+        total_tasks = json.total_tasks;
+        category_names = json.category_names;
+        category_ids = json.category_ids;
+        total_tasks_per_category = json.total_tasks_per_category;
+        active_board_id = json.active_board_id;
+
         if (sender == 'sidebar' && action == 'delete'){
+
           $(".reload-board").load(" .reload-board > *");
+
           element.parent().parent().parent().remove()
-          $('.active-board[value="' + json.active_board_id + '"]').addClass('item-selected');
+          $('.active-board[value="' + active_board_id + '"]').addClass('item-selected');
+
+          $('#sidebar-categories').empty();
+
+          category_names.forEach((name, i) => {
+
+            if (total_tasks_per_category[i] != 0){
+              $("#sidebar-categories").append(
+                '<li class="row hovered-nav-item active-category mb-1" value="'+ category_ids[i] +'"><div class="category-link fs-5 text-white col-9 total-tasks-number" value="'+ category_ids[i] +'">'+name+" "+'<span class="nav-total-number total-task-length">' + " " + total_tasks_per_category[i] +'</span></div></li>'
+              )
+            }else{
+              $("#sidebar-categories").append(
+                '<li class="row hovered-nav-item active-category mb-1" value="'+ category_ids[i] +'"><div class="category-link fs-5 text-white col-9 total-tasks-number" value="'+ category_ids[i] +'">'+name+'</div></li>'
+              )
+            }
+          });
+
         }
 
       },

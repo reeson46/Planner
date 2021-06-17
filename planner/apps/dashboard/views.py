@@ -3,7 +3,7 @@ from planner.apps.task.models import Category
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
-from .dashboard import Dashboard
+from .dashboard import Dashboard, Sidebar
 from .models import Board
 
 
@@ -156,7 +156,7 @@ def board_category(request):
         
         # Delete Board
         if request.POST.get('type') == 'board':
-            import ipdb; ipdb.set_trace()
+
             board = Board.objects.get(pk=request.POST.get('id'))
             board.delete()
 
@@ -170,35 +170,28 @@ def board_category(request):
             else:
                 active_board = boards.get(pk=dashboard.get_active_board_id())
 
-        
-        response = {'message': 'Board deleted', 'active_board_id': active_board.id}
+            sidebar = Sidebar(active_board)
+
+            response = sidebar.categories_reload_json_response()
+            response['active_board_id'] = active_board.id
 
         return JsonResponse(response)
         
 
 
 def set_active_board(request):
-    dashboard = Dashboard(request)
 
     if request.POST.get("action") == "post":
+
+        dashboard = Dashboard(request)
+
         board_id = int(request.POST.get("board_id"))
         dashboard.set_active_board_id(board_id=board_id)
         dashboard.set_active_category_id(category_id=-1)
-
         active_board = Board.objects.get(pk=board_id)
-        total_tasks = len(active_board.task.all())
-        categories = active_board.category.all()
-        category_names = [category.name for category in categories]
-        category_ids = [category.id for category in categories]
-        total_tasks_per_category = [len(category.task.filter(board=active_board)) for category in categories]
 
-        response = {
-            'total_tasks': total_tasks,
-            'category_names': category_names,
-            'category_ids': category_ids,
-            'total_tasks_per_category': total_tasks_per_category,
-            "message": "Active board set!"
-        }
+        sidebar = Sidebar(active_board)
+        response = sidebar.categories_reload_json_response()
 
         return JsonResponse(response)
 

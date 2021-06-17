@@ -48,14 +48,15 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
-        $(".reload-board").load(location.href+" .reload-board>*","");
         
         // get all the data
         total_tasks = json.total_tasks;
         category_names = json.category_names;
         category_ids = json.category_ids;
         total_tasks_per_category = json.total_tasks_per_category;
-
+        
+        $(".reload-board").load(location.href+" .reload-board>*","");
+        
         if (total_tasks > 0){
           $("#sidebar-all-tasks").html(
             'All <span class="nav-total-number">'+total_tasks+'</span>'
@@ -80,8 +81,6 @@ $(document).ready(function () {
               '<li class="row hovered-nav-item active-category mb-1" value="'+ category_ids[i] +'"><div class="category-link fs-5 text-white col-9 total-tasks-number" value="'+ category_ids[i] +'">'+name+'</div></li>'
             )
           }
-
-
         });
 
       },
