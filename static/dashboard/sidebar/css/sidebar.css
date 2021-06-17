@@ -48,9 +48,9 @@
     color: white;
 }
 
-/* .sidebar-nav .hovered-nav-item:hover{
+.sidebar-nav .hovered-nav-item:hover{
     background: #3b4249 ;
-} */
+}
 
 .sidebar-nav .hovered-nav-item .board-link, 
 .category-link:hover{

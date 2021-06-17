@@ -21,8 +21,6 @@ $(document).ready(function () {
 
     task_id = $(this).data('index')
     task_extend_state = $(this).attr('value')
-    console.log('task id ' + task_id)
-    console.log('task state ' + task_extend_state)
 
     task_extend_state = 1 - task_extend_state;
 

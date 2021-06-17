@@ -42,9 +42,13 @@ $(document).ready(function () {
     content: function () {
       return '<input class="card bg-dark text-light add-input" type="text" placeholder="' + $(this).data("placeholder") + '" value="'+$(this).data("value")+'" />'
     },
-    // focus the input
+    // focus the input and put the prompt at the end of text
   }).on('shown.bs.popover', function () {
-    $('.add-input').focus();
+
+    var input = $('.add-input');
+    var strLength = input.val().length;
+    input.focus();
+    input[0].setSelectionRange(strLength, strLength);
 
     // On pressing Enter
     $(".add-input").keypress(function (e) {

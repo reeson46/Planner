@@ -57,8 +57,6 @@ def dashboard(request):
         
         dashboard.set_active_board_id(active_board.id)
 
-        
-
         # get the category id
         active_category_id = dashboard.get_active_category_id()
 
@@ -84,7 +82,7 @@ def dashboard(request):
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
-    #import ipdb; ipdb.set_trace()
+
     context = {
         "tasks": tasks,
         'total_tasks': total_tasks,
@@ -185,8 +183,24 @@ def set_active_board(request):
     if request.POST.get("action") == "post":
         board_id = int(request.POST.get("board_id"))
         dashboard.set_active_board_id(board_id=board_id)
+        dashboard.set_active_category_id(category_id=-1)
 
-        return JsonResponse({"message": "Active board set!"})
+        active_board = Board.objects.get(pk=board_id)
+        total_tasks = len(active_board.task.all())
+        categories = active_board.category.all()
+        category_names = [category.name for category in categories]
+        category_ids = [category.id for category in categories]
+        total_tasks_per_category = [len(category.task.filter(board=active_board)) for category in categories]
+
+        response = {
+            'total_tasks': total_tasks,
+            'category_names': category_names,
+            'category_ids': category_ids,
+            'total_tasks_per_category': total_tasks_per_category,
+            "message": "Active board set!"
+        }
+
+        return JsonResponse(response)
 
 
 def set_active_category(request):
