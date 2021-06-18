@@ -47,7 +47,7 @@ class Sidebar:
     def __init__(self, active_board):
         self.active_board = active_board
     
-    # this functions returns needed data for refreshing the sidebar categories
+    # returns needed data for refreshing the sidebar categories
     def categories_reload_json_response(self):
         self.categories = self.active_board.category.all()
         self.total_tasks = len(self.active_board.task.all())

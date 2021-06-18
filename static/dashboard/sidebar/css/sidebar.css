@@ -1,5 +1,5 @@
 /* Sidebar */
-#sidebar-wrapper{
+#sidebar-wrapper {
     z-index: 1;
     position: fixed;
     width: 200px;
@@ -8,28 +8,28 @@
 }
 
 /* Main content */
-#page-content-wrapper{
+#page-content-wrapper {
     width: 100%;
     position: absolute;
     padding-left: 200px;
 }
 
 /* Change the width of the sidebar to display it */
-#wrapper.menuDisplayed #sidebar-wrapper{ 
+#wrapper.menuDisplayed #sidebar-wrapper {
     width: 0;
 }
 
-#wrapper.menuDisplayed #page-content-wrapper{ 
+#wrapper.menuDisplayed #page-content-wrapper {
     padding-left: 0px;
 }
 
 /* Sidebar styling */
-.sidebar-nav{
+.sidebar-nav {
     padding: 0;
     list-style: none;
 }
 
-.sidebar-item{
+.sidebar-item {
     display: block;
     color: white;
     text-indent: 20px;
@@ -37,36 +37,36 @@
 
 }
 
-.sidebar-nav li{
+.sidebar-nav li {
     text-indent: 20px;
     line-height: 40px;
 }
 
-.sidebar-nav li a{
+.sidebar-nav li a {
     display: block;
     text-decoration: none;
     color: white;
 }
 
-.sidebar-nav .hovered-nav-item:hover{
-    background: #3b4249 ;
+.sidebar-nav .hovered-nav-item:hover {
+    background: #3b4249;
 }
 
-.sidebar-nav .hovered-nav-item .board-link, 
-.category-link:hover{
+.sidebar-nav .hovered-nav-item .board-link,
+.category-link:hover {
     cursor: pointer;
 }
 
-.item-selected{
-    background: #3b4249 ;
+.item-selected {
+    background: #3b4249;
 }
 
-.sidebar-nav hr{
+.sidebar-nav hr {
     background-color: white;
 }
 
 /* Total numbers */
-.nav-total-number{
+.nav-total-number {
     border-radius: 5px;
     padding: 2px;
     border: 2px solid #666;
@@ -75,21 +75,35 @@
 }
 
 /* Rename/delete icon */
-.rename-icon-sidebar{
+.rename-icon-sidebar {
     fill: rgb(2, 168, 2);
 }
 
-.rename-icon-sidebar:hover{
+.rename-icon-sidebar:hover {
     cursor: pointer;
     fill: rgb(0, 243, 0);
 }
 
-.delete-icon-sidebar:hover{
+.delete-icon-sidebar:hover {
     cursor: pointer;
     fill: orangered;
 }
 
 /* Board name */
-.board-link:hover{
+.board-link:hover {
     text-decoration: underline;
+}
+
+/* Dropdown */
+.dot-icon {
+    fill: #fff;
+}
+
+.dot-icon:hover {
+    fill: tomato;
+    cursor: pointer;
+}
+
+.dropdown .dropdown-menu {
+    min-width: 60px;
 }

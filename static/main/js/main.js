@@ -38,7 +38,6 @@ $(document).ready(function () {
   $('.bs-icon').popover({
     html: true,
     sanitize: false,
-    placement: "bottom",
     content: function () {
       return '<input class="card bg-dark text-light add-input" type="text" placeholder="' + $(this).data("placeholder") + '" value="'+$(this).data("value")+'" />'
     },

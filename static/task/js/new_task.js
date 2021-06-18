@@ -36,11 +36,6 @@ $(document).ready(function () {
     }
   });
 
-  $('.pop[rel=popover]').popover({
-    html: 'true',
-    placement: 'bottom'
-  })
-
   // Add Subtask
 
   $("#subtask-div").keypress(function (e) {
