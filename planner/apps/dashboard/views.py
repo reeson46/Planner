@@ -104,7 +104,9 @@ def board_category(request):
 
     dashboard = Dashboard(request)
 
-    ###  Adding  ###
+    """
+    ADDING
+    """
     if request.POST.get('action') == 'add':
 
         # Add Board
@@ -137,7 +139,9 @@ def board_category(request):
         
         return JsonResponse(response)
     
-    ### Renaming ###
+    """
+    RENAMING
+    """
     if request.POST.get('action') == 'rename':
         
         # Rename Board
@@ -147,11 +151,23 @@ def board_category(request):
             board.name = name
             board.save()
 
-            response = {'messafe': 'Board renamed', 'name': name}
+            response = {'message': 'Board renamed', 'name': name}
+            
+        
+        # Rename Category
+        if request.POST.get('type') == 'category':
+            name = request.POST.get('name')
+            category = Category.objects.get(pk=request.POST.get('id'))
+            category.name = name
+            category.save()
 
-            return JsonResponse(response)
+            response = {'message': 'Category renamed', 'name': name}
+        
+        return JsonResponse(response)
     
-    ### Deleteing ###
+    """
+    DELETING
+    """
     if request.POST.get('action') == 'delete':
         
         # Delete Board

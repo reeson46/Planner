@@ -23,9 +23,7 @@ $(document).ready(function () {
   var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
   $('.total-tasks-number').each(function (i) {
     if (tasks[i] != 0) {
-      $(this).append(
-        '<span class="nav-total-number total-task-length">' + " " + tasks[i] + '</span>'
-      );
+      $(this).append(tasks[i]);
     }
   });
 
@@ -72,17 +70,15 @@ $(document).ready(function () {
 
         category_names.forEach((name, i) => {
 
-          if (total_tasks_per_category[i] != 0){
-            $("#sidebar-categories").append(
-              '<li class="row hovered-nav-item active-category mb-1" value="'+ category_ids[i] +'"><div class="category-link fs-5 text-white col-9 total-tasks-number" value="'+ category_ids[i] +'">'+name+" "+'<span class="nav-total-number total-task-length">' + " " + total_tasks_per_category[i] +'</span></div></li>'
+          $("#sidebar-categories").append(
+            sidebarCategory(
+              name,
+              category_ids,
+              total_tasks_per_category,
+              i,
             )
-          }else{
-            $("#sidebar-categories").append(
-              '<li class="row hovered-nav-item active-category mb-1" value="'+ category_ids[i] +'"><div class="category-link fs-5 text-white col-9 total-tasks-number" value="'+ category_ids[i] +'">'+name+'</div></li>'
-            )
-          }
+          )
         });
-
       },
 
       error: function (xhr, errmsg, err) {

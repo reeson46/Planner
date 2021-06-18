@@ -77,11 +77,17 @@
 /* Rename/delete icon */
 .rename-icon-sidebar {
     fill: rgb(2, 168, 2);
+    width: 100%;
 }
 
 .rename-icon-sidebar:hover {
     cursor: pointer;
     fill: rgb(0, 243, 0);
+}
+
+.delete-icon-sidebar{
+    width: 100%;
+    margin-top: 10px;
 }
 
 .delete-icon-sidebar:hover {
@@ -90,13 +96,19 @@
 }
 
 /* Board name */
-.board-link:hover {
-    text-decoration: underline;
+.board-link{
+    width: 100%;
+}
+
+/* Category name */
+.category-link{
+    width: 100%;
 }
 
 /* Dropdown */
 .dot-icon {
     fill: #fff;
+    height: 100%;
 }
 
 .dot-icon:hover {
@@ -105,5 +117,9 @@
 }
 
 .dropdown .dropdown-menu {
-    min-width: 60px;
+    min-width: 30px;
+    border: 1px solid lightblue;
+    left: 50% !important;
+    top: -10px !important;
+
 }
