@@ -144,20 +144,18 @@ $(document).ready(function () {
 
   popoverAjax();
 
-
-  $(document).on('click', '.bs-icon', function () {
-
-    type = $(this).data('type');
-    sender = $(this).data('sender');
-    action = $(this).data('action');
-    id = $(this).data('id');
-    element = $(this)
-
-    popoverAjax();
-  });
-  
-  
 })
+
+$(document).on('click', '.bs-icon', function () {
+
+  type = $(this).data('type');
+  sender = $(this).data('sender');
+  action = $(this).data('action');
+  id = $(this).data('id');
+  element = $(this)
+
+  popoverAjax();
+});
 
 // Close the popover on pressing ESC
 $(document).keyup(function (e) {
