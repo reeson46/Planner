@@ -5,8 +5,8 @@ $(document).ready(function () {
   $('.active-board[value="' + HIGHLIGHTED_BOARD + '"]').addClass('item-selected');
 
   // keep the selected board highlighted
-  $(document).on('click', '.board-link', function () {
-    $('.board-link').parent().parent().removeClass('item-selected');
+  $(document).on('click', '.board-item', function () {
+    $('.board-item').parent().parent().removeClass('item-selected');
     $(this).parent().parent().addClass('item-selected');
   });
 
@@ -14,8 +14,8 @@ $(document).ready(function () {
   $('.active-category[value="' + HIGHLIGHTED_CATEGORY + '"]').addClass('item-selected');
 
   // keep the selected category highlighted
-  $(document).on('click', '.category-link', function() {
-    $('.category-link').parent().removeClass('item-selected');
+  $(document).on('click', '.category-item', function() {
+    $('.category-item').parent().removeClass('item-selected');
     $(this).parent().addClass('item-selected');
   });
 
@@ -23,7 +23,7 @@ $(document).ready(function () {
   var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
   $('.total-tasks-number').each(function (i) {
     if (tasks[i] != 0) {
-      $(this).append(tasks[i]);
+      $(this).append('<div class="total-number"><div class="number">'+tasks[i]+'</div></div>');
     }
   });
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
   // ALL ABOUT ACTIVE BOARD
 
   // POST selected board id
-  $(document).on('click', ".board-link", function (e) {
+  $(document).on('click', ".board-item", function (e) {
     e.preventDefault();
     board_id = $(this).attr('value');
     
@@ -57,7 +57,7 @@ $(document).ready(function () {
         
         if (total_tasks > 0){
           $("#sidebar-all-tasks").html(
-            'All <span class="nav-total-number">'+total_tasks+'</span>'
+            'All <div class="total-number"><div class="number">'+total_tasks+'</div></div>'
           )
         }else{
           $("#sidebar-all-tasks").html('All')

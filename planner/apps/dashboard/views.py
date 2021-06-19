@@ -144,6 +144,9 @@ def board_category(request):
     """
     if request.POST.get('action') == 'rename':
         
+        dashboard = Dashboard(request)
+        sidebar = Sidebar(active_board=None, request=request)
+
         # Rename Board
         if request.POST.get('type') == 'board':
             name = request.POST.get('name')
@@ -151,8 +154,8 @@ def board_category(request):
             board.name = name
             board.save()
 
-            response = {'message': 'Board renamed', 'name': name}
-            
+            response = sidebar.boards_reload_json_response()
+            response['active_board_id'] = int(dashboard.get_active_board_id())
         
         # Rename Category
         if request.POST.get('type') == 'category':
@@ -186,7 +189,7 @@ def board_category(request):
             else:
                 active_board = boards.get(pk=dashboard.get_active_board_id())
 
-            sidebar = Sidebar(active_board)
+            sidebar = Sidebar(active_board=active_board, request=None)
 
             response = sidebar.categories_reload_json_response()
             response['active_board_id'] = active_board.id
@@ -206,7 +209,7 @@ def set_active_board(request):
         dashboard.set_active_category_id(category_id=-1)
         active_board = Board.objects.get(pk=board_id)
 
-        sidebar = Sidebar(active_board)
+        sidebar = Sidebar(active_board, request=None)
         response = sidebar.categories_reload_json_response()
 
         return JsonResponse(response)
@@ -220,3 +223,6 @@ def set_active_category(request):
         dashboard.set_active_category_id(category_id=category_id)
 
         return JsonResponse({"message": "Active category set!"})
+
+def test(request):
+    return render(request, 'test.html')
