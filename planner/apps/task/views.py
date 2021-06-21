@@ -87,7 +87,7 @@ def create_task(request):
 
             # if the active category is not the same as request category
             if active_category != category:
-                # add this board to this new category
+                # add this board to this new category to make a relationship
                 category.board.add(board)
                 
             task = Task.objects.get(pk=request.POST.get("task_id"))

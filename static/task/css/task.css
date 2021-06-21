@@ -30,23 +30,23 @@
 }
 
 /* New/update task */
-.add-icon{
+.add-icon-task{
     position: relative;
     left: 10px;
     display: inherit;
 }
 
-.add-icon svg:hover{
+.add-icon-task svg:hover{
     cursor: pointer;
     fill: orangered;
 }
 
-.delete-icon{
+.delete-icon-task{
     position: relative;
     left: 50px;
 }
 
-.delete-icon svg:hover{
+.delete-icon-task svg:hover{
     cursor: pointer;
     fill: orangered;
 }

@@ -1,4 +1,4 @@
-from django.db import reset_queries
+from django.core import serializers
 
 
 class Dashboard:
@@ -53,16 +53,15 @@ class Sidebar:
     
     # returns needed data for refreshing the sidebar categories
     def categories_reload_json_response(self):
+
         categories = self.active_board.category.all()
-        total_tasks = len(self.active_board.task.all())
-        category_names = [category.name for category in categories]
-        category_ids = [category.id for category in categories]
         total_tasks_per_category = [len(category.task.filter(board=self.active_board)) for category in categories]
+        total_tasks = self.active_board.task.all().count()
+        categories = serializers.serialize("json", self.active_board.category.all()) 
 
         response = {
+            'categories': categories,
             'total_tasks': total_tasks,
-            'category_names': category_names,
-            'category_ids': category_ids,
             'total_tasks_per_category': total_tasks_per_category,
         }
 
@@ -70,16 +69,12 @@ class Sidebar:
     
     # returns needed data for refreshing the sidebar boards
     def boards_reload_json_response(self):
-        user = self.request.user
-        boards = user.board.all()
-        total_boards = len(boards)
-        board_names = [board.name for board in boards]
-        board_ids = [board.id for board in boards]
 
+        user = self.request.user
+        total_boards = user.board.all().count()
+        boards = serializers.serialize('json', user.board.all())
         response = {
             'total_boards': total_boards,
-            'board_names': board_names,
-            'board_ids': board_ids
+            'boards': boards
         }
-
         return response

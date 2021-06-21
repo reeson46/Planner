@@ -49,9 +49,8 @@ $(document).ready(function () {
         
         // get all the data
         total_tasks = json.total_tasks;
-        category_names = json.category_names;
-        category_ids = json.category_ids;
         total_tasks_per_category = json.total_tasks_per_category;
+        categories = JSON.parse(json.categories);
         
         $(".reload-board").load(location.href+" .reload-board>*","");
         
@@ -63,17 +62,17 @@ $(document).ready(function () {
           $("#sidebar-all-tasks").html('All')
         }
 
-        // highlight the "All" category
+        // re-highlight the "All" category
         $('.active-category[value="-1"]').addClass('item-selected');
 
         $('#sidebar-categories').empty();
 
-        category_names.forEach((name, i) => {
+        // loop over every board's category and append the data
+        categories.forEach((category, i) => {
 
           $("#sidebar-categories").append(
             sidebarCategory(
-              name,
-              category_ids,
+              category,
               total_tasks_per_category,
               i,
             )

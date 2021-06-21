@@ -58,7 +58,7 @@
 }
 
 .item-selected {
-    background: #3b4249;
+    background: #464e57;
 }
 
 .sidebar-nav hr {
@@ -87,12 +87,12 @@
 }
 
 /* Rename/delete icon */
-.rename-icon-sidebar {
+.rename-add-icon-sidebar {
     fill: rgb(2, 168, 2);
     width: 100%;
 }
 
-.rename-icon-sidebar:hover {
+.rename-add-icon-sidebar:hover {
     cursor: pointer;
     fill: rgb(0, 243, 0);
 }
