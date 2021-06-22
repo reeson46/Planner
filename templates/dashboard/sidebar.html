@@ -11,13 +11,15 @@
   </li>
   <hr>
   <div class="container">
-    <li class="fs-4 row hovered-nav-item mb-1"><a href="#">
+    <li class="fs-4 row hovered-nav-item">
+      <div class="fs-5 text-white rename-add-icon-sidebar" data-bs-placement="top" data-sender="board" data-action="add"
+        data-placeholder="Enter Board name" data-value="" data-id="">
         New Board
-      </a>
+      </div>
     </li>
     <div id="sidebar-boards">
       {% for board in boards %}
-      <li class="row hovered-nav-item active-board mb-1" value="{{ board.id }}">
+      <li class="row hovered-nav-item active-board" value="{{ board.id }}">
         <span class="d-flex justify-content-between">
           <div class="fs-5 text-white board-item" value="{{ board.id }}">
             {{ board.name }}
@@ -62,11 +64,11 @@
   <hr>
 
   <div class="container">
-    <li class="fs-4 row hovered-nav-item mb-1"><a href="#">
+    <li class="fs-4 row hovered-nav-item"><a href="#">
         New Category
       </a>
     </li>
-    <li class="row hovered-nav-item active-category mb-1" value="-1">
+    <li class="row hovered-nav-item active-category" value="-1">
       <span class="category-item category-link fs-5 text-white d-flex" id="sidebar-all-tasks" value="-1">
 
         All

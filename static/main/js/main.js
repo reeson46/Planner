@@ -35,7 +35,7 @@ function sidebarBoard(board, total_boards) {
     del_icon = ""
   }
 
-  return '<li class="row hovered-nav-item active-board mb-1" value="' + board.pk + '"><span class="d-flex justify-content-between"><div class="fs-5 text-white board-item" value="' + board.pk + '">' + board.fields.name + '</div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon"type="button" id="dropdownMenuButton' + board.pk + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + board.pk + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-icon-sidebar" data-bs-placement="top" data-type="board" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + board.fields.name + '" data-id="' + board.pk + '" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li>' + del_icon + '</ul></div></span></li>'
+  return '<li class="row hovered-nav-item active-board" value="' + board.pk + '"><span class="d-flex justify-content-between"><div class="fs-5 text-white board-item" value="' + board.pk + '">' + board.fields.name + '</div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon"type="button" id="dropdownMenuButton' + board.pk + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + board.pk + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill rename-add-icon-sidebar" data-bs-placement="top" data-type="board" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + board.fields.name + '" data-id="' + board.pk + '" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li>' + del_icon + '</ul></div></span></li>'
 
 
 }
@@ -73,6 +73,7 @@ function ajaxBoardManager(action, id, entered_name) {
 
     success: function (json) {
 
+ 
       if (action == 'rename') {
         // Update the name
         $('.board-item[value="' + id + '"]').html(json.name)
@@ -82,12 +83,28 @@ function ajaxBoardManager(action, id, entered_name) {
         $('.rename-add-icon-sidebar[data-id="' + id + '"]').data('value', json.name)
       }
 
-      if (action == 'delete'){
-        // Remove the board from sidebar
-        $('.active-board[value="' + id + '"]').remove()
+      if (action == 'delete' || action == 'add'){
+        // get the data
+        boards = JSON.parse(json.boards)
+        total_boards = json.total_boards
+        active_board_id = json.active_board_id
+
+   
+        // empty the board's div
+        $('#sidebar-boards').empty();
+
+        // loop over json response boards and reconstruct them
+        boards.forEach((board) => {
+          $('#sidebar-boards').append(
+
+            sidebarBoard(board, total_boards)
+
+          );
+        });
+
 
         // Highlight the active board
-        $('.active-board[value="' + json.active_board_id + '"]').addClass('item-selected');
+        $('.active-board[value="' + active_board_id + '"]').addClass('item-selected');
       }
 
 
@@ -130,7 +147,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         entered_name = $('.add-input').val();
-        console.log(entered_name)
+        
 
         $('.rename-add-icon-sidebar').popover('hide');
 

@@ -264,12 +264,15 @@ def board_manager(request):
             name=name,
             created_by=user
         )
-
+    
         dashboard.set_active_board_id(board.id)
-        response = {
+
+        sidebar = Sidebar()
+        response = sidebar.boards_reload_json_response(request)
+        response.update({
             'message': 'Board "'+name+'" created',
-            'board_id': board.id,
-        }
+            'active_board_id': board.id,
+        })
     
     """
     RENAME
@@ -303,10 +306,13 @@ def board_manager(request):
             dashboard.set_active_board_id(active_board.id)
         else:
             active_board_id = dashboard.get_active_board_id()
-
-        response = {
+        
+        sidebar = Sidebar()
+        response = sidebar.boards_reload_json_response(request)
+        response.update({
             'message': 'Board deleted',
             'active_board_id': active_board_id
-            }
+        })
+        
     
     return JsonResponse(response)
