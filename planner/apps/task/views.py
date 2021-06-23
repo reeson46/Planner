@@ -108,7 +108,7 @@ def task_manager(request):
 
 def update_task(request, pk):
     task = Task.objects.get(pk=pk)
-    form = TaskForm(instance=task, user=request.user)
+    form = TaskForm(instance=task, request=request)
 
     context = {
         "form": form,

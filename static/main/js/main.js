@@ -22,7 +22,7 @@ function sidebarCategory(category, total_tasks_per_category, i) {
     var total_tasks = ""
   }
 
-  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="'+category.pk+'"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="'+category.pk+'"><div class="category-name" value="'+category.pk+'">'+category.fields.name+'</div>'+total_tasks+'</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton'+category.pk+'" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton'+category.pk+'"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-bs-placement="top" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="'+category.fields.name+'" data-id="'+category.pk+'" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="sidebar" data-action="delete" data-id="'+category.pk+'" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
+  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="'+category.pk+'"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="'+category.pk+'"><div class="category-name" value="'+category.pk+'">'+category.fields.name+'</div>'+total_tasks+'</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton'+category.pk+'" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton'+category.pk+'"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-bs-placement="top" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="'+category.fields.name+'" data-id="'+category.pk+'" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="category" data-action="delete" data-id="'+category.pk+'" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
 
 
 }
@@ -196,35 +196,18 @@ function ajaxCategoryManager(action, id, entered_name, source) {
         // the input field gets pre-populated with this new name
         $('.rename-add-icon[data-id="' + id + '"][data-sender="category"]').data('value', entered_name)
       }
+      
+      if (action == 'delete'){
+        
+        reconstructSidebarCategories(json)
+
+      }
 
       if (action == 'add' && source == 'new-task'){
         // refresh category dropdown
         $("[name=category]").load(" [name=category] > *");
       }
 
-      if (action == 'delete' || action == 'add'){
-        // // get the data
-        // boards = JSON.parse(json.boards)
-        // total_boards = json.total_boards
-        // active_board_id = json.active_board_id
-
-   
-        // // empty the board's div
-        // $('#sidebar-boards').empty();
-
-        // // loop over json response boards and reconstruct them
-        // boards.forEach((board) => {
-        //   $('#sidebar-boards').append(
-
-        //     sidebarBoard(board, total_boards)
-
-        //   );
-        // });
-
-
-        // // Highlight the active board
-        // $('.board-item[value="' + active_board_id + '"]').addClass('item-selected');
-      }
 
 
     },
@@ -292,11 +275,14 @@ $(document).ready(function () {
     action = $(this).data('action');
     id = $(this).data('id');
 
-
+    // ### AJAX FOR BOARD ###
     if (sender == 'board'){
-  
       ajaxBoardManager(action, id)
-  
+    }
+
+    // ### AJAX FOR CATEGORY ###
+    if (sender == 'category'){
+      ajaxCategoryManager(action, id)
     }
   });
 

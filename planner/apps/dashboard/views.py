@@ -331,11 +331,11 @@ def category_manager(request):
         name = request.POST.get('name')
         user = request.user
 
-        board = Board.objects.get(pk=dashboard.get_active_board_id())
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
 
         Category.objects.create(
             name=name,
-            board=board,
+            board=active_board,
             created_by=user
         )
 
@@ -354,7 +354,22 @@ def category_manager(request):
         category.save()
 
         response = {'message': 'Category renamed'}
+    
+    """
+    DELETE
+    """
+    if request.POST.get('action') == 'delete':
 
+        pk = request.POST.get('id')
+
+        category = Category.objects.get(pk=pk)
+        category.delete()
+
+        dashboard.set_active_category_id(-1)
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+
+        sidebar = Sidebar()
+        response = sidebar.categories_reload_json_response(active_board)
             
     return JsonResponse(response)
 
