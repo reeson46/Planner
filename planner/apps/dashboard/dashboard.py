@@ -47,25 +47,22 @@ class Dashboard:
 
 
 class Sidebar:
-    # def __init__(self, active_board, request):
-    #     self.active_board = active_board
-    #     self.request = request
     
     # returns needed data for refreshing the sidebar categories
-    # def categories_reload_json_response(self):
+    def categories_reload_json_response(self, active_board):
 
-    #     categories = self.active_board.category.all()
-    #     total_tasks_per_category = [len(category.task.filter(board=self.active_board)) for category in categories]
-    #     total_tasks = self.active_board.task.all().count()
-    #     categories = serializers.serialize("json", self.active_board.category.all()) 
+        categories = active_board.category.all()
+        total_tasks_per_category = [category.task.filter(board=active_board).count() for category in categories]
+        total_tasks = active_board.task.all().count()
+        categories = serializers.serialize("json", active_board.category.all()) 
 
-    #     response = {
-    #         'categories': categories,
-    #         'total_tasks': total_tasks,
-    #         'total_tasks_per_category': total_tasks_per_category,
-    #     }
+        response = {
+            'categories': categories,
+            'total_tasks': total_tasks,
+            'total_tasks_per_category': total_tasks_per_category,
+        }
 
-    #     return response
+        return response
     
     # returns needed data for refreshing the sidebar boards
     def boards_reload_json_response(self, request):

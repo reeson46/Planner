@@ -2,11 +2,11 @@ $(document).ready(function () {
   // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
   // on page refresh, highligh the active board
-  $('.active-board[value="' + HIGHLIGHTED_BOARD + '"]').addClass('item-selected');
+  $('.board-item[value="' + HIGHLIGHTED_BOARD + '"]').addClass('item-selected');
 
   // keep the selected board highlighted
-  $(document).on('click', '.board-item', function () {
-    $('.board-item').parent().parent().removeClass('item-selected');
+  $(document).on('click', '.board-name', function () {
+    $('.board-name').parent().parent().removeClass('item-selected');
     $(this).parent().parent().addClass('item-selected');
   });
 
@@ -18,6 +18,7 @@ $(document).ready(function () {
     $('.category-item').parent().removeClass('item-selected');
     $(this).parent().addClass('item-selected');
   });
+
 
   // SET TOTAL TASK NUMBER FOR EACH CATEGORY
   var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
@@ -31,7 +32,7 @@ $(document).ready(function () {
   // ALL ABOUT ACTIVE BOARD
 
   // POST selected board id
-  $(document).on('click', ".board-item", function (e) {
+  $(document).on('click', ".board-name", function (e) {
     e.preventDefault();
     board_id = $(this).attr('value');
     
@@ -47,37 +48,8 @@ $(document).ready(function () {
 
       success: function (json) {
         
-        // get all the data
-        total_tasks = json.total_tasks;
-        total_tasks_per_category = json.total_tasks_per_category;
-        categories = JSON.parse(json.categories);
-        
-        $(".reload-board").load(location.href+" .reload-board>*","");
-        
-        if (total_tasks > 0){
-          $("#sidebar-all-tasks").html(
-            'All <div class="total-number"><div class="number">'+total_tasks+'</div></div>'
-          )
-        }else{
-          $("#sidebar-all-tasks").html('All')
-        }
-
-        // re-highlight the "All" category
-        $('.active-category[value="-1"]').addClass('item-selected');
-
-        $('#sidebar-categories').empty();
-
-        // loop over every board's category and append the data
-        categories.forEach((category, i) => {
-
-          $("#sidebar-categories").append(
-            sidebarCategory(
-              category,
-              total_tasks_per_category,
-              i,
-            )
-          )
-        });
+        // function located in "main.js"
+        reconstructSidebarCategories(json);
       },
 
       error: function (xhr, errmsg, err) {

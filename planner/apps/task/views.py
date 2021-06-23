@@ -2,16 +2,17 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from planner.apps.dashboard.dashboard import Dashboard
-from planner.apps.dashboard.models import Board
+from planner.apps.dashboard.models import Board, Category
 
 from .forms import TaskForm
-from .models import Category, Subtask, Task
+from .models import Subtask, Task
 
 
 def new_task(request):
     dashboard = Dashboard(request)
-    user = request.user
-    categories = user.category.all()
+
+    active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+    categories = active_board.category.all()
 
     active_category_id = dashboard.get_active_category_id()
 
@@ -28,10 +29,11 @@ def new_task(request):
             "category": active_category,
             "status": "Planned",
         }, 
-        user=user
+        request=request
     )
     context = {
         'form': form,
+        'active_board': active_board,
         "button_value": "Create",
         "update": False,
         "button": "Create",
@@ -39,7 +41,7 @@ def new_task(request):
     return render(request, "dashboard/task/new_task.html", context)
 
 
-def create_task(request):
+def task_manager(request):
     dashboard = Dashboard(request)
 
     if request.POST.get("action") == "post":
@@ -49,26 +51,25 @@ def create_task(request):
         else:
             status = request.POST.get("status")
 
-        board = Board.objects.get(pk=dashboard.get_active_board_id())
         
         category = Category.objects.get(pk=request.POST.get("category"))
-        category.board.add(board)
-
+        
         name = request.POST.get("name")
-
         description = request.POST.get("description")
-
         user = request.user
-
         subtasks = request.POST.getlist("subtasks[]")
-
         update = request.POST.get("update")
 
+        """
+        CREATING A NEW TASK
+        """
+        # if update is false, meaning we are creating a new task
         if update == "False":
             
-            
+            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+
             task = Task.objects.create(
-                board=board,
+                board=active_board,
                 category=category,
                 status=status,
                 name=name,
@@ -77,19 +78,16 @@ def create_task(request):
             )
 
             for sub in subtasks:
-                Subtask.objects.create(name=sub, task=task.id)
+                Subtask.objects.create(name=sub, task=task)
 
             response = JsonResponse({"message": "Task Created!"})
-
+        
+        """
+        UPDATING EXISTING TASK
+        """
+        # if update is "true", meaning we are updating/editing existing task
         if update == "True":
-            
-            active_category = Category.objects.get(pk=dashboard.get_active_category_id())
-
-            # if the active category is not the same as request category
-            if active_category != category:
-                # add this board to this new category to make a relationship
-                category.board.add(board)
-                
+                    
             task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category
             task.status = status

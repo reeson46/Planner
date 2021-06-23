@@ -2,23 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from planner.apps.account.models import UserAccount
-from planner.apps.dashboard.models import Board
+from planner.apps.dashboard.models import Board, Category
 
-
-class Category(models.Model):
-    name = models.CharField(max_length=250)
-    board = models.ManyToManyField(Board, related_name='category', blank=True)
-    created_by = models.ForeignKey(
-        UserAccount, related_name="category", on_delete=models.CASCADE
-    )
-
-    class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
-
-
-    def __str__(self):
-        return self.name
 
 
 class Task(models.Model):

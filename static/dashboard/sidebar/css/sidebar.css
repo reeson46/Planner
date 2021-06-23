@@ -52,7 +52,7 @@
     background: #343a41;
 }
 
-.sidebar-nav .hovered-nav-item .board-item,
+.sidebar-nav .hovered-nav-item, .board-item,
 .category-item:hover {
     cursor: pointer;
 }
@@ -86,36 +86,12 @@
     padding: 5px;
 }
 
-/* Rename/delete icon */
-.rename-add-icon-sidebar {
-    fill: rgb(2, 168, 2);
-    width: 100%;
-}
-
-.rename-add-icon-sidebar:hover {
-    cursor: pointer;
-    fill: rgb(0, 243, 0);
-}
-
-.delete-icon-sidebar {
-    width: 100%;
-    margin-top: 10px;
-}
-
-.delete-icon-sidebar:hover {
-    cursor: pointer;
-    fill: orangered;
-}
 
 /* Board name */
-.board-item {
+.board-name {
     width: 100%;
 }
 
-/* Category name */
-.category-item {
-    width: 100%;
-}
 
 /* Dropdown */
 .dot-icon {

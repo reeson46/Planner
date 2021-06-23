@@ -12,16 +12,16 @@
   <hr>
   <div class="container">
     <li class="fs-4 row hovered-nav-item">
-      <div class="fs-5 text-white rename-add-icon-sidebar" data-bs-placement="top" data-sender="board" data-action="add"
+      <div class="fs-5 text-white rename-add-icon" data-bs-placement="top" data-sender="board" data-action="add"
         data-placeholder="Enter Board name" data-value="" data-id="">
         New Board
       </div>
     </li>
     <div id="sidebar-boards">
       {% for board in boards %}
-      <li class="row hovered-nav-item active-board" value="{{ board.id }}">
+      <li class="row hovered-nav-item board-item" value="{{ board.id }}">
         <span class="d-flex justify-content-between">
-          <div class="fs-5 text-white board-item" value="{{ board.id }}">
+          <div class="fs-5 text-white board-name" value="{{ board.id }}">
             {{ board.name }}
           </div>
           <div class="dropdown d-flex">
@@ -35,9 +35,9 @@
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton{{ board.id }}">
               <li class="d-flex">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                  class="bi bi-pen-fill rename-add-icon-sidebar" data-bs-placement="top" data-sender="board"
-                  data-action="rename" data-placeholder="" data-value="{{ board.name }}" data-id="{{ board.id }}"
-                  viewBox="0 0 16 16">
+                  class="bi bi-pen-fill rename-add-icon rename-add-icon-sidebar" data-bs-placement="top"
+                  data-sender="board" data-action="rename" data-placeholder="" data-value="{{ board.name }}"
+                  data-id="{{ board.id }}" viewBox="0 0 16 16">
                   <path
                     d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" />
                 </svg>
@@ -46,8 +46,8 @@
               {% if boards|length > 1 %}
               <li class="d-flex">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange"
-                  class="bi bi-x-lg delete-icon-sidebar" data-sender="board" data-action="delete"
-                  data-id="{{ board.id }}" viewBox="0 0 16 16">
+                  class="bi bi-x-lg delete-icon" data-sender="board" data-action="delete" data-id="{{ board.id }}"
+                  viewBox="0 0 16 16">
                   <path
                     d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
                 </svg>
@@ -64,12 +64,11 @@
   <hr>
 
   <div class="container">
-    <li class="fs-4 row hovered-nav-item"><a href="#">
-        New Category
-      </a>
+    <li class="fs-4 text-white row">
+      Categories
     </li>
     <li class="row hovered-nav-item active-category" value="-1">
-      <span class="category-item category-link fs-5 text-white d-flex" id="sidebar-all-tasks" value="-1">
+      <span class="category-link fs-5 text-white d-flex category-item" id="sidebar-all-tasks" value="-1">
 
         All
 
@@ -83,11 +82,11 @@
   </li>
   <div class="container" id="sidebar-categories">
     {% for category in categories %}
-    <li class="row hovered-nav-item active-category mb-1" value="{{ category.id }}">
-      <span class="d-flex justify-content-between">
+    <li class="row hovered-nav-item">
+      <span class="d-flex justify-content-between active-category" value="{{ category.id }}">
         <div class="category-item">
           <span class="category-link fs-5 text-white total-tasks-number d-flex" value="{{ category.id }}">
-            <div class="category-name">
+            <div class="category-name" value="{{ category.id }}">
               {{ category.name }}
             </div>
           </span>
@@ -103,17 +102,17 @@
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton{{ category.id }}">
             <li class="d-flex">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-pen-fill bs-icon rename-icon-sidebar" data-bs-placement="top" data-type="category"
-                data-sender="sidebar" data-action="rename" data-placeholder="" data-value="{{ category.name }}"
-                data-id="{{ category.id }}" viewBox="0 0 16 16">
+                class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-bs-placement="top"
+                data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder=""
+                data-value="{{ category.name }}" data-id="{{ category.id }}" viewBox="0 0 16 16">
                 <path
                   d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" />
               </svg>
             </li>
             <li class="d-flex">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange"
-                class="bi bi-x-lg delete-icon-sidebar del-icon" data-type="category" data-sender="sidebar"
-                data-action="delete" data-id="{{ category.id }}" viewBox="0 0 16 16">
+                class="bi bi-x-lg delete-icon" data-type="category" data-sender="sidebar" data-action="delete"
+                data-id="{{ category.id }}" viewBox="0 0 16 16">
                 <path
                   d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
               </svg>

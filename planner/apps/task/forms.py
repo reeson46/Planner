@@ -1,7 +1,8 @@
 from django.forms import ModelForm
 from django.forms.models import ModelChoiceField
-from planner.apps.dashboard.models import Board
-from .models import Category, Task
+from planner.apps.dashboard.models import Board, Category
+from planner.apps.dashboard.dashboard import Dashboard
+from .models import Task
 
 
 class TaskForm(ModelForm):
@@ -12,12 +13,14 @@ class TaskForm(ModelForm):
             "status",
         ]
 
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, request, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
 
         self.label_suffix = ""
 
-        category_qs = Category.objects.filter(created_by=user)
+        dashboard = Dashboard(request)
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+        category_qs = active_board.category.all()
 
         if not category_qs:
             category_label = 'No Categories'
@@ -38,18 +41,3 @@ class TaskForm(ModelForm):
             }
         )
 
-
-class CategoryForm(ModelForm):
-    class Meta:
-        model = Category
-        fields = ["name"]
-
-    def __init__(self, *args, **kwargs):
-        super(CategoryForm, self).__init__(*args, **kwargs)
-
-        self.fields["name"].widget.attrs.update(
-            {
-                "class": "card",
-            }
-        )
-        self.fields["name"].empty_label = None

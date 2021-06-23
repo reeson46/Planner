@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Board
+from .models import Board, Category
 
 
 class BoardAdminConfig(admin.ModelAdmin):
@@ -19,8 +19,15 @@ class BoardAdminConfig(admin.ModelAdmin):
         "created_by",
     )
 
-    def categories(self, obj):
-        return "\n".join([a.name for a in obj.category.all()])
+
+class CategoryAdminConfig(admin.ModelAdmin):
+    model = Category
+    list_display = (
+        'name',
+        'board',
+        'created_by'
+    )
 
 
+admin.site.register(Category, CategoryAdminConfig)
 admin.site.register(Board, BoardAdminConfig)
