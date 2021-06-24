@@ -1,14 +1,6 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block title %}
-{% if update %}
-Update Task
-{% else %}
-Create Task
-{% endif %}
-{% endblock %}
 
-{% block content %}
+
 <style>
   #new-task-wrapper {
     width: 700px;
@@ -29,7 +21,7 @@ Create Task
           <div class="col mb-3" >
 
               <div class="text-white fs-4 mb-2">
-                {{ active_board.name }}
+                {{ board_name }}
               </div>
               <div class="">
                 <label class="text-white mb-1">{{ form.category.label }}</label>
@@ -111,4 +103,3 @@ Create Task
 </script>
 <script src="{% static 'task/js/new_task.js' %}" data-rel-js></script>
 
-{% endblock %}

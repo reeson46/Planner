@@ -5,6 +5,7 @@
     width: 200px;
     height: 100vh;
     overflow-y: hidden;
+    transition: 0.3s;
 }
 
 /* Main content */
@@ -12,6 +13,7 @@
     width: 100%;
     position: absolute;
     padding-left: 200px;
+    transition: 0.3s;
 }
 
 /* Change the width of the sidebar to display it */
@@ -93,26 +95,47 @@
     width: 100%;
 }
 
-#board-wrapper{
-    border: 2px solid rgba(255, 166, 0, 0.603);
-}
 
 #sidebar-boards {
-    height: 330px;
+    height: 300px;
     overflow-x: hidden;
     border-top: 1px solid #9d9a9a;
 }
 
 /* Category section */
 #sidebar-categories{
-    height: 330px;
+    height: 300px;
     overflow-x: hidden;
     border-top: 1px solid #9d9a9a;
 }
 
-#category-wrapper{
-    border: 2px solid rgba(176, 235, 16, 0.603);
+/* Section wrappers */
+#sidebar-new-task-wrapper,
+#board-wrapper,
+#category-wrapper
+{
+    border: 2px solid #976304;
+    border-radius: 5px;
+}
 
+#sidebar-new-task{
+    height: 150px;
+}
+
+.new-task-text{
+    position: relative;
+    top: 10px
+}
+
+.newtask-icon{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+.newtask-icon:hover{
+    fill: yellowgreen;
+    cursor: pointer;
 }
 
 /* Dropdown */
@@ -158,20 +181,4 @@
 .sidebar-add-icon:hover{
     cursor: pointer;
     fill: yellow;
-}
-
-/* New task section */
-#sidebar-new-task{
-    height: 150px;
-}
-
-.new-task-text{
-    position: relative;
-    top: 10px
-}
-
-.newtask-icon{
-    width: 100%;
-    height: 100%;
-    padding: 20px;
 }

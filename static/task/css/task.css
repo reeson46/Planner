@@ -50,3 +50,17 @@
     cursor: pointer;
     fill: orangered;
 }
+
+.new-task-wrapper{
+    position: absolute;
+    left: calc(50% - 350px);
+    z-index: 1;
+    top: -510px;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.newtaskDisplayed{
+    top: 0;
+    opacity: 1;
+}

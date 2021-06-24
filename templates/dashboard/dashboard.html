@@ -5,7 +5,7 @@
 
 <div id="wrapper">
 
-  <div class="bg-dark" id="sidebar-wrapper">
+  <div class="" id="sidebar-wrapper">
     {% include 'dashboard/sidebar.html' %}
   </div>
 
@@ -21,7 +21,9 @@
       </a>
       <div class="row">
         <div class="col-lg-12 pt-3">
-
+          <div class="new-task-wrapper">
+            {% include 'dashboard/task/new_task.html' %}
+          </div>
           {% include 'dashboard/board.html' %}
         </div>
       </div>
@@ -36,6 +38,15 @@
     $("#wrapper").toggleClass("menuDisplayed");
 
   });
+
+  $(".newtask-icon").click(function (e) {
+    e.preventDefault();
+
+    $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
+  });
+
+  
 </script>
 
 {% endblock content %}

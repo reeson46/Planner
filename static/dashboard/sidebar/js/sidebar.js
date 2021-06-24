@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  // toggle for NEW TASK
+  toggle = 0;
+
+
   // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
   // on page refresh, highligh the active board
@@ -14,7 +18,7 @@ $(document).ready(function () {
   $('.active-category[value="' + HIGHLIGHTED_CATEGORY + '"]').addClass('item-selected');
 
   // keep the selected category highlighted
-  $(document).on('click', '.category-item', function() {
+  $(document).on('click', '.category-item', function () {
     $('.category-item').parent().removeClass('item-selected');
     $(this).parent().addClass('item-selected');
   });
@@ -24,18 +28,18 @@ $(document).ready(function () {
   var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
   $('.total-tasks-number').each(function (i) {
     if (tasks[i] != 0) {
-      $(this).append('<div class="total-number"><div class="number">'+tasks[i]+'</div></div>');
+      $(this).append('<div class="total-number"><div class="number">' + tasks[i] + '</div></div>');
     }
   });
 
 
-  // ALL ABOUT ACTIVE BOARD
+  // ### ACTIVE BOARD ###
 
   // POST selected board id
   $(document).on('click', ".board-name", function (e) {
     e.preventDefault();
     board_id = $(this).attr('value');
-    
+
     $.ajax({
       type: "POST",
       url: SET_ACTIVE_BOARD_URL,
@@ -47,7 +51,7 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
-        
+
         // function located in "main.js"
         reconstructSidebarCategories(json);
       },
@@ -60,7 +64,7 @@ $(document).ready(function () {
 
   });
 
-  // ALL ABOUT ACTIVE CATEGORY
+  // ### ACTIVE CATEGORY ###
 
   // POST selected category id
   $(document).on('click', ".category-link", function (e) {
@@ -89,6 +93,38 @@ $(document).ready(function () {
     });
 
   });
+
+  // ### NEW TASK ICON ###
+  // $(document).on('click', ".newtask-icon", function (e) {
+  //   e.preventDefault();
+
+  //   if (toggle == 0) {
+
+  //     $.ajax({
+  //       type: "POST",
+  //       url: NEW_TASK,
+  //       data: {
+  //         csrfmiddlewaretoken: CSRF_TOKEN,
+  //         action: 'post',
+  //       },
+  //       datatype: 'json',
+
+  //       success: function (json) {
+  //         console.log(json)
+
+  //       },
+
+  //       error: function (xhr, errmsg, err) {
+
+  //       },
+
+  //     });
+  //   }
+
+  //   toggle = 1 - toggle;
+
+
+  // });
 
 
 });
