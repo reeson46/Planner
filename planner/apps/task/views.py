@@ -1,6 +1,7 @@
+
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-
+from django.core import serializers
 from planner.apps.dashboard.dashboard import Dashboard
 from planner.apps.dashboard.models import Board, Category
 
@@ -13,36 +14,34 @@ def new_task(request):
     dashboard = Dashboard(request)
 
     active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+    
     categories = active_board.category.all()
 
     active_category_id = dashboard.get_active_category_id()
 
     if categories:
+        categories_json = serializers.serialize('json',active_board.category.all())
+
         if active_category_id == -1 or not categories.filter(pk=active_category_id).exists():
-            active_category = categories.first()
+            active_cat = categories.first()
+            active_category = active_cat.id
         else:
-            active_category = categories.get(pk=active_category_id)
+            active_cat = categories.get(pk=active_category_id)
+            active_category = active_cat.id
     else:
         active_category = None
+        categories_json = None
 
-    form = TaskForm(
-        initial={
-            "category": active_category,
-            "status": "Planned",
-        }, 
-        request=request
-    )
-
-    context = {
-        'form': form,
+    response = {
+        'categories': categories_json,
+        'active_category': active_category,
         'board_name': active_board.name,
         "button_value": "Create",
         "update": False,
         "button": "Create",
     }
 
-    return render(request, 'dashboard/task/new_task.html', context)
-    
+    return JsonResponse(response)
 
 
 def update_task(request, pk):

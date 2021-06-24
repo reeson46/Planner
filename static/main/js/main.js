@@ -78,15 +78,35 @@ function reconstructSidebarCategories(json){
   // re-highlight the "All" category
   $('.active-category[value="-1"]').addClass('item-selected');
 
-  $('#sidebar-categories').empty();
+  $('#categories-loop').empty();
 
   // loop over active board categories and append the data
   categories.forEach((category, i) => {
 
-    $("#sidebar-categories").append(
+    $("#categories-loop").append(
       sidebarCategory(category, total_tasks_per_category, i)
     )
   });
+}
+
+function reconstructNewTaskCategories(json){
+
+  categories = JSON.parse(json.categories)
+
+  $('.newtask-categorySelect').empty();
+  
+  categories.forEach((category) => {
+
+    if (json.added_category_id == category.pk){
+      var option = '<option value="'+category.pk+'" selected=>'+category.fields.name+'</option>'
+    }else{
+      var option = '<option value="'+category.pk+'">'+category.fields.name+'</option>'
+    }
+
+    $('.newtask-categorySelect').append(option)
+
+  });
+
 }
 
 function renameAddPopover() {
@@ -197,15 +217,20 @@ function ajaxCategoryManager(action, id, entered_name, source) {
         $('.rename-add-icon[data-id="' + id + '"][data-sender="category"]').data('value', entered_name)
       }
       
-      if (action == 'delete' || action == 'add'){
-        
-        reconstructSidebarCategories(json)
+      if (source == 'sidebar'){
 
+        if (action == 'delete' || action == 'add'){
+          
+          reconstructSidebarCategories(json)
+  
+        }
       }
 
       if (action == 'add' && source == 'new-task'){
-        // refresh category dropdown
-        $("[name=category]").load(" [name=category] > *");
+
+        reconstructNewTaskCategories(json);
+
+        reconstructSidebarCategories(json)
       }
 
 

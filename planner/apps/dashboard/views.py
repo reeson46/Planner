@@ -1,5 +1,4 @@
-
-from django.db import reset_queries
+from django.core import serializers
 from django.http import response
 from planner.apps.task.models import Category
 from django.http.response import JsonResponse
@@ -100,128 +99,6 @@ def dashboard(request):
     }
 
     return render(request, "dashboard/dashboard.html", context)
-
-
-# def board_category(request):
-
-    dashboard = Dashboard(request)
-    
-    """
-    ADDING
-    """
-    if request.POST.get('action') == 'add':
-
-        # Add Board
-        if request.POST.get('type') == 'board':
-            name = request.POST.get('name')
-            user = request.user
-            board = Board.objects.create(
-                name=name,
-                created_by=user
-            )
-
-            dashboard.set_active_board_id(board.id)
-            response = {
-                'message': 'Board "'+name+'" created',
-            }
-
-        # Add Category
-        if request.POST.get('type') == 'category':
-            name = request.POST.get('name')
-            user = request.user
-            category = Category.objects.create(
-                name=name,
-                created_by=user
-            )
-
-            dashboard.set_active_category_id(category.id)
-            response = {
-                'message': 'Category "'+name+'" created',
-            }
-        
-        return JsonResponse(response)
-    
-    """
-    RENAMING
-    """
-    if request.POST.get('action') == 'rename':
-        
-        dashboard = Dashboard(request)
-        sidebar = Sidebar(active_board=None, request=request)
-
-        # Rename Board
-        if request.POST.get('type') == 'board':
-            name = request.POST.get('name')
-            board = Board.objects.get(pk=request.POST.get('id')) 
-            board.name = name
-            board.save()
-
-            response = sidebar.boards_reload_json_response()
-            response['active_board_id'] = int(dashboard.get_active_board_id())
-        
-        # Rename Category
-        if request.POST.get('type') == 'category':
-            name = request.POST.get('name')
-            category = Category.objects.get(pk=request.POST.get('id'))
-            category.name = name
-            category.save()
-
-            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-            sidebar = Sidebar(active_board=active_board, request=None)
-
-            response = sidebar.categories_reload_json_response()
-            response['active_category_id'] = int(dashboard.get_active_category_id())
-
-                
-        return JsonResponse(response)
-    
-    """
-    DELETING
-    """
-    if request.POST.get('action') == 'delete':
-        
-        # Delete Board
-        if request.POST.get('type') == 'board':
-
-            board = Board.objects.get(pk=request.POST.get('id'))
-            board.delete()
-
-            user = request.user
-            boards = user.board.all()
-            
-            # check is the active board is the same as the one we just deleted
-            if int(dashboard.get_active_board_id()) == int(request.POST.get('id')):
-                # if so, then grab the last created board and set it as active
-                active_board = boards.order_by('-id')[0]
-            else:
-                active_board = boards.get(pk=dashboard.get_active_board_id())
-
-            sidebar = Sidebar(active_board=active_board, request=None)
-
-            response = sidebar.categories_reload_json_response()
-            response['active_board_id'] = active_board.id
-
-        # Delete Category
-        if request.POST.get('type') == 'category':
- 
-            category = Category.objects.get(pk=request.POST.get('id'))
-            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-
-            # also remove the many-to-many relationship if we are deleting from sidebar
-            if request.POST.get('sender') == 'sidebar':
-                category.board.remove(active_board)
-            
-            # and delete all tasks associated with active board and deleted category
-            category.task.filter(board=active_board).delete()
-
-
-            sidebar = Sidebar(active_board=active_board, request=None)
-
-            response = sidebar.categories_reload_json_response()
-
-    
-        return JsonResponse(response)
-        
 
 
 def set_active_board(request):
@@ -333,17 +210,21 @@ def category_manager(request):
 
         active_board = Board.objects.get(pk=dashboard.get_active_board_id())
 
-        Category.objects.create(
+        category = Category.objects.create(
             name=name,
             board=active_board,
             created_by=user
         )
 
-        response = {'message': 'Category "'+name+'" created'}
-    
-        if request.POST.get('source') == 'sidebar':
-            sidebar = Sidebar()
-            response.update(sidebar.categories_reload_json_response(active_board))
+
+        response = {
+            'message': 'Category "'+name+'" created',
+            'added_category_id': category.id
+        }
+
+        sidebar = Sidebar()
+        response.update(sidebar.categories_reload_json_response(active_board))
+
     """
     RENAME
     """

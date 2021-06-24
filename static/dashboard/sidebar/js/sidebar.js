@@ -1,7 +1,48 @@
+function newTask(json){
+  // ### BOARD NAME ################
+  $('newtask-boardName').html(json.board_name)
+
+
+  // ### CATEGORY SELECTION #########
+  
+  categories = JSON.parse(json.categories)
+  
+  $('.newtask-categorySelect').empty();
+
+
+  if (categories == null){
+
+    $('.newtask-categorySelect').append(
+      '<option value="" selected="">No Categories</option>'
+    )
+
+  }else{
+
+    categories.forEach((category) => {
+      
+      if (json.active_category == category.pk){
+        var option = '<option value="'+category.pk+'" selected=>'+category.fields.name+'</option>'
+      }else{
+        var option = '<option value="'+category.pk+'">'+category.fields.name+'</option>'
+      }
+  
+      $('.newtask-categorySelect').append(option)
+  
+    });
+
+  }
+  // function located in "new_task.js"
+  categoryCheck();
+  // ###########################################################
+
+
+  
+}
+
+
 $(document).ready(function () {
   // toggle for NEW TASK
   toggle = 0;
-
 
   // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
@@ -94,37 +135,38 @@ $(document).ready(function () {
 
   });
 
-  // ### NEW TASK ICON ###
-  // $(document).on('click', ".newtask-icon", function (e) {
-  //   e.preventDefault();
+  // ### NEW TASK ICON -- DISPLAY NEW TASK WINDOW ###
+  $(document).on('click', ".newtask-icon", function (e) {
+    e.preventDefault();
 
-  //   if (toggle == 0) {
+    if (toggle == 0) {
 
-  //     $.ajax({
-  //       type: "POST",
-  //       url: NEW_TASK,
-  //       data: {
-  //         csrfmiddlewaretoken: CSRF_TOKEN,
-  //         action: 'post',
-  //       },
-  //       datatype: 'json',
+      $.ajax({
+        type: "POST",
+        url: NEW_TASK,
+        data: {
+          csrfmiddlewaretoken: CSRF_TOKEN,
+          action: 'post',
+        },
+        datatype: 'json',
 
-  //       success: function (json) {
-  //         console.log(json)
+        success: function (json) {
 
-  //       },
+          newTask(json);
 
-  //       error: function (xhr, errmsg, err) {
+        },
 
-  //       },
+        error: function (xhr, errmsg, err) {
 
-  //     });
-  //   }
+        },
 
-  //   toggle = 1 - toggle;
+      });
+    }
+
+    toggle = 1 - toggle;
 
 
-  // });
+  });
 
 
 });
