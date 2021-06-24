@@ -30,6 +30,7 @@ body {
     background-color: transparent;
 }
 
+
 /* Status */
 #total-tasks {
     background-color: #127e91;
@@ -92,19 +93,10 @@ hr.new4 {
 }
 
 /* Rename/delete icon */
-.rename-add-icon-sidebar {
-    fill: rgb(2, 168, 2);
-    width: 100%;
-}
 
-.rename-add-icon-sidebar:hover {
-    cursor: pointer;
-    fill: rgb(0, 243, 0);
-}
 
 .delete-icon {
     width: 100%;
-    margin-top: 10px;
 }
 
 .delete-icon:hover {

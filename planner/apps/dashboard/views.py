@@ -341,6 +341,9 @@ def category_manager(request):
 
         response = {'message': 'Category "'+name+'" created'}
     
+        if request.POST.get('source') == 'sidebar':
+            sidebar = Sidebar()
+            response.update(sidebar.categories_reload_json_response(active_board))
     """
     RENAME
     """

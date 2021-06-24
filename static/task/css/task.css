@@ -1,7 +1,7 @@
 /* Task Card */
 .task-col{
     overflow-y: scroll;
-    max-height: 75vh;
+    max-height: 85vh;
 }
 
 .task{
@@ -38,7 +38,7 @@
 
 .add-icon-task svg:hover{
     cursor: pointer;
-    fill: orangered;
+    fill: yellow;
 }
 
 .delete-icon-task{

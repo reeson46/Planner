@@ -52,7 +52,8 @@
     background: #343a41;
 }
 
-.sidebar-nav .hovered-nav-item, .board-item,
+.sidebar-nav .hovered-nav-item,
+.board-item,
 .category-item:hover {
     cursor: pointer;
 }
@@ -87,16 +88,42 @@
 }
 
 
-/* Board name */
+/* Board section */
 .board-name {
     width: 100%;
 }
 
+#board-wrapper{
+    border: 2px solid rgba(255, 166, 0, 0.603);
+}
+
+#sidebar-boards {
+    height: 330px;
+    overflow-x: hidden;
+    border-top: 1px solid #9d9a9a;
+}
+
+/* Category section */
+#sidebar-categories{
+    height: 330px;
+    overflow-x: hidden;
+    border-top: 1px solid #9d9a9a;
+}
+
+#category-wrapper{
+    border: 2px solid rgba(176, 235, 16, 0.603);
+
+}
 
 /* Dropdown */
 .dot-icon {
     fill: #fff;
     height: 100%;
+}
+
+.sidebar-dropdown {
+    position: relative;
+    margin-right: 10px;
 }
 
 .dot-icon:hover {
@@ -105,9 +132,46 @@
 }
 
 .dropdown .dropdown-menu {
+    height: 60px;
     min-width: 30px;
     border: 1px solid lightblue;
     left: 50% !important;
     top: -10px !important;
+}
 
+.rename-add-icon-sidebar {
+    fill: rgb(2, 168, 2);
+    width: 100%;
+    margin-bottom: 7px;
+}
+
+.rename-add-icon-sidebar:hover {
+    cursor: pointer;
+    fill: rgb(0, 243, 0);
+}
+
+/* Add icon */
+.sidebar-add-icon{
+    height: 100%;
+}
+
+.sidebar-add-icon:hover{
+    cursor: pointer;
+    fill: yellow;
+}
+
+/* New task section */
+#sidebar-new-task{
+    height: 150px;
+}
+
+.new-task-text{
+    position: relative;
+    top: 10px
+}
+
+.newtask-icon{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
 }
