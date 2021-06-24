@@ -9,6 +9,7 @@ from .models import Subtask, Task
 
 
 def new_task(request):
+
     dashboard = Dashboard(request)
 
     active_board = Board.objects.get(pk=dashboard.get_active_board_id())
@@ -31,12 +32,29 @@ def new_task(request):
         }, 
         request=request
     )
+
     context = {
         'form': form,
-        'active_board': active_board,
+        'board_name': active_board.name,
         "button_value": "Create",
         "update": False,
         "button": "Create",
+    }
+
+    return render(request, 'dashboard/task/new_task.html', context)
+    
+
+
+def update_task(request, pk):
+    task = Task.objects.get(pk=pk)
+    form = TaskForm(instance=task, request=request)
+
+    context = {
+        "form": form,
+        'board_name': task.board.name,
+        "task": task,
+        "update": True,
+        "button": "Update",
     }
     return render(request, "dashboard/task/new_task.html", context)
 
@@ -105,18 +123,6 @@ def task_manager(request):
 
         return response
 
-
-def update_task(request, pk):
-    task = Task.objects.get(pk=pk)
-    form = TaskForm(instance=task, request=request)
-
-    context = {
-        "form": form,
-        "task": task,
-        "update": True,
-        "button": "Update",
-    }
-    return render(request, "dashboard/task/new_task.html", context)
 
 
 def delete_task(request, pk):
