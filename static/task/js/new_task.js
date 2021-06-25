@@ -32,6 +32,11 @@ function resetNewTaskFields(){
   $('.subtask-field').each(function(){
     $(this).remove();
   })
+
+  // reset "create and continue" checkbox
+  $('.custom-checkbox-wrapper').html(
+    '<input class="form-check-input custom-checkbox" id="create-and-continue" type="checkbox" id="flexSwitchCheckChecked"><label class="form-check-label text-white" for="flexSwitchCheckChecked">Create and continue</label>'
+  )
 }
 
 
@@ -206,6 +211,9 @@ $(document).ready(function () {
 
     // close the newtask window
     $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
+    // reset all fields
+    resetNewTaskFields();
 
     // and enable back the newtask icon
     toggle = 1;
