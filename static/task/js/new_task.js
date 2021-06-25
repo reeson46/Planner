@@ -9,32 +9,41 @@ function categoryCheck() {
   }
 }
 
-$(document).ready(function () {
-
-  // Prevent clicking on CREATE/UPDATE button if the "name" field is empty
-  // OR if the category shows "No Categories"
+function requiredFieldsCheck(){
+  categoryCheck();
 
   if ($('input[type="text"]').val() != '') {
     $('button[type="submit"]').attr('disabled', false);
     $('#id_name').removeClass('required-field')
-    categoryCheck()
+
   } else {
     $('button[type="submit"]').attr('disabled', true);
     $('#id_name').addClass('required-field')
-    categoryCheck()
+
   }
+}
+
+
+$(document).ready(function () {
 
   $('input[type="text"]').on('keyup', function () {
-    if ($(this).val() != '') {
+
+    categoryCheck();
+
+    if ($('input[type="text"]').val() != '') {
       $('button[type="submit"]').attr('disabled', false);
       $('#id_name').removeClass('required-field')
-      categoryCheck()
+
+
     } else {
       $('button[type="submit"]').attr('disabled', true);
       $('#id_name').addClass('required-field')
-      categoryCheck()
+
     }
-  });
+    
+  })
+
+
 
   // Add Subtask
 
@@ -68,9 +77,13 @@ $(document).ready(function () {
 
   });
 
-  // Create task
+
+  // Create task button
   $(document).on('click', "#create-task", function (e) {
     e.preventDefault();
+
+    // Grab is_update
+    update = $(this).attr('value')
 
     // Grab Category
     cat = $("select[name='category'").children("option:selected").val();
@@ -96,8 +109,8 @@ $(document).ready(function () {
       type: "POST",
       url: CREATE_TASK_URL,
       data: {
-        update: UPDATE,
-        task_id: TASK_ID,
+        update: update,
+        //task_id: TASK_ID,
         category: cat,
         status: stat,
         name: n,
@@ -109,8 +122,30 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
-        //alert(json.message)
-        window.location = DASHBOARD_HOME_URL
+        $(".reload-board").load(" .reload-board > *");
+
+        reconstructSidebarCategories(json);
+
+        // Highlight the created task's category
+        $('.active-category[value="-1"]').removeClass('item-selected');
+        $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+
+        // if Create and continue is checked
+        // if ($('#create-and-continue').is(':checked')){
+        //   console.log('checked')
+        // }
+        // else{
+        //   console.log('not checked')
+        // }
+
+        // close the newtask window
+        $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
+        // Empty input fields
+        $("#id_name").val("");
+
+        // and enable back the newtask icon
+        toggle = 1;
       },
 
       error: function (xhr, errmsg, err) {
@@ -149,6 +184,18 @@ $(document).ready(function () {
       },
 
     });
+
+  });
+
+  // Cancel button
+  $(document).on('click', '#cancel-task', function (e) {
+    e.preventDefault();
+
+    // close the newtask window
+    $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
+    // and enable back the newtask icon
+    toggle = 1;
 
   });
 

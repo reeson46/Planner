@@ -64,3 +64,21 @@
     top: 0;
     opacity: 1;
 }
+
+#cancel-task{
+    background-color: #da8d00;
+    color: black;
+}
+
+#cancel-task:hover{
+    background-color: #ad7101;
+}
+
+.custom-checkbox:checked{
+    background-color: coral;
+    border-color: coral;
+}
+
+.custom-checkbox:focus{
+    box-shadow: none;
+}

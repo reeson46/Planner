@@ -14,20 +14,15 @@
 <div class="d-flex justify-content-center">
   <div class="row mt-4" id="new-task-wrapper">
     <div class="card card-body shadow form-bg">
-      <form action="">
-
         <div class="row">
-
           <div class="col mb-3">
-
             <div class="text-white fs-4 mb-2 newtask-boardName">
               Board 1
             </div>
             <div class="">
               <label class="text-white mb-1">Category</label>
               <span class="d-flex">
-                <select name="category" class="card bg-dark text-light newtask-categorySelect"
-                  id="id_category">
+                <select name="category" class="card bg-dark text-light newtask-categorySelect" id="id_category">
                 </select>
                 <a tabindex="0" role="button" data-sender="category" data-action="add" data-bs-placement="bottom"
                   data-placeholder="Enter Category name" data-value="" data-source="new-task"
@@ -40,10 +35,9 @@
                   </svg></a>
               </span>
             </div>
-
           </div>
 
-
+          <!--
           {% if update %}
           <div class="col d-flex justify-content-end">
             <div class="">
@@ -52,12 +46,11 @@
             </div>
           </div>
           {% endif %}
-
+          -->
         </div>
-      </form>
 
       <label class="text-white mb-1" for="id_name">Name</label>
-      <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="{{task.name}}">
+      <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="">
       <br>
       <label class="text-white mb-1" for="id_description">Description</label>
       <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
@@ -92,7 +85,19 @@
       </div>
       <br>
 
-      <button type="submit" class="btn btn-success btn-block fw500 w-100" id="create-task">{{ button }}</button>
+      <div class="row">
+        <div class="form-check form-switch mt-2 m-3">
+          <input class="form-check-input custom-checkbox" id="create-and-continue" type="checkbox" id="flexSwitchCheckChecked">
+          <label class="form-check-label text-white" for="flexSwitchCheckChecked">Create and continue</label>
+        </div>
+        <div class="col-9">
+          <button type="submit" value="" class="btn btn-success btn-block fw500 w-100" id="create-task"></button>
+        </div>
+        <div class="col-3">
+          <button class="btn btn-block fw500 w-100" id="cancel-task">Cancel</button>
+        </div>
+
+      </div>
 
     </div>
   </div>
@@ -102,7 +107,6 @@
   var CREATE_TASK_URL = '{% url "task:task_manager" %}';
   var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
   var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
-  var UPDATE = '{{ update }}';
   var TASK_ID = '{{ task.id }}';
   var CSRF_TOKEN = '{{ csrf_token }}';
 </script>

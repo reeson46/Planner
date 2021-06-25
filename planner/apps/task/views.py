@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.core import serializers
 from planner.apps.dashboard.dashboard import Dashboard
 from planner.apps.dashboard.models import Board, Category
-
+from planner.apps.dashboard.dashboard import Sidebar
 from .forms import TaskForm
 from .models import Subtask, Task
 
@@ -36,8 +36,7 @@ def new_task(request):
         'categories': categories_json,
         'active_category': active_category,
         'board_name': active_board.name,
-        "button_value": "Create",
-        "update": False,
+        "is_update": "False",
         "button": "Create",
     }
 
@@ -84,6 +83,8 @@ def task_manager(request):
         if update == "False":
             
             active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+            active_category_id = category.id
+            dashboard.set_active_category_id(active_category_id)
 
             task = Task.objects.create(
                 board=active_board,
@@ -97,8 +98,16 @@ def task_manager(request):
             for sub in subtasks:
                 Subtask.objects.create(name=sub, task=task)
 
-            response = JsonResponse({"message": "Task Created!"})
-        
+            
+            sidebar = Sidebar()
+
+            response = {
+                "message": "Task Created!",
+                'active_category_id': active_category_id,
+            }
+
+            response.update(sidebar.categories_reload_json_response(active_board))
+
         """
         UPDATING EXISTING TASK
         """
@@ -118,9 +127,9 @@ def task_manager(request):
                 else:
                     Subtask.objects.create(name=sub, task=task)
 
-            response = JsonResponse({"message": "Task Updated!"})
+            response = {"message": "Task Updated!"}
 
-        return response
+        return JsonResponse(response)
 
 
 

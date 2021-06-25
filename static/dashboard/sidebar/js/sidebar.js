@@ -1,10 +1,9 @@
 function newTask(json){
-  // ### BOARD NAME ################
+  // ### BOARD NAME ####
   $('newtask-boardName').html(json.board_name)
 
 
-  // ### CATEGORY SELECTION #########
-  
+  // ### CATEGORY SELECTION ####
   categories = JSON.parse(json.categories)
   
   $('.newtask-categorySelect').empty();
@@ -31,18 +30,25 @@ function newTask(json){
     });
 
   }
-  // function located in "new_task.js"
-  categoryCheck();
+
   // ###########################################################
 
 
-  
+  // ### CREATE BUTTON ###
+  $('#create-task').html(json.button)
+  $('#create-task').attr('value', json.is_update)
+
+  requiredFieldsCheck();
 }
 
 
+var toggle;
+
 $(document).ready(function () {
-  // toggle for NEW TASK
-  toggle = 0;
+
+
+  // Set the newtask icon toggle, aka enable the icon
+  toggle = 1;
 
   // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
@@ -135,11 +141,16 @@ $(document).ready(function () {
 
   });
 
+
   // ### NEW TASK ICON -- DISPLAY NEW TASK WINDOW ###
   $(document).on('click', ".newtask-icon", function (e) {
     e.preventDefault();
 
-    if (toggle == 0) {
+
+    if (toggle == 1) {
+
+      $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
 
       $.ajax({
         type: "POST",
@@ -154,6 +165,8 @@ $(document).ready(function () {
 
           newTask(json);
 
+          toggle = 0;
+
         },
 
         error: function (xhr, errmsg, err) {
@@ -163,7 +176,7 @@ $(document).ready(function () {
       });
     }
 
-    toggle = 1 - toggle;
+    
 
 
   });

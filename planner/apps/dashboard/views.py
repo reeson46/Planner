@@ -216,10 +216,13 @@ def category_manager(request):
             created_by=user
         )
 
+        
+        active_category_id = dashboard.get_active_category_id()
 
         response = {
             'message': 'Category "'+name+'" created',
-            'added_category_id': category.id
+            'added_category_id': category.id,
+            'active_category_id': active_category_id,
         }
 
         sidebar = Sidebar()
