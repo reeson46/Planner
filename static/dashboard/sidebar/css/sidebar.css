@@ -26,6 +26,30 @@
 }
 
 /* Sidebar styling */
+.menu-arrow{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    fill: orange;
+    
+}
+
+#menu-toggle{
+    height: 45px;
+    width: 45px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu-arrow-rot{
+    transform: rotateZ(-180deg);
+}
+
+.menu-arrow:hover{
+    cursor: pointer;
+    fill: orangered;
+}
+
 .sidebar-nav {
     padding: 0;
     list-style: none;
@@ -79,6 +103,11 @@
     justify-content: center;
     align-items: center;
     text-indent: 0;
+}
+
+/* All tasks */
+.all-tasks-text{
+    color: rgb(255, 181, 71);
 }
 
 .category-item {
