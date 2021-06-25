@@ -69,10 +69,10 @@ function reconstructSidebarCategories(json){
   
   if (total_tasks > 0){
     $("#sidebar-all-tasks").html(
-      'All <div class="total-number"><div class="number">'+total_tasks+'</div></div>'
+      '<div class="all-tasks-text">All</div><div class="total-number"><div class="number">'+total_tasks+'</div></div>'
     )
   }else{
-    $("#sidebar-all-tasks").html('All')
+    $("#sidebar-all-tasks").html('<div class="all-tasks-text">All</div>')
   }
 
   $('#categories-loop').empty();
@@ -167,8 +167,8 @@ function ajaxBoardManager(action, id, entered_name) {
         reconstructSidebarBoards(json);
         
         // Empty sidebar categories and just add "All"
-        $('#sidebar-categories').empty();
-        $("#sidebar-all-tasks").html('All')
+        $('#categories-loop').empty();
+        $("#sidebar-all-tasks").html('<div class="all-tasks-text">All</div>') 
 
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');

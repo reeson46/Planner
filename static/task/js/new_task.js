@@ -23,6 +23,17 @@ function requiredFieldsCheck(){
   }
 }
 
+function resetNewTaskFields(){
+  // Empty input fields
+  $("#id_name").val("");
+  $("#id_description").val("");
+
+  // remove subtasks
+  $('.subtask-field').each(function(){
+    $(this).remove();
+  })
+}
+
 
 $(document).ready(function () {
 
@@ -54,7 +65,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         $('#subtask-div').append(
-          '<div class="d-flex"><input type="text-sub" class="card subtask bg-dark text-light col-10" value="' + $('#subtask-input').val() + '" disabled><span class="delete-subtask delete-icon-task"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></span></div>'
+          '<div class="d-flex subtask-field"><input type="text-sub" class="card subtask bg-dark text-light col-10" value="' + $('#subtask-input').val() + '" disabled><span class="delete-subtask delete-icon-task"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></span></div>'
         )
 
         $('#subtask-input').val("");
@@ -130,22 +141,24 @@ $(document).ready(function () {
         $('.active-category[value="-1"]').removeClass('item-selected');
         $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
 
+        resetNewTaskFields();
+
         // if Create and continue is checked
-        // if ($('#create-and-continue').is(':checked')){
-        //   console.log('checked')
-        // }
-        // else{
-        //   console.log('not checked')
-        // }
+        if ($('#create-and-continue').is(':checked')){
 
-        // close the newtask window
-        $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+          
+          requiredFieldsCheck();
+          
+        }
+        else{
+          // close the newtask window
+          $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+          // and enable back the newtask icon
+          toggle = 1;
+        }
 
-        // Empty input fields
-        $("#id_name").val("");
-
-        // and enable back the newtask icon
-        toggle = 1;
+        
+        
       },
 
       error: function (xhr, errmsg, err) {

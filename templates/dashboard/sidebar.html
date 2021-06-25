@@ -104,9 +104,9 @@
     <div class="container" id="sidebar-categories">
       <li class="row{% if user.is_authenticated %} hovered-nav-item active-category {% endif %}" value="-1">
         {% if user.is_authenticated %}
-        <span class="category-link category-item fs-5 text-white d-flex " id="sidebar-all-tasks" value="-1">
-
-          All
+        <span class="category-link category-item fs-5 d-flex " id="sidebar-all-tasks" value="-1">
+          <div class="all-tasks-text">All</div>
+          
 
           {% if total_tasks|length > 0 %}
           <div class="total-number">
