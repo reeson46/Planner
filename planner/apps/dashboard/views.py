@@ -1,5 +1,3 @@
-from django.core import serializers
-from django.http import response
 from planner.apps.task.models import Category
 from django.http.response import JsonResponse
 from django.shortcuts import render

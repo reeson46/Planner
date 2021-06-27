@@ -1,113 +1,84 @@
 {% load static %}
-
-
-<style>
-  #new-task-wrapper {
-    width: 700px;
-  }
-
-  .required-field {
-    border: 1px orange solid;
-  }
-</style>
-
-<div class="d-flex justify-content-center">
-  <div class="row mt-4" id="new-task-wrapper">
-    <div class="card card-body shadow form-bg">
-        <div class="row">
-          <div class="col mb-3">
-            <div class="text-white fs-4 mb-2 newtask-boardName">
-              Board 1
-            </div>
-            <div class="">
-              <label class="text-white mb-1">Category</label>
-              <span class="d-flex">
-                <select name="category" class="card bg-dark text-light newtask-categorySelect" id="id_category">
-                </select>
-                <a tabindex="0" role="button" data-sender="category" data-action="add" data-bs-placement="bottom"
-                  data-placeholder="Enter Category name" data-value="" data-source="new-task"
-                  class="rename-add-icon add-icon-task"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                    fill="orange" class="bi bi-plus-square" viewBox="0 0 16 16">
-                    <path
-                      d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                    <path
-                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                  </svg></a>
-              </span>
-            </div>
+<div class="row mt-4" id="new-task-wrapper">
+  <div class="card card-body shadow form-bg">
+    <div class="row">
+      <div class="col mb-3">
+        <div class="text-white fs-4 mb-2 newtask-boardName">
+          Board 1
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="">
+            <label class="text-white mb-1">Category</label>
+            <span class="d-flex">
+              <select name="category" class="card bg-dark text-light newtask-categorySelect" id="id_category">
+              </select>
+              <a tabindex="0" role="button" data-sender="category" data-action="add" data-bs-placement="bottom"
+                data-placeholder="Enter Category name" data-value="" data-source="new-task"
+                class="rename-add-icon add-icon-task"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                  fill="orange" class="bi bi-plus-square" viewBox="0 0 16 16">
+                  <path
+                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg></a>
+            </span>
           </div>
-
-          <!--
-          {% if update %}
-          <div class="col d-flex justify-content-end">
-            <div class="">
-              <label class="text-white mb-1">{{ form.status.label }}</label>
-              {{ form.status }}
-            </div>
+          <div class="task-status d-none">
+            <label class="text-white mb-1">Status</label>
+            <select name="status" class="card bg-dark text-light task-statusSelect" id="id_status">
+            </select>
           </div>
-          {% endif %}
-          -->
         </div>
+      </div>
+    </div>
 
-      <label class="text-white mb-1" for="id_name">Name</label>
-      <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="">
-      <br>
-      <label class="text-white mb-1" for="id_description">Description</label>
-      <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
-        placeholder="Enter description">{{ task.description }}</textarea>
-      <br>
+    <label class="text-white mb-1" for="id_name">Name</label>
+    <input type="text" class="card bg-dark text-light" id="id_name" placeholder="Enter name" value="">
+    <br>
+    <label class="text-white mb-1" for="id_description">Description</label>
+    <textarea class="card bg-dark text-light" name="description" id="id_description" cols="30" rows="5"
+      placeholder="Enter description">{{ task.description }}</textarea>
+    <br>
 
 
-      <div id="subtask-div">
-        <div class="row m-0">
-          <label class="text-white mb-1 p-0" for="subtask-lb">Subtasks</label>
-          <input type="text-sub" id="subtask-input" class="card subtask-lb bg-dark text-light col-10"
-            placeholder="Enter subtask">
-        </div>
-        <br>
-
-        {% if task.subtask.all|length != 0 %}
-        {% for sub in task.subtask.all %}
-
-        <div class="d-flex">
-          <input type="text-sub" class="card subtask bg-dark text-light col-10" value="{{sub.name}}" disabled>
-          <span class="delete-existing-subtask delete-icon-task" data-index="{{ sub.id }}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg"
-              viewBox="0 0 16 16">
-              <path
-                d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
-            </svg>
-          </span>
-        </div>
-
-        {% endfor %}
-        {% endif %}
+    <div id="subtask-div">
+      <div class="row m-0">
+        <label class="text-white mb-1 p-0" for="subtask-lb">Subtasks</label>
+        <input type="text-sub" id="subtask-input" class="card subtask-lb bg-dark text-light col-10"
+          placeholder="Enter subtask">
       </div>
       <br>
 
+      <div id="individual-subtask"></div>
+
+    </div>
+    <br>
+
+    <div class="row col align-items-end">
+      <div class="form-check form-switch mt-2 m-3 custom-checkbox-wrapper">
+        <input class="form-check-input custom-checkbox" id="create-and-continue" type="checkbox"
+          id="flexSwitchCheckChecked">
+        <label class="form-check-label text-white" for="flexSwitchCheckChecked">Create and continue</label>
+      </div>
       <div class="row">
-        <div class="form-check form-switch mt-2 m-3 custom-checkbox-wrapper">
-          <input class="form-check-input custom-checkbox" id="create-and-continue" type="checkbox" id="flexSwitchCheckChecked">
-          <label class="form-check-label text-white" for="flexSwitchCheckChecked">Create and continue</label>
-        </div>
         <div class="col-9">
-          <button type="submit" value="" class="btn btn-success btn-block fw500 w-100" id="create-task"></button>
+          <button type="submit" data-edit="" data-taskID="" class="btn btn-success btn-block fw500 w-100"
+            id="create-task"></button>
         </div>
         <div class="col-3">
           <button class="btn btn-block fw500 w-100" id="cancel-task">Cancel</button>
         </div>
-
       </div>
 
     </div>
+
   </div>
 </div>
 
+
 <script>
   var CREATE_TASK_URL = '{% url "task:task_manager" %}';
-  var DELETE_EXISTING_TASK = '{% url "task:delete_subtask" %}';
   var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
-  var TASK_ID = '{{ task.id }}';
   var CSRF_TOKEN = '{{ csrf_token }}';
 </script>
 <script src="{% static 'task/js/new_task.js' %}" data-rel-js></script>

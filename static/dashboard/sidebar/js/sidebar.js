@@ -1,45 +1,4 @@
-function newTask(json){
-  // ### BOARD NAME ####
-  $('newtask-boardName').html(json.board_name)
 
-
-  // ### CATEGORY SELECTION ####
-  categories = JSON.parse(json.categories)
-  
-  $('.newtask-categorySelect').empty();
-
-
-  if (categories == null){
-
-    $('.newtask-categorySelect').append(
-      '<option value="" selected="">No Categories</option>'
-    )
-
-  }else{
-
-    categories.forEach((category) => {
-      
-      if (json.active_category == category.pk){
-        var option = '<option value="'+category.pk+'" selected=>'+category.fields.name+'</option>'
-      }else{
-        var option = '<option value="'+category.pk+'">'+category.fields.name+'</option>'
-      }
-  
-      $('.newtask-categorySelect').append(option)
-  
-    });
-
-  }
-
-  // ###########################################################
-
-
-  // ### CREATE BUTTON ###
-  $('#create-task').html(json.button)
-  $('#create-task').attr('value', json.is_update)
-
-  requiredFieldsCheck();
-}
 
 
 var toggle;
@@ -153,17 +112,17 @@ $(document).ready(function () {
 
 
       $.ajax({
-        type: "POST",
+        type: "GET",
         url: NEW_TASK,
         data: {
           csrfmiddlewaretoken: CSRF_TOKEN,
-          action: 'post',
         },
         datatype: 'json',
 
         success: function (json) {
 
-          newTask(json);
+          taskForm(json);
+          
 
           toggle = 0;
 

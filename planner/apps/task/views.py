@@ -5,56 +5,75 @@ from django.core import serializers
 from planner.apps.dashboard.dashboard import Dashboard
 from planner.apps.dashboard.models import Board, Category
 from planner.apps.dashboard.dashboard import Sidebar
-from .forms import TaskForm
+
 from .models import Subtask, Task
 
 
 def new_task(request):
 
-    dashboard = Dashboard(request)
+    if request.method == "GET":
 
-    active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-    
-    categories = active_board.category.all()
+        dashboard = Dashboard(request)
 
-    active_category_id = dashboard.get_active_category_id()
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+        
+        categories = active_board.category.all()
 
-    if categories:
-        categories_json = serializers.serialize('json',active_board.category.all())
+        active_category_id = dashboard.get_active_category_id()
 
-        if active_category_id == -1 or not categories.filter(pk=active_category_id).exists():
-            active_cat = categories.first()
-            active_category = active_cat.id
+        if categories:
+            categories_json = serializers.serialize('json',active_board.category.all())
+
+            if active_category_id == -1 or not categories.filter(pk=active_category_id).exists():
+                active_cat = categories.first()
+                active_category = active_cat.id
+            else:
+                active_cat = categories.get(pk=active_category_id)
+                active_category = active_cat.id
         else:
-            active_cat = categories.get(pk=active_category_id)
-            active_category = active_cat.id
-    else:
-        active_category = None
-        categories_json = None
+            active_category = None
+            categories_json = None
 
-    response = {
-        'categories': categories_json,
-        'active_category': active_category,
-        'board_name': active_board.name,
-        "is_update": "False",
-        "button": "Create",
-    }
+        response = {
+            'categories': categories_json,
+            'category_id': active_category,
+            'board_name': active_board.name,
+            "is_edit": "False",
+            "button": "Create",
+        }
 
-    return JsonResponse(response)
+        return JsonResponse(response)
 
 
-def update_task(request, pk):
-    task = Task.objects.get(pk=pk)
-    form = TaskForm(instance=task, request=request)
+def edit_task(request):
 
-    context = {
-        "form": form,
-        'board_name': task.board.name,
-        "task": task,
-        "update": True,
-        "button": "Update",
-    }
-    return render(request, "dashboard/task/new_task.html", context)
+    if request.method == "GET":
+
+        dashboard = Dashboard(request)
+
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+
+        task_id = request.GET.get('task_id')
+
+        t = Task.objects.get(pk=task_id)
+        statuses = [s[0] for s in Task.STATUS]
+
+        categories = serializers.serialize('json', active_board.category.all())
+        task = serializers.serialize('json', [t])
+        subtasks = serializers.serialize('json', t.subtask.all())
+
+        response = {
+            'board_name': t.board.name,
+            'category_id': t.category.id,
+            'categories': categories,
+            'statuses': statuses,
+            'task': task,
+            "subtasks": subtasks,
+            "is_edit": "True",
+            "button": "Update",
+        }
+        
+        return JsonResponse(response)
 
 
 def task_manager(request):
@@ -74,13 +93,13 @@ def task_manager(request):
         description = request.POST.get("description")
         user = request.user
         subtasks = request.POST.getlist("subtasks[]")
-        update = request.POST.get("update")
+        is_edit = request.POST.get("is_edit")
 
         """
         CREATING A NEW TASK
         """
-        # if update is false, meaning we are creating a new task
-        if update == "False":
+        # if edit is false, meaning we are creating a new task
+        if is_edit == "False":
             
             active_board = Board.objects.get(pk=dashboard.get_active_board_id())
             active_category_id = category.id
@@ -94,9 +113,10 @@ def task_manager(request):
                 description=description,
                 created_by=user,
             )
-
-            for sub in subtasks:
-                Subtask.objects.create(name=sub, task=task)
+            
+            if subtasks:
+                for sub in subtasks:
+                    Subtask.objects.create(name=sub, task=task)
 
             
             sidebar = Sidebar()
@@ -112,7 +132,16 @@ def task_manager(request):
         UPDATING EXISTING TASK
         """
         # if update is "true", meaning we are updating/editing existing task
-        if update == "True":
+        if is_edit == "True":
+
+            deleted_subtasks = request.POST.getlist("deleted_subtasks[]")
+
+            # if any existing subtasks were added to array
+            if deleted_subtasks:
+                # delete them
+                for sub in deleted_subtasks:
+                    Subtask.objects.get(pk=sub).delete()
+                    
                     
             task = Task.objects.get(pk=request.POST.get("task_id"))
             task.category = category
@@ -121,11 +150,12 @@ def task_manager(request):
             task.description = description
             task.save()
 
-            for sub in subtasks:
-                if Subtask.objects.filter(name=sub, task=task).exists():
-                    pass
-                else:
-                    Subtask.objects.create(name=sub, task=task)
+            if subtasks:
+                for sub in subtasks:
+                    if Subtask.objects.filter(name=sub, task=task).exists():
+                        pass
+                    else:
+                        Subtask.objects.create(name=sub, task=task)
 
             response = {"message": "Task Updated!"}
 
@@ -141,15 +171,6 @@ def delete_task(request, pk):
         return redirect("dashboard:home")
 
     return render(request, "dashboard/task/delete_task.html", {"task": task})
-
-
-def delete_subtask(request):
-    if request.POST.get("action") == "post":
-        subtask_id = request.POST.get("subtask_id")
-        subtask = Subtask.objects.get(pk=subtask_id)
-        subtask.delete()
-
-        return JsonResponse({"message": "Subtask Deleted"})
 
 
 def set_task_extend_state(request):
