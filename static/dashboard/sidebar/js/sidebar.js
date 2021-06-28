@@ -125,6 +125,7 @@ $(document).ready(function () {
           
 
           newtask_toggle = 0;
+          is_newtaskDisplayed = true;
 
         },
 

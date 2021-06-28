@@ -107,10 +107,12 @@ function taskForm(json) {
   requiredFieldsCheck();
 }
 var edittask_toggle;
+var is_newtaskDisplayed;
 
 $(document).ready(function () {
 
   edittask_toggle = 1;
+  is_newtaskDisplayed = false;
 
   // ### Posting task id for setting its "extended state" ###
   $(document).on('click', '.task-extend', function (e) {
@@ -167,6 +169,7 @@ $(document).ready(function () {
 
           newtask_toggle = 0;
           edittask_toggle = 0;
+          is_newtaskDisplayed = true;
 
           $(".new-task-wrapper").toggleClass("newtaskDisplayed");
 
@@ -251,4 +254,17 @@ $(document).ready(function () {
 
     
   });
+});
+
+// Close the new/edit task on pressing ESC
+$(document).keyup(function (e) {
+  if (is_newtaskDisplayed){
+
+    if (e.which === 27) {
+      $('.new-task-wrapper').toggleClass('newtaskDisplayed');
+      is_newtaskDisplayed = false;
+      newtask_toggle = 1;
+      edittask_toggle = 1;
+    } 
+  }
 });

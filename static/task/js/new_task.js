@@ -225,6 +225,7 @@ $(document).ready(function () {
     // and enable back the newtask icon/edit button
     newtask_toggle = 1;
     edittask_toggle = 1;
+    is_newtaskDisplayed = false;
 
   });
 
