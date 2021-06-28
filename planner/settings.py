@@ -115,12 +115,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Custom user model
 AUTH_USER_MODEL = "account.UserAccount"
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/account/login/"
 
 GRAPH_MODELS = {
     "all_applications": True,
     "group_models": True,
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

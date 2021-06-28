@@ -1,32 +1,60 @@
 <div class="card text-white task shadow" id="panelsStayOpen-heading{{ task.id }}">
-  <div class="card-header task-extend" data-index="{{ task.id }}" value="{{task.extend_state}}" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}"
-    aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ task.id }}">
+  <div class="card-header task-extend" data-index="{{ task.id }}" value="{{task.extend_state}}"
+    data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}" aria-expanded="true"
+    aria-controls="panelsStayOpen-collapse{{ task.id }}">
 
-    <h4 class="card-subtitle">{{ task.name }}</h5>
+    <div class="card-subtitle fs-3 task-title-text">{{ task.name }}</div>
 
   </div>
-  <div id="panelsStayOpen-collapse{{ task.id }}" class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% endif %}"
+  <div id="panelsStayOpen-collapse{{ task.id }}"
+    class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% endif %}"
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
       {% if task.description %}
+      <div class="task-description-text fs-5 mb-2">Description:</div>
       <div class="card-text">{{ task.description}}</div>
       <hr>
       {% endif %}
 
+      {% if task.subtask.all %}
+      <div class="task-subtask-text fs-5 mb-2">Subtasks:</div>
       {% for subtask in task.subtask.all %}
-      <div class="d-flex justify-content-between">
-        <li class="card-subtitle fw-light subtask">{{ subtask.name }}</li> 
-        <input type="checkbox" class="custom-control-input" id="">
-      </div>
+      <span class="d-flex justify-content-between mb-3">
+        <li class="card-subtitle card-subtask">{{ subtask.name }}</li>
+        <div class="checkbox-div">
+          <input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="{{ subtask.id }}"
+            {% if subtask.is_complete %}checked{% endif %}>
+        </div>
+      </span>
       {% endfor %}
+      {% endif %}
 
     </div>
     <div class="card-footer">
-      <h6 class="card-subtitle fw-light">Created by {{ task.created_by }} , on
+      <h6 class="card-subtitle fw-light mt-1">Created by {{ task.created_by }} , on
         {{ task.date_created }}</h6>
       <hr>
-      <div class="row">
-        <button class="btn btn-block fw500 w-100" value="{{ task.id }}" id="edit-task">Edit</button>
+      <div class="d-flex justify-content-between">
+        <div class="">
+          <button class="btn btn-block fw500 w-100" value="{{ task.id }}" id="edit-task">Edit</button>
+        </div>
+        <div class="">
+          <div class="dropdown">
+            <button data-display="static" class="btn btn-secondary dropdown-toggle task-status-button" type="button" id="dropdownMenuButton{{ task.id }}"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Move to
+            </button>
+            <ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton{{ task.id }}">
+              {% for status in statuses %}
+                {% if task.status == status %}
+                  <li class="taskcard-status current-status" data-taskid="{{ task.id }}">{{ status }}</li>
+                {% else %}
+                  <li class="taskcard-status" data-taskid="{{ task.id }}">{{ status }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

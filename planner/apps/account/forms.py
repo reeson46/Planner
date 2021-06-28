@@ -5,21 +5,25 @@ from .models import UserAccount
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'card bg-dark text-light form-control mb-3',
-            'placeholder': 'Email address',
-            'id': 'login-username'
-        }
-    ))
-    password = forms.CharField(widget=forms.PasswordInput(
-        attrs={
-            'class': "card bg-dark text-light form-control mb-3",
-            'placeholder': 'Password',
-            'id': 'login-password'
-        }
-    ))
-    
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Email address",
+                "id": "login-username",
+            }
+        )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Password",
+                "id": "login-password",
+            }
+        )
+    )
+
 
 class UserRegistrationForm(forms.ModelForm):
     user_name = forms.CharField(
@@ -61,14 +65,26 @@ class UserRegistrationForm(forms.ModelForm):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
         self.fields["user_name"].widget.attrs.update(
-            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter username"}
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Enter username",
+            }
         )
         self.fields["email"].widget.attrs.update(
-            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter email"}
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Enter email",
+            }
         )
         self.fields["password"].widget.attrs.update(
-            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Enter password"}
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Enter password",
+            }
         )
         self.fields["password2"].widget.attrs.update(
-            {"class": "card bg-dark text-light form-control mb-3", "placeholder": "Repeat password"}
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Repeat password",
+            }
         )

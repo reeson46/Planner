@@ -1,13 +1,13 @@
 
 
 
-var toggle;
+var newtask_toggle;
 
 $(document).ready(function () {
 
 
   // Set the newtask icon toggle, aka enable the icon
-  toggle = 1;
+  newtask_toggle = 1;
 
   // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
 
@@ -106,7 +106,7 @@ $(document).ready(function () {
     e.preventDefault();
 
 
-    if (toggle == 1) {
+    if (newtask_toggle == 1) {
 
       $(".new-task-wrapper").toggleClass("newtaskDisplayed");
 
@@ -124,7 +124,7 @@ $(document).ready(function () {
           taskForm(json);
           
 
-          toggle = 0;
+          newtask_toggle = 0;
 
         },
 
@@ -135,10 +135,6 @@ $(document).ready(function () {
       });
     }
 
-    
-
-
   });
-
 
 });

@@ -1,7 +1,7 @@
 /* Task Card */
 .task-col {
     overflow-y: scroll;
-    max-height: 85vh;
+    height: 85vh;
 }
 
 .task {
@@ -37,6 +37,58 @@
     background-color: #adaf1e;
 }
 
+.custom-subtask-checkbox{
+    background-color: #e3e3e3;
+}
+
+.custom-subtask-checkbox:checked{
+    background-color: green;
+    border-color: green;
+}
+
+.custom-subtask-checkbox:focus{
+    box-shadow: none;
+}
+
+
+.task-description-text,
+.task-subtask-text{
+    color: orange;
+}
+
+.task-title-text{
+    color: #ffbc41;
+    font-weight: bold;
+}
+
+.card-subtask{
+    padding-right: 10px;
+}
+
+.task-status-button:focus{
+    box-shadow: none;
+}
+
+.dropdown-menu-taskcard{
+    min-width: 100px;
+    border: 1px solid lightblue;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.taskcard-status{
+    color: white;
+    padding: 3px;
+}
+
+.taskcard-status:hover{
+    background-color: #343a41;
+    cursor: pointer;
+}
+
+.current-status{
+    background-color: #464e57;
+}
 
 /* New/update task */
 .add-icon-task {
@@ -104,4 +156,9 @@
 
 .required-field {
     border: 1px orange solid;
+}
+
+.task-bottom-section{
+    height: 78px;
+    margin-left: 10px;
 }

@@ -30,7 +30,7 @@ class UserAdminConfig(UserAdmin):
                     "user_name",
                     "first_name",
                     "last_name",
-                    'password',
+                    "password",
                 )
             },
         ),

@@ -1,7 +1,9 @@
 from django.forms import ModelForm
 from django.forms.models import ModelChoiceField
-from planner.apps.dashboard.models import Board, Category
+
 from planner.apps.dashboard.dashboard import Dashboard
+from planner.apps.dashboard.models import Board, Category
+
 from .models import Task
 
 
@@ -23,11 +25,11 @@ class TaskForm(ModelForm):
         category_qs = active_board.category.all()
 
         if not category_qs:
-            category_label = 'No Categories'
+            category_label = "No Categories"
         else:
             category_label = None
-            
-        self.fields['category'] = ModelChoiceField(queryset=category_qs)
+
+        self.fields["category"] = ModelChoiceField(queryset=category_qs)
         self.fields["category"].empty_label = category_label
         self.fields["category"].widget.attrs.update(
             {
@@ -40,4 +42,3 @@ class TaskForm(ModelForm):
                 "class": "card bg-dark text-light",
             }
         )
-

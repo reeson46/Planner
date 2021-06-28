@@ -8,7 +8,7 @@ urlpatterns = [
     path("", views.dashboard, name="home"),
     path("set_active_board/", views.set_active_board, name="set_active_board"),
     path("set_active_category/", views.set_active_category, name="set_active_category"),
-    path('board_manager/', views.board_manager),
-    path('category_manager/', views.category_manager),
-    #path('test/', views.test)
+    path("board_manager/", views.board_manager),
+    path("category_manager/", views.category_manager),
+    # path('test/', views.test)
 ]

@@ -4,15 +4,16 @@
     position: fixed;
     width: 200px;
     height: 100vh;
+    margin-left: 10px;
     overflow-y: hidden;
-    transition: 0.3s;
+    transition: 0.3s;  
 }
 
 /* Main content */
 #page-content-wrapper {
     width: 100%;
     position: absolute;
-    padding-left: 200px;
+    padding-left: 210px;
     transition: 0.3s;
 }
 
@@ -30,7 +31,7 @@
     height: 100%;
     width: 100%;
     position: relative;
-    fill: orange;
+    fill: #3baab0;
 }
 
 #menu-toggle{
@@ -46,7 +47,7 @@
 
 .menu-arrow:hover{
     cursor: pointer;
-    fill: orangered;
+    fill: #378e92;
 }
 
 .sidebar-nav {
@@ -142,7 +143,7 @@
 #board-wrapper,
 #category-wrapper
 {
-    border: 2px solid #976304;
+    border: 4px solid #276568;
     border-radius: 5px;
 }
 
@@ -182,7 +183,7 @@
     cursor: pointer;
 }
 
-.dropdown .dropdown-menu {
+.dropdown .dropdown-menu-sidebar {
     height: 60px;
     min-width: 30px;
     border: 1px solid lightblue;

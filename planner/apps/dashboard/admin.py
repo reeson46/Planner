@@ -15,18 +15,14 @@ class BoardAdminConfig(admin.ModelAdmin):
     )
     list_display = (
         "name",
-        'categories',
+        "categories",
         "created_by",
     )
 
 
 class CategoryAdminConfig(admin.ModelAdmin):
     model = Category
-    list_display = (
-        'name',
-        'board',
-        'created_by'
-    )
+    list_display = ("name", "board", "created_by")
 
 
 admin.site.register(Category, CategoryAdminConfig)

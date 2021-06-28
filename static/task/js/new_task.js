@@ -33,6 +33,7 @@ function resetNewTaskFields() {
   // Empty input fields
   $("#id_name").val("");
   $("#id_description").val("");
+  $("#subtask-input").val("");
 
   // remove subtasks
   $('#individual-subtask').empty();
@@ -99,7 +100,7 @@ $(document).ready(function () {
   });
 
 
-  // Create task button
+  // Create/update task button
   $(document).on('click', "#create-task", function (e) {
     e.preventDefault();
 
@@ -169,18 +170,25 @@ $(document).ready(function () {
           } else {
             // close the newtask window
             $(".new-task-wrapper").toggleClass("newtaskDisplayed");
-            // and enable back the newtask icon
-            toggle = 1;
+            // and enable back the newtask icon/edit button
+            newtask_toggle = 1;
+            edittask_toggle = 1;
           }
         }
 
         if (is_edit == "True") {
           // close the newtask window
           $(".new-task-wrapper").toggleClass("newtaskDisplayed");
-          // and enable back the newtask icon
-          toggle = 1;
-        }
+          // and enable back the newtask icon/edit button
+            newtask_toggle = 1;
+            edittask_toggle = 1;
 
+          if (json.category_change == "True"){
+            reconstructSidebarCategories(json);
+            // Highlight the active category
+            $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+          }
+        }
 
       },
 
@@ -214,8 +222,9 @@ $(document).ready(function () {
     // reset all fields
     resetNewTaskFields();
 
-    // and enable back the newtask icon
-    toggle = 1;
+    // and enable back the newtask icon/edit button
+    newtask_toggle = 1;
+    edittask_toggle = 1;
 
   });
 

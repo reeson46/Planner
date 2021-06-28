@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from planner.apps.account.models import UserAccount
 
 
@@ -26,7 +27,7 @@ class Board(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=250)
-    board = models.ForeignKey(Board, related_name='category', on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, related_name="category", on_delete=models.CASCADE)
     created_by = models.ForeignKey(
         UserAccount, related_name="category", on_delete=models.CASCADE
     )
@@ -34,7 +35,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
-
 
     def __str__(self):
         return self.name

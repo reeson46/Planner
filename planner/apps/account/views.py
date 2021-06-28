@@ -1,18 +1,20 @@
-from planner.apps.account.models import UserAccount
-from django.shortcuts import redirect, render
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
 from django.contrib.auth import login
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from planner.apps.account.models import UserAccount
+
 from .forms import UserRegistrationForm
 from .token import account_activation_token
-from django.http import HttpResponse
 
 
 def account_register(request):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect("/")
 
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -36,7 +38,7 @@ def account_register(request):
                 },
             )
             user.email_user(subject=subject, message=message)
-            return HttpResponse('Account activation email sent')
+            return HttpResponse("Account activation email sent")
     else:
         form = UserRegistrationForm()
 
@@ -47,13 +49,13 @@ def account_activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = UserAccount.objects.get(pk=uid)
-    except():
+    except ():
         pass
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         login(request, user)
 
-        return redirect('/')
+        return redirect("/")
     else:
-        return render(request, 'account/registration/activation_invalid.html')
+        return render(request, "account/registration/activation_invalid.html")

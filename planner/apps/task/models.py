@@ -5,7 +5,6 @@ from planner.apps.account.models import UserAccount
 from planner.apps.dashboard.models import Board, Category
 
 
-
 class Task(models.Model):
     STATUS = (
         ("Planned", "Planned"),

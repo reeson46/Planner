@@ -14,39 +14,39 @@ function getCookie(name) {
   return cookieValue;
 }
 
-function taskForm(json){
+function taskForm(json) {
   // ### BOARD NAME ####
   $('newtask-boardName').html(json.board_name)
 
   // ### CATEGORY SELECTION ####
   categories = JSON.parse(json.categories)
-  
+
   $('.newtask-categorySelect').empty();
 
-  if (categories == null){
+  if (categories == null) {
 
     $('.newtask-categorySelect').append(
       '<option value="" selected="">No Categories</option>'
     )
 
-  }else{
-    
+  } else {
+
     categories.forEach((category) => {
-      
-      if (json.category_id == category.pk){
-        var option = '<option value="'+category.pk+'" selected=>'+category.fields.name+'</option>'
-      }else{
-        var option = '<option value="'+category.pk+'">'+category.fields.name+'</option>'
+
+      if (json.category_id == category.pk) {
+        var option = '<option value="' + category.pk + '" selected=>' + category.fields.name + '</option>'
+      } else {
+        var option = '<option value="' + category.pk + '">' + category.fields.name + '</option>'
       }
-  
+
       $('.newtask-categorySelect').append(option)
-  
+
     });
 
   }
 
   // ### STATUS , NAME, DESCRIPTION AND SUBTASKS ###
-  if (json.is_edit == "True"){
+  if (json.is_edit == "True") {
 
     t = JSON.parse(json.task)
     task = t[0]
@@ -58,15 +58,15 @@ function taskForm(json){
     $('.task-status').removeClass('d-none')
 
     json.statuses.forEach((status) => {
-      
-      if (task.fields.status == status){
-        var option = '<option value="'+status+'" selected=>'+status+'</option>'
-      }else{
-        var option = '<option value="'+status+'">'+status+'</option>'
+
+      if (task.fields.status == status) {
+        var option = '<option value="' + status + '" selected=>' + status + '</option>'
+      } else {
+        var option = '<option value="' + status + '">' + status + '</option>'
       }
-  
+
       $('#id_status').append(option)
-  
+
     });
 
     // Task name field
@@ -80,7 +80,7 @@ function taskForm(json){
 
     subtasks.forEach((sub) => {
       $('#individual-subtask').append(
-        '<span class="d-flex subtask-field"><input type="text-sub" class="card existing-subtask bg-dark text-light col-10" value="'+sub.fields.name+'" disabled=""><div class="delete-existing-subtask delete-icon-task" data-index="'+sub.pk+'"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path></svg></div></span>'
+        '<span class="d-flex subtask-field"><input type="text-sub" class="card existing-subtask bg-dark text-light col-10" value="' + sub.fields.name + '" disabled=""><div class="delete-existing-subtask delete-icon-task" data-index="' + sub.pk + '"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path></svg></div></span>'
       );
     });
 
@@ -88,17 +88,17 @@ function taskForm(json){
     $('#create-task').data('taskID', task.pk)
 
     // Hide "create and continue checkbox"
-    if (!$('.custom-checkbox-wrapper').hasClass('d-none')){
+    if (!$('.custom-checkbox-wrapper').hasClass('d-none')) {
       $('.custom-checkbox-wrapper').addClass('d-none');
     }
 
-  }else{
+  } else {
     // show "create and continue checkbox"
     $('.custom-checkbox-wrapper').removeClass('d-none');
   }
 
 
-  
+
 
   // ### CREATE BUTTON ###
   $('#create-task').html(json.button)
@@ -106,10 +106,13 @@ function taskForm(json){
 
   requiredFieldsCheck();
 }
+var edittask_toggle;
 
-// ### Posting task id for setting its "extended state" ###
 $(document).ready(function () {
 
+  edittask_toggle = 1;
+
+  // ### Posting task id for setting its "extended state" ###
   $(document).on('click', '.task-extend', function (e) {
     e.preventDefault();
 
@@ -142,38 +145,110 @@ $(document).ready(function () {
 
   });
 
-  // Edit task button
-  $(document).on('click', '#edit-task', function(e){
+  // ### Edit task button ###
+  $(document).on('click', '#edit-task', function (e) {
     e.preventDefault()
-    var task_id = $(this).attr('value')
+
+    if (edittask_toggle == 1) {
+
+      var task_id = $(this).attr('value')
+
+      $.ajax({
+        type: "GET",
+        url: 'http://localhost:8000/task/edit_task/',
+
+        data: {
+          task_id: task_id,
+          csrfmiddlewaretoken: getCookie('csrftoken'),
+        },
+        datatype: 'json',
+
+        success: function (json) {
+
+          newtask_toggle = 0;
+          edittask_toggle = 0;
+
+          $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+
+          taskForm(json)
+
+
+
+        },
+
+        error: function (xhr, errmsg, err) {
+
+        },
+
+      });
+    }
+
+
+
+  });
+
+  // ### Subtask checkbox ###
+  $('.custom-subtask-checkbox').change(function () {
+
+    if ($(this).is(':checked')) {
+      is_complete = true
+    } else {
+      is_complete = false
+    }
+
+    subtask_id = $(this).data('subtaskid')
+
 
     $.ajax({
-      type: "GET",
-      url: 'http://localhost:8000/task/edit_task/',
-      
+      type: 'POST',
+      url: 'http://localhost:8000/task/subtask_manager/',
       data: {
-        task_id: task_id,
-        csrfmiddlewaretoken: getCookie('csrftoken'),
+        is_complete: is_complete,
+        subtask_id: subtask_id,
+        csrfmiddlewaretoken: getCookie('csrftoken')
       },
       datatype: 'json',
 
       success: function (json) {
 
-        toggle = 0;
 
-        $(".new-task-wrapper").toggleClass("newtaskDisplayed");
-
-        taskForm(json)
-
-
-  
       },
-  
+
       error: function (xhr, errmsg, err) {
-  
-      },
 
+      },
     });
 
+  });
+
+  // ### Task card "status" selection
+  $(document).on('click', '.taskcard-status', function(e){
+    e.preventDefault();
+
+    task_id = $(this).data('taskid');
+    new_status = $(this).html()
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:8000/task/status_manager/',
+      data: {
+        task_id: task_id,
+        new_status: new_status,
+        csrfmiddlewaretoken: getCookie('csrftoken')
+      },
+      datatype: 'json',
+
+      success: function (json) {
+        
+        $(".reload-board").load(location.href+" .reload-board>*","");
+
+      },
+
+      error: function (xhr, errmsg, err) {
+
+      },
+    });
+
+    
   });
 });
