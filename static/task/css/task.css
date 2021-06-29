@@ -37,13 +37,21 @@
     background-color: #adaf1e;
 }
 
+#edit-task:focus{
+    box-shadow: none;
+}
+
+#edit-task:active{
+ transform: scale(0.95);
+}
+
 .custom-subtask-checkbox{
     background-color: #e3e3e3;
 }
 
 .custom-subtask-checkbox:checked{
-    background-color: green;
-    border-color: green;
+    background-color: #00A62F;
+    border-color: #00A62F;
 }
 
 .custom-subtask-checkbox:focus{
@@ -67,6 +75,10 @@
 
 .task-status-button:focus{
     box-shadow: none;
+}
+
+.task-status-button{
+    background-color: cadetblue;
 }
 
 .dropdown-menu-taskcard{
@@ -136,13 +148,28 @@
     opacity: 1;
 }
 
+#create-task:focus{
+    box-shadow: none;
+}
+
+#create-task:active{
+    transform: scale(0.95);
+}
+
 #cancel-task {
     background-color: #da8d00;
     color: black;
 }
 
+#cancel-task:focus {
+    box-shadow: none;
+}
+
 #cancel-task:hover {
     background-color: #ad7101;
+}
+#cancel-task:active {
+    transform: scale(0.95);
 }
 
 .custom-checkbox:checked {
@@ -160,5 +187,30 @@
 
 .task-bottom-section{
     height: 78px;
-    margin-left: 10px;
+}
+
+#delete-task{
+    background-color: red;
+    color: black;
+}
+
+#delete-task:hover{
+    background-color: rgb(255, 116, 116);
+}
+
+#delete-task:focus{
+    box-shadow: none;
+}
+
+#delete-task:active{
+    transform: scale(0.9);
+}
+
+/* Task delete window */
+.task-delete-window{
+    width: fit-content;
+    height: 195px;
+    background-color: #454545;
+    border: 2px solid orange;
+    white-space: nowrap;
 }

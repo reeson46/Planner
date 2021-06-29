@@ -1,33 +1,37 @@
-function categoryCheck() {
+function requiredFieldsCheck() {
 
-  if ($("#id_category option:first").html() != 'No Categories') {
+  if ($("#id_category option:first").html() != 'No Categories' && $('input[type="text"]').val() != ''){
     $('button[type="submit"]').attr('disabled', false);
-    $('#id_category').removeClass('required-field')
-  } else {
+  }
+  else{
     $('button[type="submit"]').attr('disabled', true);
+  }
+
+  if ($("#id_category option:first").html() != 'No Categories'){
+    $('#id_category').removeClass('required-field')
+  }
+  else{
     $('#id_category').addClass('required-field')
   }
-}
 
-function requiredFieldsCheck() {
-  categoryCheck();
-
-  if ($('input[type="text"]').val() != '') {
-    $('button[type="submit"]').attr('disabled', false);
+  if ($('input[type="text"]').val() != ''){
     $('#id_name').removeClass('required-field')
-
-  } else {
-    $('button[type="submit"]').attr('disabled', true);
+  }else{
     $('#id_name').addClass('required-field')
-
   }
 }
+
 
 function resetNewTaskFields() {
 
   // hide the status field (only available when editing task)
   if (!$('.task-status').hasClass('d-none')) {
     $('.task-status').addClass('d-none');
+  }
+
+  // hide the Delete button (only available when editing task)
+  if (!$('.delete-task-button').hasClass('d-none')) {
+    $('.delete-task-button').addClass('d-none');
   }
 
   // Empty input fields
@@ -43,33 +47,41 @@ function resetNewTaskFields() {
 
 }
 
+function deleteTaskPopover() {
+  $('#delete-task').popover({
+    html: true,
+    sanitize: false,
+    content: function () {
+      return '<div class="card shadow task-delete-window p-3"><div class="text-center text-warning fs-4 mb-2 mt-1">Are you sure you want to delete "' + $(this).data('taskname') + '"?</div><div class="text-center text-danger fs-5 mb-3">Warning, this cannot be undone!</div><div class="text-center text-white fs-6 mb-1 mb-2">To confirm this action, type "DELETE" below and press Enter</div><input type="text" class="card bg-dark text-light" id="delete-task-confirm-input"></div>'
+    },
+
+  }).on('shown.bs.popover', function () {
+    // focus the input
+    $('#delete-task-confirm-input').focus();
+
+  });
+}
+
+var is_delete_popover_open;
 
 $(document).ready(function () {
 
-  // init an empty array to track which existing subtask was removed
+  // init the popover
+  deleteTaskPopover();
+
+  is_delete_popover_open = false;
+
+  // init an empty array to track which existing subtasks were removed
   existing_subtasks = [];
 
+  // checking if "new/edit task" required fields are valid
   $('input[type="text"]').on('keyup', function () {
 
-    categoryCheck();
+    requiredFieldsCheck();
 
-    if ($('input[type="text"]').val() != '') {
-      $('button[type="submit"]').attr('disabled', false);
-      $('#id_name').removeClass('required-field')
+  });
 
-
-    } else {
-      $('button[type="submit"]').attr('disabled', true);
-      $('#id_name').addClass('required-field')
-
-    }
-
-  })
-
-
-
-  // Add Subtask
-
+  // ### Add Subtask ###
   $("#subtask-div").keypress(function (e) {
     if (e.which === 13) {
 
@@ -90,7 +102,7 @@ $(document).ready(function () {
 
   });
 
-  // Remove Subtask
+  // ### Remove Subtask ###
   $(document).on('click', ".delete-subtask", function (e) {
 
     e.preventDefault();
@@ -100,11 +112,11 @@ $(document).ready(function () {
   });
 
 
-  // Create/update task button
+  // ### Create/update task button ###
   $(document).on('click', "#create-task", function (e) {
     e.preventDefault();
 
-    // Grab is_update
+    // Grab is_edit
     is_edit = $(this).data('edit')
 
     // Grab Category
@@ -148,9 +160,8 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
+
         $(".reload-board").load(" .reload-board > *");
-
-
 
         resetNewTaskFields();
 
@@ -161,7 +172,7 @@ $(document).ready(function () {
           // Highlight the created task's category
           $('.active-category[value="-1"]').removeClass('item-selected');
           $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
-          
+
           // if Create and continue is checked
           if ($('#create-and-continue').is(':checked')) {
 
@@ -171,33 +182,31 @@ $(document).ready(function () {
             // close the newtask window
             $(".new-task-wrapper").toggleClass("newtaskDisplayed");
             // and enable back the newtask icon/edit button
-            newtask_toggle = 1;
-            edittask_toggle = 1;
+            newtask_toggle = true;
+            edittask_toggle = true;
           }
         }
 
         if (is_edit == "True") {
           // close the newtask window
           $(".new-task-wrapper").toggleClass("newtaskDisplayed");
-          // and enable back the newtask icon/edit button
-            newtask_toggle = 1;
-            edittask_toggle = 1;
+          // and enable back the newtask icon and edit button
+          newtask_toggle = true;
+          edittask_toggle = true;
 
-          if (json.category_change == "True"){
+          // only if the task's category has been changed
+          if (json.category_change == "True") {
             reconstructSidebarCategories(json);
             // Highlight the active category
             $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
           }
         }
-
       },
 
       error: function (xhr, errmsg, err) {
 
       },
-
     });
-
   });
 
 
@@ -209,10 +218,9 @@ $(document).ready(function () {
 
     existing_subtasks.push($(this).data('index'))
 
-
   });
 
-  // Cancel button
+  // ### Cancel button ###
   $(document).on('click', '#cancel-task', function (e) {
     e.preventDefault();
 
@@ -223,10 +231,97 @@ $(document).ready(function () {
     resetNewTaskFields();
 
     // and enable back the newtask icon/edit button
-    newtask_toggle = 1;
-    edittask_toggle = 1;
-    is_newtaskDisplayed = false;
+    newtask_toggle = true;
+    edittask_toggle = true;
 
+    is_newTaskDisplayed = false;
+    
+
+    // close the "delete task popover" if it was open
+    if (is_delete_popover_open) {
+      $('#delete-task').popover('hide');
+      delete_task_button_toggle = 1
+    }
+
+  });
+
+  // ### DELETE TASK CONFIRMATION ###
+  // On pressing Enter
+  $(document).keypress('#delete-task-confirm-input', function (e) {
+    if (e.which === 13) {
+      // only if something is entered and if it was "DELETE"
+      if ($('#delete-task-confirm-input').val() && $('#delete-task-confirm-input').val() == "DELETE") {
+        e.preventDefault();
+
+        delete_popover = $('#delete-task');
+
+        task_id = delete_popover.data('taskid');
+        delete_popover.popover('hide');
+
+
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:8000/task/delete_task/',
+          data: {
+            task_id: task_id,
+            csrfmiddlewaretoken: getCookie('csrftoken')
+          },
+          datatype: 'json',
+
+          success: function (json) {
+
+            $(".reload-board").load(location.href + " .reload-board>*", "");
+
+            resetNewTaskFields();
+
+            // close the newtask window
+            $(".new-task-wrapper").toggleClass("newtaskDisplayed");
+            // and enable back the newtask icon/edit button
+            newtask_toggle = true;
+            edittask_toggle = true;
+
+            is_delete_popover_open = false;
+            is_newTaskDisplayed = false;
+
+            reconstructSidebarCategories(json);
+
+            // re-highlight the active category
+            $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+
+          },
+
+          error: function (xhr, errmsg, err) {
+
+          },
+        });
+      }
+    }
+  });
+
+  // ### On clicking the "delete" task button ###
+  var delete_task_button_toggle = 1;
+  $(document).on('click', '#delete-task', function () {
+
+    // setting the "is delete popover open" state
+    if (delete_task_button_toggle == 1) {
+      is_delete_popover_open = true;
+    } else {
+      is_delete_popover_open = false;
+    }
+
+    delete_task_button_toggle = 1 - delete_task_button_toggle;
+
+  })
+
+  // Close the delete task popover on ES
+  $(document).keyup(function (e) {
+    if (is_delete_popover_open) {
+      if (e.which === 27) {
+        $('#delete-task').popover('hide');
+        is_delete_popover_open = false;
+        delete_task_button_toggle = 1
+      }
+    }
   });
 
 });

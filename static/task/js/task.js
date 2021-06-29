@@ -1,22 +1,7 @@
-function getCookie(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie != "") {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = jQuery.trim(cookies[i]);
-      // Does this cookie string begin with the name we want?
-      if (cookie.substring(0, name.length + 1) == name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
 function taskForm(json) {
+
   // ### BOARD NAME ####
-  $('newtask-boardName').html(json.board_name)
+  $('.newtask-boardName').html(json.board_name)
 
   // ### CATEGORY SELECTION ####
   categories = JSON.parse(json.categories)
@@ -45,12 +30,18 @@ function taskForm(json) {
 
   }
 
-  // ### STATUS , NAME, DESCRIPTION AND SUBTASKS ###
+  // ### DELETE, STATUS , NAME, DESCRIPTION AND SUBTASKS ###
+  // ony if we are editing the task
   if (json.is_edit == "True") {
 
     t = JSON.parse(json.task)
     task = t[0]
     subtasks = JSON.parse(json.subtasks)
+
+    // Show Delete button and add task data to it
+    $('.delete-task-button').removeClass('d-none');
+    $('#delete-task').data('taskid', task.pk);
+    $('#delete-task').data('taskname', task.fields.name);
 
     // Status selection
     $('#id_status').empty();
@@ -93,26 +84,38 @@ function taskForm(json) {
     }
 
   } else {
+
+    // Hide "delete button"
+    if (!$('.delete-task-button').hasClass('d-none')) {
+      $('.delete-task-button').addClass('d-none');
+    }
+
+    // Hide "status selection"
+    if (!$('.task-status').hasClass('d-none')) {
+      $('.task-status').addClass('d-none');
+    }
+
     // show "create and continue checkbox"
     $('.custom-checkbox-wrapper').removeClass('d-none');
+
   }
 
-
-
-
-  // ### CREATE BUTTON ###
+  // ### CREATE/UPDATE BUTTON ###
   $('#create-task').html(json.button)
   $('#create-task').data('edit', json.is_edit)
 
   requiredFieldsCheck();
 }
+
 var edittask_toggle;
-var is_newtaskDisplayed;
+var is_newTaskDisplayed;
 
 $(document).ready(function () {
 
-  edittask_toggle = 1;
-  is_newtaskDisplayed = false;
+  // enable the task card's "edit" button
+  edittask_toggle = true;
+
+  is_newTaskDisplayed = false;
 
   // ### Posting task id for setting its "extended state" ###
   $(document).on('click', '.task-extend', function (e) {
@@ -151,7 +154,7 @@ $(document).ready(function () {
   $(document).on('click', '#edit-task', function (e) {
     e.preventDefault()
 
-    if (edittask_toggle == 1) {
+    if (edittask_toggle) {
 
       var task_id = $(this).attr('value')
 
@@ -167,30 +170,28 @@ $(document).ready(function () {
 
         success: function (json) {
 
-          newtask_toggle = 0;
-          edittask_toggle = 0;
-          is_newtaskDisplayed = true;
+          // while we have the "edit task" window open,
+          // we must disable the "new task icon" and the "edit" button itself
+          newtask_toggle = false;
+          edittask_toggle = false;
+
+          is_newTaskDisplayed = true;
 
           $(".new-task-wrapper").toggleClass("newtaskDisplayed");
 
           taskForm(json)
-
-
 
         },
 
         error: function (xhr, errmsg, err) {
 
         },
-
       });
     }
-
-
-
   });
 
   // ### Subtask checkbox ###
+  // posting the checkbox state
   $('.custom-subtask-checkbox').change(function () {
 
     if ($(this).is(':checked')) {
@@ -200,7 +201,6 @@ $(document).ready(function () {
     }
 
     subtask_id = $(this).data('subtaskid')
-
 
     $.ajax({
       type: 'POST',
@@ -214,7 +214,6 @@ $(document).ready(function () {
 
       success: function (json) {
 
-
       },
 
       error: function (xhr, errmsg, err) {
@@ -224,47 +223,52 @@ $(document).ready(function () {
 
   });
 
-  // ### Task card "status" selection
-  $(document).on('click', '.taskcard-status', function(e){
+  // ### Task card's"status" selection ###
+  $(document).on('click', '.taskcard-status', function (e) {
     e.preventDefault();
 
     task_id = $(this).data('taskid');
     new_status = $(this).html()
+    current_status = $(this).data('status')
 
-    $.ajax({
-      type: 'POST',
-      url: 'http://localhost:8000/task/status_manager/',
-      data: {
-        task_id: task_id,
-        new_status: new_status,
-        csrfmiddlewaretoken: getCookie('csrftoken')
-      },
-      datatype: 'json',
+    if (new_status != current_status) {
 
-      success: function (json) {
-        
-        $(".reload-board").load(location.href+" .reload-board>*","");
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8000/task/status_manager/',
+        data: {
+          task_id: task_id,
+          new_status: new_status,
+          csrfmiddlewaretoken: getCookie('csrftoken')
+        },
+        datatype: 'json',
 
-      },
+        success: function (json) {
 
-      error: function (xhr, errmsg, err) {
+          $(".reload-board").load(location.href + " .reload-board>*", "");
 
-      },
-    });
+        },
 
-    
+        error: function (xhr, errmsg, err) {
+
+        },
+      });
+    }
   });
 });
 
 // Close the new/edit task on pressing ESC
+// this should only be possible if "new/edit" task window is open AND 
+// if the "task delete popover" in NOT open
 $(document).keyup(function (e) {
-  if (is_newtaskDisplayed){
+
+  if (is_newTaskDisplayed && !is_delete_popover_open) {
 
     if (e.which === 27) {
       $('.new-task-wrapper').toggleClass('newtaskDisplayed');
-      is_newtaskDisplayed = false;
-      newtask_toggle = 1;
-      edittask_toggle = 1;
-    } 
+      is_newTaskDisplayed = false;
+      newtask_toggle = true;
+      edittask_toggle = true;
+    }
   }
 });

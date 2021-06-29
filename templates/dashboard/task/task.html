@@ -40,16 +40,16 @@
         </div>
         <div class="">
           <div class="dropdown">
-            <button data-display="static" class="btn btn-secondary dropdown-toggle task-status-button" type="button" id="dropdownMenuButton{{ task.id }}"
+            <button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton{{ task.id }}"
               data-bs-toggle="dropdown" aria-expanded="false">
               Move to
             </button>
             <ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton{{ task.id }}">
               {% for status in statuses %}
                 {% if task.status == status %}
-                  <li class="taskcard-status current-status" data-taskid="{{ task.id }}">{{ status }}</li>
+                  <li class="taskcard-status current-status" data-status="{{ status }}" data-taskid="{{ task.id }}">{{ status }}</li>
                 {% else %}
-                  <li class="taskcard-status" data-taskid="{{ task.id }}">{{ status }}</li>
+                  <li class="taskcard-status" data-status="" data-taskid="{{ task.id }}">{{ status }}</li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -59,3 +59,4 @@
     </div>
   </div>
 </div>
+

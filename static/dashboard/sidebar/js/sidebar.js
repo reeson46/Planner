@@ -1,15 +1,11 @@
-
-
-
 var newtask_toggle;
 
 $(document).ready(function () {
 
-
   // Set the newtask icon toggle, aka enable the icon
-  newtask_toggle = 1;
+  newtask_toggle = true;
 
-  // HIGHLIGHT THE ACTIVE BOARD/CATEGORY
+  // ### HIGHLIGHT THE ACTIVE BOARD/CATEGORY ###
 
   // on page refresh, highligh the active board
   $('.board-item[value="' + HIGHLIGHTED_BOARD + '"]').addClass('item-selected');
@@ -29,15 +25,13 @@ $(document).ready(function () {
     $(this).parent().addClass('item-selected');
   });
 
-
-  // SET TOTAL TASK NUMBER FOR EACH CATEGORY
+  // ### SET TOTAL TASK NUMBER FOR EACH CATEGORY ###
   var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
   $('.total-tasks-number').each(function (i) {
     if (tasks[i] != 0) {
       $(this).append('<div class="total-number"><div class="number">' + tasks[i] + '</div></div>');
     }
   });
-
 
   // ### ACTIVE BOARD ###
 
@@ -100,16 +94,14 @@ $(document).ready(function () {
 
   });
 
-
   // ### NEW TASK ICON -- DISPLAY NEW TASK WINDOW ###
   $(document).on('click', ".newtask-icon", function (e) {
     e.preventDefault();
 
+    if (newtask_toggle) {
 
-    if (newtask_toggle == 1) {
-
+      // display newtask window
       $(".new-task-wrapper").toggleClass("newtaskDisplayed");
-
 
       $.ajax({
         type: "GET",
@@ -123,9 +115,11 @@ $(document).ready(function () {
 
           taskForm(json);
           
-
-          newtask_toggle = 0;
-          is_newtaskDisplayed = true;
+          // disable newtask icon/ edit button
+          newtask_toggle = false;
+          edittask_toggle = false;  
+          
+          is_newTaskDisplayed = true;
 
         },
 

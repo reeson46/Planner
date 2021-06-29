@@ -1,5 +1,5 @@
 from django.core import serializers
-from django.http import JsonResponse
+from django.http import JsonResponse, response
 from django.shortcuts import redirect, render
 
 from planner.apps.dashboard.dashboard import Dashboard, Sidebar
@@ -170,14 +170,20 @@ def task_manager(request):
         return JsonResponse(response)
 
 
-def delete_task(request, pk):
-    task = Task.objects.get(pk=pk)
+def delete_task(request):
+    if request.method == 'POST':
 
-    if request.method == "POST":
+        task_id = request.POST.get('task_id')
+        task = Task.objects.get(pk=task_id)
+        board = task.board
         task.delete()
-        return redirect("dashboard:home")
 
-    return render(request, "dashboard/task/delete_task.html", {"task": task})
+        sidebar = Sidebar()
+        dashboard = Dashboard(request)
+
+        response = sidebar.categories_reload_json_response(board)
+        response['active_category_id'] = dashboard.get_active_category_id()
+        return JsonResponse(response)
 
 
 def set_task_extend_state(request):
