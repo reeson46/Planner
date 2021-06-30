@@ -1,3 +1,112 @@
+function taskForm(json) {
+
+  // ### BOARD NAME ####
+  $('.newtask-boardName').html(json.board_name)
+
+  // ### CATEGORY SELECTION ####
+  categories = JSON.parse(json.categories)
+
+  $('.newtask-categorySelect').empty();
+
+  if (categories == null) {
+
+    $('.newtask-categorySelect').append(
+      '<option value="" selected="">No Categories</option>'
+    )
+
+  } else {
+
+    categories.forEach((category) => {
+
+      if (json.category_id == category.pk) {
+        var option = '<option value="' + category.pk + '" selected=>' + category.fields.name + '</option>'
+      } else {
+        var option = '<option value="' + category.pk + '">' + category.fields.name + '</option>'
+      }
+
+      $('.newtask-categorySelect').append(option)
+
+    });
+
+  }
+
+  // ### DELETE, STATUS , NAME, DESCRIPTION AND SUBTASKS ###
+  // only if we are editing the task
+  if (json.is_edit == "True") {
+
+    t = JSON.parse(json.task)
+    task = t[0]
+    subtasks = JSON.parse(json.subtasks)
+
+    // Show Delete button and add task data to it
+    $('.delete-task-button').removeClass('d-none');
+    $('#delete-task').data('taskid', task.pk);
+    $('#delete-task').data('taskname', task.fields.name);
+
+    // Status selection
+    $('#id_status').empty();
+
+    $('.task-status').removeClass('d-none')
+
+    json.statuses.forEach((status) => {
+
+      if (task.fields.status == status) {
+        var option = '<option value="' + status + '" selected=>' + status + '</option>'
+      } else {
+        var option = '<option value="' + status + '">' + status + '</option>'
+      }
+
+      $('#id_status').append(option)
+
+    });
+
+    // Task name field
+    $('#id_name').val(task.fields.name)
+
+    // Task description field
+    $('#id_description').val(task.fields.description)
+
+    // Subtasks
+    $('#individual-subtask').empty();
+
+    subtasks.forEach((sub) => {
+      $('#individual-subtask').append(
+        '<span class="d-flex subtask-field"><input type="text-sub" class="card existing-subtask bg-dark text-light col-10" value="' + sub.fields.name + '" disabled=""><div class="delete-existing-subtask delete-icon-task" data-index="' + sub.pk + '"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path></svg></div></span>'
+      );
+    });
+
+    // Create/update button
+    $('#create-task').data('taskID', task.pk)
+
+    // Hide "create and continue checkbox"
+    if (!$('.custom-checkbox-wrapper').hasClass('d-none')) {
+      $('.custom-checkbox-wrapper').addClass('d-none');
+    }
+
+  } else {
+
+    // Hide "delete button"
+    if (!$('.delete-task-button').hasClass('d-none')) {
+      $('.delete-task-button').addClass('d-none');
+    }
+
+    // Hide "status selection"
+    if (!$('.task-status').hasClass('d-none')) {
+      $('.task-status').addClass('d-none');
+    }
+
+    // show "create and continue checkbox"
+    $('.custom-checkbox-wrapper').removeClass('d-none');
+
+  }
+
+  // ### CREATE/UPDATE BUTTON ###
+  $('#create-task').html(json.button)
+  $('#create-task').data('edit', json.is_edit)
+
+  requiredFieldsCheck();
+}
+
 function requiredFieldsCheck() {
 
   if ($("#id_category option:first").html() != 'No Categories' && $('input[type="text"]').val() != ''){
@@ -21,8 +130,7 @@ function requiredFieldsCheck() {
   }
 }
 
-
-function resetNewTaskFields() {
+function resetTaskFormFields() {
 
   // hide the status field (only available when editing task)
   if (!$('.task-status').hasClass('d-none')) {
@@ -52,7 +160,7 @@ function deleteTaskPopover() {
     html: true,
     sanitize: false,
     content: function () {
-      return '<div class="card shadow task-delete-window p-3"><div class="text-center text-warning fs-4 mb-2 mt-1">Are you sure you want to delete "' + $(this).data('taskname') + '"?</div><div class="text-center text-danger fs-5 mb-3">Warning, this cannot be undone!</div><div class="text-center text-white fs-6 mb-1 mb-2">To confirm this action, type "DELETE" below and press Enter</div><input type="text" class="card bg-dark text-light" id="delete-task-confirm-input"></div>'
+      return '<div class="card shadow delete-window p-3"><div class="text-center text-warning fs-4 mb-2 mt-1">Are you sure you want to delete "' + $(this).data('taskname') + '"?</div><div class="text-center text-danger fs-5 mb-3">Warning, this cannot be undone!</div><div class="text-center text-white fs-6 mb-1 mb-2">To confirm this action, type "DELETE" below and press Enter, or press ESC to cancel</div><input type="text" class="card bg-dark text-light" id="delete-task-confirm-input"></div>'
     },
 
   }).on('shown.bs.popover', function () {
@@ -62,14 +170,14 @@ function deleteTaskPopover() {
   });
 }
 
-var is_delete_popover_open;
+var is_deleteTask_popover_open;
 
 $(document).ready(function () {
 
   // init the popover
   deleteTaskPopover();
 
-  is_delete_popover_open = false;
+  is_deleteTask_popover_open = false;
 
   // init an empty array to track which existing subtasks were removed
   existing_subtasks = [];
@@ -163,7 +271,7 @@ $(document).ready(function () {
 
         $(".reload-board").load(" .reload-board > *");
 
-        resetNewTaskFields();
+        resetTaskFormFields();
 
         if (is_edit == "False") {
 
@@ -182,7 +290,7 @@ $(document).ready(function () {
             // close the newtask window
             $(".new-task-wrapper").toggleClass("newtaskDisplayed");
             // and enable back the newtask icon/edit button
-            newtask_toggle = true;
+            taskForm_toggle = true;
             edittask_toggle = true;
           }
         }
@@ -191,7 +299,7 @@ $(document).ready(function () {
           // close the newtask window
           $(".new-task-wrapper").toggleClass("newtaskDisplayed");
           // and enable back the newtask icon and edit button
-          newtask_toggle = true;
+          taskForm_toggle = true;
           edittask_toggle = true;
 
           // only if the task's category has been changed
@@ -228,17 +336,17 @@ $(document).ready(function () {
     $(".new-task-wrapper").toggleClass("newtaskDisplayed");
 
     // reset all fields
-    resetNewTaskFields();
+    resetTaskFormFields();
 
     // and enable back the newtask icon/edit button
-    newtask_toggle = true;
+    taskForm_toggle = true;
     edittask_toggle = true;
 
-    is_newTaskDisplayed = false;
+    is_taskFormDisplayed = false;
     
 
     // close the "delete task popover" if it was open
-    if (is_delete_popover_open) {
+    if (is_deleteTask_popover_open) {
       $('#delete-task').popover('hide');
       delete_task_button_toggle = 1
     }
@@ -272,16 +380,16 @@ $(document).ready(function () {
 
             $(".reload-board").load(location.href + " .reload-board>*", "");
 
-            resetNewTaskFields();
+            resetTaskFormFields();
 
             // close the newtask window
             $(".new-task-wrapper").toggleClass("newtaskDisplayed");
             // and enable back the newtask icon/edit button
-            newtask_toggle = true;
+            taskForm_toggle = true;
             edittask_toggle = true;
 
-            is_delete_popover_open = false;
-            is_newTaskDisplayed = false;
+            is_deleteTask_popover_open = false;
+            is_taskFormDisplayed = false;
 
             reconstructSidebarCategories(json);
 
@@ -304,21 +412,21 @@ $(document).ready(function () {
 
     // setting the "is delete popover open" state
     if (delete_task_button_toggle == 1) {
-      is_delete_popover_open = true;
+      is_deleteTask_popover_open = true;
     } else {
-      is_delete_popover_open = false;
+      is_deleteTask_popover_open = false;
     }
 
     delete_task_button_toggle = 1 - delete_task_button_toggle;
 
   })
 
-  // Close the delete task popover on ES
+  // Close the delete task popover on ESC
   $(document).keyup(function (e) {
-    if (is_delete_popover_open) {
-      if (e.which === 27) {
+    if (e.which === 27) {
+      if (is_deleteTask_popover_open) {
         $('#delete-task').popover('hide');
-        is_delete_popover_open = false;
+        is_deleteTask_popover_open = false;
         delete_task_button_toggle = 1
       }
     }

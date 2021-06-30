@@ -8,7 +8,7 @@
     <div class="p-3 task-col">
 
       {% for task in planned %}
-      {% include 'dashboard/task/task.html' %}
+      {% include 'dashboard/task/task_card.html' %}
       {% endfor %}
 
     </div>
@@ -21,7 +21,7 @@
     <div class="p-3 task-col">
 
       {% for task in in_progress %}
-      {% include 'dashboard/task/task.html' %}
+      {% include 'dashboard/task/task_card.html' %}
       {% endfor %}
 
     </div>
@@ -35,7 +35,7 @@
     <div class="p-3 task-col">
 
       {% for task in testing %}
-      {% include 'dashboard/task/task.html' %}
+      {% include 'dashboard/task/task_card.html' %}
       {% endfor %}
 
     </div>
@@ -49,10 +49,10 @@
     <div class="p-3 task-col">
 
       {% for task in completed %}
-      {% include 'dashboard/task/task.html' %}
+      {% include 'dashboard/task/task_card.html' %}
       {% endfor %}
 
     </div>
   </div>
 </div>
-  <script src="{% static 'task/js/task.js' %}"></script>
+  <script src="{% static 'task/js/task_card.js' %}"></script>

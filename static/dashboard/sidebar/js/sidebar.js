@@ -1,9 +1,30 @@
-var newtask_toggle;
+function deletePopover() {
+  $('.delete-icon').popover({
+    html: true,
+    sanitize: false,
+    content: function () {
+
+      return '<div class="card shadow delete-window p-3"><div class="text-center text-warning fs-4 mb-2 mt-1">Are you sure you want to delete "' + $(this).data('name') + '"?</div><div class="text-center text-danger fs-5 mb-3" id="popover-message"></div><div class="text-center text-white fs-6 mb-1 mb-2">To confirm this action, type "DELETE" below and press Enter, or press ESC to cancel</div><input type="text" class="card bg-dark text-light" id="delete-confirm-input"></div>'
+    },
+
+  }).on('shown.bs.popover', function () {
+    // focus the input
+    $('#delete-confirm-input').focus();
+
+  });
+}
+
+var is_deleteBoardCategory_popover_open;
+var taskForm_toggle;
 
 $(document).ready(function () {
 
+  // init the delete  popover
+  deletePopover();
+  is_deleteBoardCategory_popover_open = false;
+
   // Set the newtask icon toggle, aka enable the icon
-  newtask_toggle = true;
+  taskForm_toggle = true;
 
   // ### HIGHLIGHT THE ACTIVE BOARD/CATEGORY ###
 
@@ -98,7 +119,9 @@ $(document).ready(function () {
   $(document).on('click', ".newtask-icon", function (e) {
     e.preventDefault();
 
-    if (newtask_toggle) {
+    if (taskForm_toggle) {
+
+      resetTaskFormFields();
 
       // display newtask window
       $(".new-task-wrapper").toggleClass("newtaskDisplayed");
@@ -116,10 +139,10 @@ $(document).ready(function () {
           taskForm(json);
           
           // disable newtask icon/ edit button
-          newtask_toggle = false;
+          taskForm_toggle = false;
           edittask_toggle = false;  
           
-          is_newTaskDisplayed = true;
+          is_taskFormDisplayed = true;
 
         },
 
@@ -130,6 +153,17 @@ $(document).ready(function () {
       });
     }
 
+  });
+
+  // Close the delete category popover on ESC
+  $(document).keyup(function (e) {
+    if (e.which === 27) {
+      if (is_deleteBoardCategory_popover_open) {
+        $('.delete-icon').popover('hide');
+        is_deleteBoardCategory_popover_open = false;
+
+      }
+    }
   });
 
 });

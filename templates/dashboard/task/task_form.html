@@ -6,7 +6,8 @@
         <div class="d-flex justify-content-between mb-3">
           <div class="text-white fs-4 newtask-boardName"></div>
           <div class="d-none delete-task-button">
-            <button class="btn btn-block btn-sm fw500 w-100" data-placeholder="bottom" data-taskid="" data-taskname=""  id="delete-task">Delete</button>
+            <button class="btn btn-block btn-sm fw500 w-100" data-placeholder="bottom" data-taskid="" data-taskname=""
+              id="delete-task">Delete</button>
           </div>
         </div>
         <div class="d-flex justify-content-between">
@@ -57,20 +58,18 @@
     </div>
     <br>
 
-    <div class="task-bottom-section row align-items-end m-0">
-      <div class="form-check form-switch mt-2 mb-2 custom-checkbox-wrapper">
+    <div class="taskForm-bottom-section row align-items-end">
+      <div class="form-check form-switch mt-2 mb-3 ms-3 custom-checkbox-wrapper">
         <input class="form-check-input custom-checkbox" id="create-and-continue" type="checkbox"
           id="flexSwitchCheckChecked">
         <label class="form-check-label text-white" for="flexSwitchCheckChecked">Create and continue</label>
       </div>
-      <div class="row p-0">
-        <div class="col-9">
-          <button type="submit" data-edit="" data-taskID="" class="btn btn-success btn-block fw500 w-100"
-            id="create-task"></button>
-        </div>
-        <div class="col-3 pe-0">
-          <button class="btn btn-block fw500 w-100" id="cancel-task">Cancel</button>
-        </div>
+      <div class="col-9">
+        <button type="submit" data-edit="" data-taskID="" class="btn btn-success btn-block fw500 w-100"
+          id="create-task"></button>
+      </div>
+      <div class="col-3">
+        <button class="btn btn-block fw500 w-100" id="cancel-task">Cancel</button>
       </div>
 
     </div>
@@ -84,4 +83,4 @@
   var DASHBOARD_HOME_URL = '{% url "dashboard:home" %}';
   var CSRF_TOKEN = '{{ csrf_token }}';
 </script>
-<script src="{% static 'task/js/new_task.js' %}" data-rel-js></script>
+<script src="{% static 'task/js/task_form.js' %}" data-rel-js></script>

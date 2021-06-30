@@ -93,8 +93,6 @@ hr.new4 {
 }
 
 /* Rename/delete icon */
-
-
 .delete-icon {
     width: 100%;
 }
@@ -102,4 +100,12 @@ hr.new4 {
 .delete-icon:hover {
     cursor: pointer;
     fill: orangered;
+}
+
+/* Delete windows */
+.delete-window{
+    width: 455px;
+    height: fit-content;
+    background-color: #454545;
+    border: 2px solid orange;
 }

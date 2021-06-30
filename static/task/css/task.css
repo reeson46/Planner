@@ -102,7 +102,7 @@
     background-color: #464e57;
 }
 
-/* New/update task */
+/* Task Form*/
 .add-icon-task {
     position: relative;
     left: 10px;
@@ -172,6 +172,7 @@
     transform: scale(0.95);
 }
 
+
 .custom-checkbox:checked {
     background-color: coral;
     border-color: coral;
@@ -185,8 +186,8 @@
     border: 1px orange solid;
 }
 
-.task-bottom-section{
-    height: 78px;
+.taskForm-bottom-section{
+    height: 80px;
 }
 
 #delete-task{
