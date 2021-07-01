@@ -269,7 +269,7 @@ $(document).ready(function () {
 
       success: function (json) {
 
-        $(".reload-board").load(" .reload-board > *");
+        $(".reload-board").load(location.href + " .reload-board>*", "");
 
         resetTaskFormFields();
 

@@ -1,4 +1,12 @@
 /* Task Card */
+.task-card-header-wrapper {
+    height: 70px;
+}
+
+.task-card-header {
+    height: 100%;
+}
+
 .task-col {
     overflow-y: scroll;
     height: 85vh;
@@ -29,76 +37,78 @@
     margin-bottom: 0;
 }
 
-#edit-task{
+#edit-task {
     background-color: #ced027;
 }
 
-#edit-task:hover{
+#edit-task:hover {
     background-color: #adaf1e;
 }
 
-#edit-task:focus{
+#edit-task:focus {
     box-shadow: none;
 }
 
-#edit-task:active{
- transform: scale(0.95);
+#edit-task:active {
+    transform: scale(0.95);
 }
 
-.custom-subtask-checkbox{
+.custom-subtask-checkbox {
     background-color: #e3e3e3;
 }
 
-.custom-subtask-checkbox:checked{
+.custom-subtask-checkbox:checked {
     background-color: #00A62F;
     border-color: #00A62F;
 }
 
-.custom-subtask-checkbox:focus{
+.custom-subtask-checkbox:focus {
     box-shadow: none;
 }
 
 
 .task-description-text,
-.task-subtask-text{
+.task-subtask-text {
     color: orange;
 }
 
-.task-title-text{
+.task-title-text {
     color: #ffbc41;
     font-weight: bold;
+    margin: auto 0;
+    margin-left: 1rem;
 }
 
-.card-subtask{
+.card-subtask {
     padding-right: 10px;
 }
 
-.task-status-button:focus{
+.task-status-button:focus {
     box-shadow: none;
 }
 
-.task-status-button{
+.task-status-button {
     background-color: cadetblue;
 }
 
-.dropdown-menu-taskcard{
+.dropdown-menu-taskcard {
     min-width: 100px;
     border: 1px solid lightblue;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-.taskcard-status{
+.taskcard-status {
     color: white;
     padding: 3px;
 }
 
-.taskcard-status:hover{
+.taskcard-status:hover {
     background-color: #343a41;
     cursor: pointer;
 }
 
-.current-status{
+.current-status {
     background-color: #464e57;
 }
 
@@ -128,17 +138,17 @@
     width: 700px;
     position: absolute;
     left: calc(50% - 350px);
-    z-index: 1;
+    z-index: 15;
     top: -835px;
     opacity: 0;
     transition: 0.5s;
 }
 
-#new-task-wrapper{
+#new-task-wrapper {
     height: 800px;
 }
 
-#individual-subtask{
+#individual-subtask {
     height: 200px;
     overflow: auto;
 }
@@ -148,11 +158,11 @@
     opacity: 1;
 }
 
-#create-task:focus{
+#create-task:focus {
     box-shadow: none;
 }
 
-#create-task:active{
+#create-task:active {
     transform: scale(0.95);
 }
 
@@ -168,6 +178,7 @@
 #cancel-task:hover {
     background-color: #ad7101;
 }
+
 #cancel-task:active {
     transform: scale(0.95);
 }
@@ -186,32 +197,92 @@
     border: 1px orange solid;
 }
 
-.taskForm-bottom-section{
+.taskForm-bottom-section {
     height: 80px;
 }
 
-#delete-task{
+#delete-task {
     background-color: red;
     color: black;
 }
 
-#delete-task:hover{
+#delete-task:hover {
     background-color: rgb(255, 116, 116);
 }
 
-#delete-task:focus{
+#delete-task:focus {
     box-shadow: none;
 }
 
-#delete-task:active{
+#delete-task:active {
     transform: scale(0.9);
 }
 
-/* Task delete window */
-.task-delete-window{
-    width: fit-content;
-    height: 195px;
-    background-color: #454545;
-    border: 2px solid orange;
-    white-space: nowrap;
+/* Subtask progress bar */
+.subtask-circular-progress {
+    position: relative;
+    margin: auto 0;
+    margin-right: 1rem;
+    height: 60px;
+    width: 60px;
+    background-color: red;
 }
+
+.subtask-circular-progress .inner {
+    position: absolute;
+    z-index: 6;
+    top: 50%;
+    left: 50%;
+    height: 50px;
+    width: 50px;
+    margin: -25px 0 0 -25px;
+    border-radius: 100%;
+    background: #454545;
+}
+
+.subtask-circular-progress .number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+}
+
+.subtask-circular-progress .bar {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    clip: rect(0px, 60px, 60px, 30px);
+}
+
+.circle .bar .sub-progress {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    clip: rect(0px, 30px, 60px, 0px);
+    background: #4158d0;
+}
+
+.circle .left .sub-progress {
+    transform: rotate(0deg);
+}
+
+
+.circle .right {
+    transform: rotate(180deg);
+    z-index: 3;
+
+}
+
+.circle .right .sub-progress {
+    transform: rotate(0deg);
+}
+

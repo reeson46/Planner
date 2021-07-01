@@ -55,4 +55,9 @@
     </div>
   </div>
 </div>
-  <script src="{% static 'task/js/task_card.js' %}"></script>
+
+<script>
+  var COMPLETED_SUBTASKS = '{{ completed_subtasks }}';
+  var TASK_IDS = '{{ task_ids }}';
+</script>
+<script src="{% static 'task/js/task_card.js' %}" data-rel-js></script>

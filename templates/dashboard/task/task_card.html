@@ -1,9 +1,22 @@
 <div class="card text-white task shadow" id="panelsStayOpen-heading{{ task.id }}">
-  <div class="card-header task-extend" data-index="{{ task.id }}" value="{{task.extend_state}}"
-    data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}" aria-expanded="true"
-    aria-controls="panelsStayOpen-collapse{{ task.id }}">
-
-    <div class="card-subtitle fs-3 task-title-text">{{ task.name }}</div>
+  <div class="card-header task-card-header-wrapper task-extend p-0" data-index="{{ task.id }}"
+    value="{{task.extend_state}}" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ task.id }}"
+    aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ task.id }}">
+    <div class="d-flex justify-content-between task-card-header">
+      <div class="card-subtitle fs-3 task-title-text">{{ task.name }}</div>
+      <div class="subtask-circular-progress sub-progress-bar{{task.id}}" data-taskid="{{task.id}}" data-totalsubs="{{task.subtask.all|length}}" data-completed="">
+        <div class="inner"></div>
+        <div class="number">100%</div>
+        <div class="circle">
+          <div class="bar left">
+            <div class="sub-progress"></div>
+          </div>
+          <div class="bar right">
+            <div class="sub-progress"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
   <div id="panelsStayOpen-collapse{{ task.id }}"
@@ -22,7 +35,7 @@
       <span class="d-flex justify-content-between mb-3">
         <li class="card-subtitle card-subtask">{{ subtask.name }}</li>
         <div class="checkbox-div">
-          <input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="{{ subtask.id }}"
+          <input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="{{ subtask.id }}" data-taskid="{{task.id}}" 
             {% if subtask.is_complete %}checked{% endif %}>
         </div>
       </span>
@@ -40,17 +53,18 @@
         </div>
         <div class="">
           <div class="dropdown">
-            <button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton{{ task.id }}"
-              data-bs-toggle="dropdown" aria-expanded="false">
+            <button data-display="static" class="btn dropdown-toggle task-status-button" type="button"
+              id="dropdownMenuButton{{ task.id }}" data-bs-toggle="dropdown" aria-expanded="false">
               Move to
             </button>
             <ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton{{ task.id }}">
               {% for status in statuses %}
-                {% if task.status == status %}
-                  <li class="taskcard-status current-status" data-status="{{ status }}" data-taskid="{{ task.id }}">{{ status }}</li>
-                {% else %}
-                  <li class="taskcard-status" data-status="" data-taskid="{{ task.id }}">{{ status }}</li>
-                {% endif %}
+              {% if task.status == status %}
+              <li class="taskcard-status current-status" data-status="{{ status }}" data-taskid="{{ task.id }}">
+                {{ status }}</li>
+              {% else %}
+              <li class="taskcard-status" data-status="" data-taskid="{{ task.id }}">{{ status }}</li>
+              {% endif %}
               {% endfor %}
             </ul>
           </div>
@@ -59,4 +73,3 @@
     </div>
   </div>
 </div>
-

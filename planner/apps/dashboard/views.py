@@ -1,8 +1,11 @@
+from django.core import serializers
+from django.core.serializers import serialize
+from django.http import response
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
 from planner.apps.task.models import Category
-
+from planner.apps.task.task import Task
 from .dashboard import Dashboard, Sidebar
 from .models import Board
 
@@ -77,9 +80,13 @@ def dashboard(request):
     categories = active_board.category.all()
 
     total_tasks_per_category = [
-        len(category.task.filter(board=active_board)) for category in categories
+        category.task.filter(board=active_board).count() for category in categories
     ]
 
+    task = Task()
+    completed_subtasks = task.getCompletedSubtasks(tasks)
+
+    task_ids = task.getTaskIds(tasks)
     statuses = ["Planned", "In Progress", "Testing", "Completed"]
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
@@ -99,6 +106,8 @@ def dashboard(request):
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
         "total_tasks_per_category": total_tasks_per_category,
+        'completed_subtasks': completed_subtasks,
+        'task_ids': task_ids
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -128,11 +137,21 @@ def set_active_category(request):
         category_id = int(request.POST.get("category_id"))
         dashboard.set_active_category_id(category_id=category_id)
 
-        return JsonResponse({"message": "Active category set!"})
+        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
 
+        task = Task()
+        tasks = task.getTasks(category_id, active_board)
 
-# def test(request):
-#     return render(request, 'test.html')
+        task_ids = task.getTaskIds(tasks)
+        completed_subtasks = task.getCompletedSubtasks(tasks)
+
+        response = {
+            'task_ids': task_ids,
+            'completed_subtasks': completed_subtasks,
+            "message": "Active category set!"
+        }
+
+        return JsonResponse(response)
 
 
 def board_manager(request):

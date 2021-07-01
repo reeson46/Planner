@@ -14,6 +14,7 @@ function getCookie(name) {
   return cookieValue;
 }
 
+
 function sidebarCategory(category, total_tasks_per_category, i) {
 
   if (total_tasks_per_category[i] != 0) {
@@ -158,7 +159,7 @@ function ajaxBoardManager(action, id, entered_name) {
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
         // Reload the board
-        $(".reload-board").load(" .reload-board > *");
+        $(".reload-board").load(location.href + " .reload-board>*", "");
 
       }
 
@@ -177,7 +178,7 @@ function ajaxBoardManager(action, id, entered_name) {
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
         // Reload the board
-        $(".reload-board").load(" .reload-board > *");
+        $(".reload-board").load(location.href + " .reload-board>*", "");
       }
 
 

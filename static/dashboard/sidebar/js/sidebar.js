@@ -103,8 +103,12 @@ $(document).ready(function () {
       datatype: 'json',
 
       success: function (json) {
-        $(".reload-board").load(" .reload-board > *");
 
+        
+        task_ids = json.task_ids
+        completed_subtasks = json.completed_subtasks
+        setSubtasksProgressBar(task_ids, completed_subtasks);
+        //$(".reload-board").load(location.href + " .reload-board>*", "");
       },
 
       error: function (xhr, errmsg, err) {
