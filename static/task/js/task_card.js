@@ -28,12 +28,15 @@ function updateSubtaskProgressBar(subs_completed, total_subs, task_id) {
 
 }
 
-function initialUpdateSubtaskProgressBar(subs_completed, total_subs, task_id) {
+function setSubtaskProgressBar(subs_completed, total_subs, task_id) {
+
+  
 
   var left_side = $(".sub-progress-bar" + task_id + " .circle .left .sub-progress");
   var right_side = $(".sub-progress-bar" + task_id + " .circle .right .sub-progress");
 
   progress = subs_completed / total_subs * 360;
+  console.log(subs_completed, total_subs, task_id, progress)
 
   if (progress <= 180) {
 
@@ -55,7 +58,7 @@ function initialUpdateSubtaskProgressBar(subs_completed, total_subs, task_id) {
 
 }
 
-function setSubtasksProgressBar(task_ids, completed_subtasks) {
+function subtasksProgressBar(task_ids, completed_subtasks) {
 
   task_ids.forEach((id, i) => {
 
@@ -63,7 +66,7 @@ function setSubtasksProgressBar(task_ids, completed_subtasks) {
     sub_progress.data('completed', completed_subtasks[i])
 
     total_subs = sub_progress.data('totalsubs')
-    initialUpdateSubtaskProgressBar(completed_subtasks[i], total_subs, id)
+    setSubtaskProgressBar(completed_subtasks[i], total_subs, id)
 
   })
 }
@@ -76,7 +79,7 @@ $(document).ready(function () {
 
   var task_ids = JSON.parse(TASK_IDS)
   var completed_subtasks = JSON.parse(COMPLETED_SUBTASKS)
-  setSubtasksProgressBar(task_ids, completed_subtasks);
+  subtasksProgressBar(task_ids, completed_subtasks);
 
   // enable the task card's "edit" button
   edittask_toggle = true;
@@ -159,8 +162,7 @@ $(document).ready(function () {
 
   // ### Subtask checkbox ###
   // posting the checkbox state
-  $('.custom-subtask-checkbox').change(function () {
-
+  $(document).on('change', '.custom-subtask-checkbox', function () {
     // get the data  
     task_id = $(this).data('taskid')
     sub_progress = $('.sub-progress-bar' + task_id)

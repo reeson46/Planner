@@ -1,3 +1,74 @@
+class Task{
+  constructor(task, statuses){
+    this.task = task;
+    this.statuses = statuses;
+  }
+
+  taskCard(){
+
+    if(this.task.task[0].fields.extend_state == 1){
+      this.extend_state = ' show';
+    }
+    else{
+      this.extend_state = '';
+    }
+  
+    if(this.task.subtasks.length){
+  
+      this.task_subtasks = '<div class="task-subtask-text fs-5 mb-2">Subtasks:</div>' 
+      
+      this.subs_complete = 0;
+      
+      this.task.subtasks.forEach((sub)=>{
+        
+        if(sub.fields.is_complete){
+          this.checked = ' checked';
+          this.subs_complete += 1;
+        }
+        else{
+          this.checked = '';
+        }
+        
+        this.task_subtasks += '<span class="d-flex justify-content-between mb-3"><li class="card-subtitle card-subtask">'+sub.fields.name+'</li><div class="checkbox-div"><input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="'+sub.pk+'" data-taskid="'+sub.fields.task+'"'+this.checked+'></div></span>'
+      })
+      
+      this.progress_bar = '<div class="subtask-circular-progress sub-progress-bar'+this.task.task[0].pk+'" data-taskid="'+this.task.task[0].pk+'" data-totalsubs="'+this.task.subtasks.length+'" data-completed="'+this.subs_complete+'"><div class="inner"></div><div class="number">100%</div><div class="circle"><div class="bar left"><div class="sub-progress"></div></div><div class="bar right"><div class="sub-progress"></div></div></div></div>';
+      
+    }else{
+      this.progress_bar = '';
+      this.task_subtasks = '';
+      this.subs_complete = 0;
+    }
+  
+    if (this.task.task[0].fields.description != ''){
+      this.task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">'+this.task.fields.description+'</div><hr>';
+    }
+    else{
+      this.task_description = '';
+    }
+  
+    let date = new Date(this.task.task[0].fields.date_created)
+  
+    this.status_dropdown = '';
+  
+    this.statuses.forEach((status)=>{
+      if(this.task.task[0].fields.status == status){
+        this.status_dropdown += '<li class="taskcard-status current-status" data-status="'+status+'" data-taskid="'+this.task.task[0].pk+'">'+status+'</li>'
+      }
+      else{
+        this.status_dropdown += '<li class="taskcard-status" data-status="" data-taskid="'+this.task.task[0].pk+'">'+status+'</li>'
+      }
+    })
+  
+    return '<div class="card text-white task shadow" id="panelsStayOpen-heading'+this.task.task[0].pk+'"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="'+this.task.task[0].pk+'" value="'+this.task.task[0].fields.extend_state+'" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse'+this.task.task[0].pk+'" aria-expanded="true" aria-controls="panelsStayOpen-collapse'+this.task.task[0].pk+'"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">'+this.task.task[0].fields.name+'</div>'+this.progress_bar+'</div></div><div id="panelsStayOpen-collapse'+this.task.task[0].pk+'" class="accordion-collapse collapse'+this.extend_state+'" aria-labelledby="panelsStayOpen-heading'+this.task.task[0].pk+'"><div class="card-body"><div class="task-card-description">'+this.task_description+'</div><div class="task-card-subtasks">'+this.task_subtasks+'</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by '+this.task.created_by[0].fields.user_name+', on '+date+'</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="'+this.task.task[0].pk+'" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton'+this.task.task[0].pk+'" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton'+this.task.task[0].pk+'">'+this.status_dropdown+'</ul></div></div></div></div></div></div>'
+  
+  }
+
+  subtasks_complete(){
+    return this.subs_complete;
+  }
+}
+
 function getCookie(name) {
   var cookieValue = null;
   if (document.cookie && document.cookie != "") {
@@ -40,59 +111,6 @@ function sidebarBoard(board, total_boards) {
 
 }
 
-function taskCard(task, statuses){
-
-  if(task.task[0].fields.extend_state == 1){
-    extend_state = ' show';
-  }
-  else{
-    extend_state = '';
-  }
-
-  if (task.task[0].fields.description != ''){
-    task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">'+task.fields.description+'</div><hr>';
-  }
-  else{
-    task_description = '';
-  }
-
-  if (task.subtasks.length){
-
-    task_subtasks = '<div class="task-subtask-text fs-5 mb-2">Subtasks:</div>' 
-    
-    task.subtasks.forEach((sub)=>{
-
-      if(sub.fields.is_complete){
-        checked = ' checked';
-      }
-      else{
-        checked = '';
-      }
-
-      task_subtasks += '<span class="d-flex justify-content-between mb-3"><li class="card-subtitle card-subtask">'+sub.fields.name+'</li><div class="checkbox-div"><input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="'+sub.pk+'" data-taskid="'+sub.fields.task+'"'+checked+'></div></span>'
-    })
-  }
-  else{
-    task_subtasks = '';
-  }
-
-  var date = new Date(task.task[0].fields.date_created)
-
-  status_dropdown = '';
-
-  statuses.forEach((status)=>{
-    if(task.task[0].fields.status == status){
-      status_dropdown += '<li class="taskcard-status current-status" data-status="'+status+'" data-taskid="'+task.task[0].pk+'">'+status+'</li>'
-    }
-    else{
-      status_dropdown += '<li class="taskcard-status" data-status="" data-taskid="'+task.task[0].pk+'">'+status+'</li>'
-    }
-  })
-
-  task_card = '<div class="card text-white task shadow" id="panelsStayOpen-heading'+task.task[0].pk+'"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="'+task.task[0].pk+'" value="'+task.task[0].fields.extend_state+'" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse'+task.task[0].pk+'" aria-expanded="true" aria-controls="panelsStayOpen-collapse'+task.task[0].pk+'"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">'+task.task[0].fields.name+'</div><div class="subtask-circular-progress sub-progress-bar'+task.id+'" data-taskid="'+task.id+'" data-totalsubs="'+task.subtasks.length+'" data-completed=""><div class="inner"></div><div class="number">100%</div><div class="circle"><div class="bar left"><div class="sub-progress"></div></div><div class="bar right"><div class="sub-progress"></div></div></div></div></div></div><div id="panelsStayOpen-collapse'+task.task[0].pk+'" class="accordion-collapse collapse'+extend_state+'" aria-labelledby="panelsStayOpen-heading'+task.task[0].pk+'"><div class="card-body"><div class="task-card-description">'+task_description+'</div><div class="task-card-subtasks">'+task_subtasks+'</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by '+task.created_by[0].fields.user_name+', on '+date+'</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="'+task.task[0].pk+'" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton'+task.task[0].pk+'" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton'+task.task[0].pk+'">'+status_dropdown+'</ul></div></div></div></div></div></div>'
-
-  return task_card;
-}
 
 function reconstructSidebarBoards(json) {
   // get the data
@@ -344,34 +362,43 @@ function reloadTasks(){
       $('#tasks-completed').empty();
 
       tasks.forEach((task)=>{
+
+        let myTask = new Task(task, statuses)
        
         if(task.task[0].fields.status == 'Planned'){
+          
           $('#tasks-planned').append(
-            taskCard(task, statuses)
+            myTask.taskCard()
           )
           planned += 1;
+          
         }
 
         if(task.task[0].fields.status == 'In Progress'){
+          
           $('#tasks-in-progress').append(
-            taskCard(task, statuses)
+            myTask.taskCard()
           );
           in_progress += 1;
         }
 
         if(task.task[0].fields.status == 'Testing'){
+          
           $('#tasks-testing').append(
-            taskCard(task, statuses)
+            myTask.taskCard()
           );
           testing += 1;
         }
 
         if(task.task[0].fields.status == 'Completed'){
+          
           $('#tasks-completed').append(
-            taskCard(task, statuses)
+            myTask.taskCard()
           );
           completed += 1;
         }
+
+        setSubtaskProgressBar(myTask.subtasks_complete(), task.subtasks.length, task.task[0].pk)
        
       })
 
