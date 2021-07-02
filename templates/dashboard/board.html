@@ -2,10 +2,10 @@
 <div class="row accordion reload-board">
 
   <div class="col-lg-3 col-md-6 col-sm-12">
-    <h2 class="text-secondary font-monospace text-center">Planned {{ planned|length }}</h2>
+    <h2 class="text-secondary font-monospace text-center" id="planned-total">Planned {{ planned|length }}</h2>
     <hr class="new1">
 
-    <div class="p-3 task-col">
+    <div class="p-3 task-col" id="tasks-planned">
 
       {% for task in planned %}
       {% include 'dashboard/task/task_card.html' %}
@@ -15,10 +15,10 @@
   </div>
 
   <div class="col-lg-3 col-md-6 col-sm-12">
-    <h2 class="text-primary font-monospace text-center">In Progress {{ in_progress|length }}</h2>
+    <h2 class="text-primary font-monospace text-center" id="in-progress-total">In Progress {{ in_progress|length }}</h2>
     <hr class="new2">
 
-    <div class="p-3 task-col">
+    <div class="p-3 task-col" id="tasks-in-progress">
 
       {% for task in in_progress %}
       {% include 'dashboard/task/task_card.html' %}
@@ -29,10 +29,10 @@
 
   <div class="col-lg-3 col-md-6 col-sm-12">
 
-    <h2 class="text-danger font-monospace text-center">Testing {{ testing|length }}</h2>
+    <h2 class="text-danger font-monospace text-center" id="testing-total">Testing {{ testing|length }}</h2>
     <hr class="new3">
 
-    <div class="p-3 task-col">
+    <div class="p-3 task-col" id="tasks-testing">
 
       {% for task in testing %}
       {% include 'dashboard/task/task_card.html' %}
@@ -43,10 +43,10 @@
 
   <div class="col-lg-3 col-md-6 col-sm-12">
 
-    <h2 class="text-success font-monospace text-center">Completed {{ completed|length }}</h2>
+    <h2 class="text-success font-monospace text-center" id="completed-total">Completed {{ completed|length }}</h2>
     <hr class="new4">
 
-    <div class="p-3 task-col">
+    <div class="p-3 task-col" id="tasks-completed">
 
       {% for task in completed %}
       {% include 'dashboard/task/task_card.html' %}

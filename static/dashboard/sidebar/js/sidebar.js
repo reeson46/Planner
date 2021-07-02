@@ -104,11 +104,9 @@ $(document).ready(function () {
 
       success: function (json) {
 
-        
-        task_ids = json.task_ids
-        completed_subtasks = json.completed_subtasks
-        setSubtasksProgressBar(task_ids, completed_subtasks);
+        reloadTasks();
         //$(".reload-board").load(location.href + " .reload-board>*", "");
+
       },
 
       error: function (xhr, errmsg, err) {

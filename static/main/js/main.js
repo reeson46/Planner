@@ -14,7 +14,6 @@ function getCookie(name) {
   return cookieValue;
 }
 
-
 function sidebarCategory(category, total_tasks_per_category, i) {
 
   if (total_tasks_per_category[i] != 0) {
@@ -39,6 +38,60 @@ function sidebarBoard(board, total_boards) {
   return '<li class="row hovered-nav-item board-item" value="' + board.pk + '"><span class="d-flex justify-content-between"><div class="fs-5 text-white board-name" value="' + board.pk + '">' + board.fields.name + '</div><div class="dropdown sidebar-dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon"type="button" id="dropdownMenuButton' + board.pk + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + board.pk + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill rename-add-icon rename-add-icon-sidebar" data-sender="board" data-action="rename" data-placeholder="" data-value="' + board.fields.name + '" data-id="' + board.pk + '" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li>' + del_icon + '</ul></div></span></li>'
 
 
+}
+
+function taskCard(task, statuses){
+
+  if(task.task[0].fields.extend_state == 1){
+    extend_state = ' show';
+  }
+  else{
+    extend_state = '';
+  }
+
+  if (task.task[0].fields.description != ''){
+    task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">'+task.fields.description+'</div><hr>';
+  }
+  else{
+    task_description = '';
+  }
+
+  if (task.subtasks.length){
+
+    task_subtasks = '<div class="task-subtask-text fs-5 mb-2">Subtasks:</div>' 
+    
+    task.subtasks.forEach((sub)=>{
+
+      if(sub.fields.is_complete){
+        checked = ' checked';
+      }
+      else{
+        checked = '';
+      }
+
+      task_subtasks += '<span class="d-flex justify-content-between mb-3"><li class="card-subtitle card-subtask">'+sub.fields.name+'</li><div class="checkbox-div"><input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="'+sub.pk+'" data-taskid="'+sub.fields.task+'"'+checked+'></div></span>'
+    })
+  }
+  else{
+    task_subtasks = '';
+  }
+
+  var date = new Date(task.task[0].fields.date_created)
+
+  status_dropdown = '';
+
+  statuses.forEach((status)=>{
+    if(task.task[0].fields.status == status){
+      status_dropdown += '<li class="taskcard-status current-status" data-status="'+status+'" data-taskid="'+task.task[0].pk+'">'+status+'</li>'
+    }
+    else{
+      status_dropdown += '<li class="taskcard-status" data-status="" data-taskid="'+task.task[0].pk+'">'+status+'</li>'
+    }
+  })
+
+  task_card = '<div class="card text-white task shadow" id="panelsStayOpen-heading'+task.task[0].pk+'"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="'+task.task[0].pk+'" value="'+task.task[0].fields.extend_state+'" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse'+task.task[0].pk+'" aria-expanded="true" aria-controls="panelsStayOpen-collapse'+task.task[0].pk+'"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">'+task.task[0].fields.name+'</div><div class="subtask-circular-progress sub-progress-bar'+task.id+'" data-taskid="'+task.id+'" data-totalsubs="'+task.subtasks.length+'" data-completed=""><div class="inner"></div><div class="number">100%</div><div class="circle"><div class="bar left"><div class="sub-progress"></div></div><div class="bar right"><div class="sub-progress"></div></div></div></div></div></div><div id="panelsStayOpen-collapse'+task.task[0].pk+'" class="accordion-collapse collapse'+extend_state+'" aria-labelledby="panelsStayOpen-heading'+task.task[0].pk+'"><div class="card-body"><div class="task-card-description">'+task_description+'</div><div class="task-card-subtasks">'+task_subtasks+'</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by '+task.created_by[0].fields.user_name+', on '+date+'</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="'+task.task[0].pk+'" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton'+task.task[0].pk+'" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton'+task.task[0].pk+'">'+status_dropdown+'</ul></div></div></div></div></div></div>'
+
+  return task_card;
 }
 
 function reconstructSidebarBoards(json) {
@@ -66,7 +119,8 @@ function reconstructSidebarCategories(json) {
   total_tasks_per_category = json.total_tasks_per_category;
   categories = JSON.parse(json.categories);
 
-  $(".reload-board").load(location.href + " .reload-board>*", "");
+  //$(".reload-board").load(location.href + " .reload-board>*", "");
+  reloadTasks();
 
   if (total_tasks > 0) {
     $("#sidebar-all-tasks").html(
@@ -158,9 +212,9 @@ function ajaxBoardManager(action, id, entered_name) {
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
-        // Reload the board
-        $(".reload-board").load(location.href + " .reload-board>*", "");
-
+        // Reload tasks
+        //$(".reload-board").load(location.href + " .reload-board>*", "");
+        reloadTasks();
       }
 
       if (action == 'add') {
@@ -177,8 +231,9 @@ function ajaxBoardManager(action, id, entered_name) {
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
-        // Reload the board
-        $(".reload-board").load(location.href + " .reload-board>*", "");
+        // Reload tasks
+        //$(".reload-board").load(location.href + " .reload-board>*", "");
+        reloadTasks();
       }
 
 
@@ -249,6 +304,89 @@ function ajaxCategoryManager(action, id, entered_name, source) {
     },
 
   });
+
+}
+
+function reloadTasks(){
+
+  $.ajax({
+    type: "GET",
+    url: 'http://localhost:8000/reload_tasks/',
+    data: {
+      csrfmiddlewaretoken: getCookie('csrftoken'),
+    },
+    datatype: 'json',
+
+    success: function (json) {
+      tasks = []
+      statuses = ["Planned", "In Progress", "Testing", "Completed"]
+
+      json.tasks.forEach((task)=>{
+
+        t = JSON.parse(task.task);
+        s = JSON.parse(task.subtasks);
+        c = JSON.parse(task.created_by);
+        tasks.push({
+          'task': t,
+          'subtasks': s,
+          'created_by': c,
+        })
+      })
+
+      planned = 0;
+      in_progress = 0;
+      testing = 0;
+      completed = 0;
+      
+      $('#tasks-planned').empty();
+      $('#tasks-in-progress').empty();
+      $('#tasks-testing').empty();
+      $('#tasks-completed').empty();
+
+      tasks.forEach((task)=>{
+       
+        if(task.task[0].fields.status == 'Planned'){
+          $('#tasks-planned').append(
+            taskCard(task, statuses)
+          )
+          planned += 1;
+        }
+
+        if(task.task[0].fields.status == 'In Progress'){
+          $('#tasks-in-progress').append(
+            taskCard(task, statuses)
+          );
+          in_progress += 1;
+        }
+
+        if(task.task[0].fields.status == 'Testing'){
+          $('#tasks-testing').append(
+            taskCard(task, statuses)
+          );
+          testing += 1;
+        }
+
+        if(task.task[0].fields.status == 'Completed'){
+          $('#tasks-completed').append(
+            taskCard(task, statuses)
+          );
+          completed += 1;
+        }
+       
+      })
+
+      $('#planned-total').html('Planned ' + planned)
+      $('#in-progress-total').html('In Progress ' + in_progress)
+      $('#testing-total').html('Testing ' + testing)
+      $('#completed-total').html('Completed ' + completed)
+
+    },
+
+    error: function (xhr, errmsg, err) {
+
+    },
+
+  })
 
 }
 

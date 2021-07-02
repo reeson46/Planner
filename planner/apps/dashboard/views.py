@@ -1,6 +1,4 @@
-from django.core import serializers
-from django.core.serializers import serialize
-from django.http import response
+
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
@@ -82,16 +80,16 @@ def dashboard(request):
     total_tasks_per_category = [
         category.task.filter(board=active_board).count() for category in categories
     ]
-
-    task = Task()
-    completed_subtasks = task.getCompletedSubtasks(tasks)
-
-    task_ids = task.getTaskIds(tasks)
+    
     statuses = ["Planned", "In Progress", "Testing", "Completed"]
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
+    
+    task = Task()
+    completed_subtasks = task.getCompletedSubtasks(tasks)
+    task_ids = task.getTaskIds(tasks)
 
     context = {
         "tasks": tasks,
@@ -274,3 +272,16 @@ def category_manager(request):
         response = sidebar.categories_reload_json_response(active_board)
 
     return JsonResponse(response)
+
+
+def reload_tasks(request):
+    if request.method == 'GET':
+
+        dashboard = Dashboard(request)
+        active_category_id = dashboard.get_active_category_id()
+        active_aboard = Board.objects.get(pk=dashboard.get_active_board_id())
+
+        task = Task()
+        response = task.tasks_reload_json_response(active_category_id, active_aboard)
+
+        return JsonResponse(response)

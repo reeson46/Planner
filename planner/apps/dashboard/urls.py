@@ -10,5 +10,5 @@ urlpatterns = [
     path("set_active_category/", views.set_active_category, name="set_active_category"),
     path("board_manager/", views.board_manager),
     path("category_manager/", views.category_manager),
-    # path('test/', views.test)
+    path('reload_tasks/', views.reload_tasks),
 ]

@@ -269,7 +269,8 @@ $(document).ready(function () {
 
       success: function (json) {
 
-        $(".reload-board").load(location.href + " .reload-board>*", "");
+        //$(".reload-board").load(location.href + " .reload-board>*", "");
+        reloadTasks();
 
         resetTaskFormFields();
 
@@ -378,7 +379,8 @@ $(document).ready(function () {
 
           success: function (json) {
 
-            $(".reload-board").load(location.href + " .reload-board>*", "");
+            //$(".reload-board").load(location.href + " .reload-board>*", "");
+            reloadTasks();
 
             resetTaskFormFields();
 

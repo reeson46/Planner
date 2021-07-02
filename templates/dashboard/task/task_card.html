@@ -23,25 +23,27 @@
     class="accordion-collapse collapse {% if task.extend_state == 1 %}show{% endif %}"
     aria-labelledby="panelsStayOpen-heading{{ task.id }}">
     <div class="card-body">
-      {% if task.description %}
-      <div class="task-description-text fs-5 mb-2">Description:</div>
-      <div class="card-text">{{ task.description}}</div>
-      <hr>
+      <div class="task-card-description">
+        {% if task.description %}
+        <div class="task-description-text fs-5 mb-2">Description:</div>
+        <div class="card-text">{{ task.description}}</div>
+        <hr>
       {% endif %}
-
-      {% if task.subtask.all %}
-      <div class="task-subtask-text fs-5 mb-2">Subtasks:</div>
-      {% for subtask in task.subtask.all %}
-      <span class="d-flex justify-content-between mb-3">
-        <li class="card-subtitle card-subtask">{{ subtask.name }}</li>
-        <div class="checkbox-div">
-          <input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="{{ subtask.id }}" data-taskid="{{task.id}}" 
-            {% if subtask.is_complete %}checked{% endif %}>
-        </div>
-      </span>
-      {% endfor %}
-      {% endif %}
-
+      </div>
+      <div class="task-card-subtasks">
+        {% if task.subtask.all %}
+        <div class="task-subtask-text fs-5 mb-2">Subtasks:</div>
+        {% for subtask in task.subtask.all %}
+        <span class="d-flex justify-content-between mb-3">
+          <li class="card-subtitle card-subtask">{{ subtask.name }}</li>
+          <div class="checkbox-div">
+            <input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="{{ subtask.id }}" data-taskid="{{task.id}}" 
+              {% if subtask.is_complete %}checked{% endif %}>
+          </div>
+        </span>
+        {% endfor %}
+        {% endif %}
+      </div>
     </div>
     <div class="card-footer">
       <h6 class="card-subtitle fw-light mt-1">Created by {{ task.created_by }} , on
