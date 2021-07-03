@@ -35,8 +35,7 @@ function setSubtaskProgressBar(subs_completed, total_subs, task_id) {
   var left_side = $(".sub-progress-bar" + task_id + " .circle .left .sub-progress");
   var right_side = $(".sub-progress-bar" + task_id + " .circle .right .sub-progress");
 
-  progress = subs_completed / total_subs * 360;
-  console.log(subs_completed, total_subs, task_id, progress)
+  progress = subs_completed / total_subs * 360
 
   if (progress <= 180) {
 
@@ -208,7 +207,7 @@ $(document).ready(function () {
 
   });
 
-  // ### Task card's"status" selection ###
+  // ### Task card's "status" selection ###
   $(document).on('click', '.taskcard-status', function (e) {
     e.preventDefault();
 

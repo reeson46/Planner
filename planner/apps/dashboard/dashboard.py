@@ -1,5 +1,4 @@
-from django.core import serializers
-
+from .serializers import BoardSerializer, CategorySerializer
 
 class Dashboard:
     def __init__(self, request):
@@ -56,10 +55,11 @@ class Sidebar:
             category.task.filter(board=active_board).count() for category in categories
         ]
         total_tasks = active_board.task.all().count()
-        categories = serializers.serialize("json", active_board.category.all())
+
+        serialize = CategorySerializer(categories, many=True)
 
         response = {
-            "categories": categories,
+            "categories": serialize.data,
             "total_tasks": total_tasks,
             "total_tasks_per_category": total_tasks_per_category,
         }
@@ -71,6 +71,10 @@ class Sidebar:
 
         user = request.user
         total_boards = user.board.all().count()
-        boards = serializers.serialize("json", user.board.all())
-        response = {"total_boards": total_boards, "boards": boards}
+        boards = user.board.all()
+
+        serialize = BoardSerializer(boards, many=True)
+
+        response = {"total_boards": total_boards, "boards": serialize.data}
+        
         return response

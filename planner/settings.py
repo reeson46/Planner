@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "planner.apps.task",
     "planner.apps.account",
     "planner.apps.dashboard.apps.DashboardConfig",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

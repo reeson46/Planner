@@ -1,4 +1,4 @@
-from django.core import serializers
+from .serializers import TaskSerializer
 
 class Task():
 
@@ -32,10 +32,11 @@ class Task():
   
             tasks_ = active_board.task.filter(category=active_category_id)
 
-        tasks = [{'task': serializers.serialize('json', [task]), 'created_by': serializers.serialize('json', [task.created_by], fields=['user_name']),'subtasks': serializers.serialize('json', task.subtask.all())} for task in tasks_]
+
+        serializer = TaskSerializer(instance=tasks_, many=True)
 
         response = {
-            'tasks': tasks,
+            'tasks': serializer.data,
         }
 
         return response

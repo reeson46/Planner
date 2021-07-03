@@ -4,7 +4,7 @@ function taskForm(json) {
   $('.newtask-boardName').html(json.board_name)
 
   // ### CATEGORY SELECTION ####
-  categories = JSON.parse(json.categories)
+  categories = json.categories
 
   $('.newtask-categorySelect').empty();
 
@@ -18,10 +18,10 @@ function taskForm(json) {
 
     categories.forEach((category) => {
 
-      if (json.category_id == category.pk) {
-        var option = '<option value="' + category.pk + '" selected=>' + category.fields.name + '</option>'
+      if (json.category_id == category.id) {
+        var option = '<option value="' + category.id + '" selected=>' + category.name + '</option>'
       } else {
-        var option = '<option value="' + category.pk + '">' + category.fields.name + '</option>'
+        var option = '<option value="' + category.id + '">' + category.name + '</option>'
       }
 
       $('.newtask-categorySelect').append(option)
@@ -30,18 +30,16 @@ function taskForm(json) {
 
   }
 
-  // ### DELETE, STATUS , NAME, DESCRIPTION AND SUBTASKS ###
   // only if we are editing the task
+  // ### DELETE, STATUS , NAME, DESCRIPTION AND SUBTASKS ###
   if (json.is_edit == "True") {
 
-    t = JSON.parse(json.task)
-    task = t[0]
-    subtasks = JSON.parse(json.subtasks)
+    task = json.task
 
     // Show Delete button and add task data to it
     $('.delete-task-button').removeClass('d-none');
-    $('#delete-task').data('taskid', task.pk);
-    $('#delete-task').data('taskname', task.fields.name);
+    $('#delete-task').data('taskid', task.id);
+    $('#delete-task').data('taskname', task.name);
 
     // Status selection
     $('#id_status').empty();
@@ -50,7 +48,7 @@ function taskForm(json) {
 
     json.statuses.forEach((status) => {
 
-      if (task.fields.status == status) {
+      if (task.status == status) {
         var option = '<option value="' + status + '" selected=>' + status + '</option>'
       } else {
         var option = '<option value="' + status + '">' + status + '</option>'
@@ -61,22 +59,22 @@ function taskForm(json) {
     });
 
     // Task name field
-    $('#id_name').val(task.fields.name)
+    $('#id_name').val(task.name)
 
     // Task description field
-    $('#id_description').val(task.fields.description)
+    $('#id_description').val(task.description)
 
     // Subtasks
     $('#individual-subtask').empty();
 
-    subtasks.forEach((sub) => {
+    task.subtask.forEach((sub) => {
       $('#individual-subtask').append(
-        '<span class="d-flex subtask-field"><input type="text-sub" class="card existing-subtask bg-dark text-light col-10" value="' + sub.fields.name + '" disabled=""><div class="delete-existing-subtask delete-icon-task" data-index="' + sub.pk + '"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path></svg></div></span>'
+        '<span class="d-flex subtask-field"><input type="text-sub" class="card existing-subtask bg-dark text-light col-10" value="' + sub.name + '" disabled=""><div class="delete-existing-subtask delete-icon-task" data-index="' + sub.id + '"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z"></path></svg></div></span>'
       );
     });
 
     // Create/update button
-    $('#create-task').data('taskID', task.pk)
+    $('#create-task').data('taskID', task.id)
 
     // Hide "create and continue checkbox"
     if (!$('.custom-checkbox-wrapper').hasClass('d-none')) {

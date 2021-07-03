@@ -6,22 +6,22 @@ class Task{
 
   taskCard(){
 
-    if(this.task.task[0].fields.extend_state == 1){
+    if(this.task.extend_state == 1){
       this.extend_state = ' show';
     }
     else{
       this.extend_state = '';
     }
   
-    if(this.task.subtasks.length){
+    if(this.task.subtask.length){
   
       this.task_subtasks = '<div class="task-subtask-text fs-5 mb-2">Subtasks:</div>' 
       
       this.subs_complete = 0;
       
-      this.task.subtasks.forEach((sub)=>{
+      this.task.subtask.forEach((sub)=>{
         
-        if(sub.fields.is_complete){
+        if(sub.is_complete){
           this.checked = ' checked';
           this.subs_complete += 1;
         }
@@ -29,10 +29,10 @@ class Task{
           this.checked = '';
         }
         
-        this.task_subtasks += '<span class="d-flex justify-content-between mb-3"><li class="card-subtitle card-subtask">'+sub.fields.name+'</li><div class="checkbox-div"><input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="'+sub.pk+'" data-taskid="'+sub.fields.task+'"'+this.checked+'></div></span>'
+        this.task_subtasks += '<span class="d-flex justify-content-between mb-3"><li class="card-subtitle card-subtask">'+sub.name+'</li><div class="checkbox-div"><input type="checkbox" class="form-check-input custom-subtask-checkbox m-0" data-subtaskid="'+sub.id+'" data-taskid="'+sub.task+'"'+this.checked+'></div></span>'
       })
       
-      this.progress_bar = '<div class="subtask-circular-progress sub-progress-bar'+this.task.task[0].pk+'" data-taskid="'+this.task.task[0].pk+'" data-totalsubs="'+this.task.subtasks.length+'" data-completed="'+this.subs_complete+'"><div class="inner"></div><div class="number">100%</div><div class="circle"><div class="bar left"><div class="sub-progress"></div></div><div class="bar right"><div class="sub-progress"></div></div></div></div>';
+      this.progress_bar = '<div class="subtask-circular-progress sub-progress-bar'+this.task.id+'" data-taskid="'+this.task.id+'" data-totalsubs="'+this.task.subtask.length+'" data-completed="'+this.subs_complete+'"><div class="inner"></div><div class="number">100%</div><div class="circle"><div class="bar left"><div class="sub-progress"></div></div><div class="bar right"><div class="sub-progress"></div></div></div></div>';
       
     }else{
       this.progress_bar = '';
@@ -40,27 +40,27 @@ class Task{
       this.subs_complete = 0;
     }
   
-    if (this.task.task[0].fields.description != ''){
+    if (this.task.description != ''){
       this.task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">'+this.task.fields.description+'</div><hr>';
     }
     else{
       this.task_description = '';
     }
   
-    let date = new Date(this.task.task[0].fields.date_created)
+    let date = new Date(this.task.date_created)
   
     this.status_dropdown = '';
   
     this.statuses.forEach((status)=>{
-      if(this.task.task[0].fields.status == status){
-        this.status_dropdown += '<li class="taskcard-status current-status" data-status="'+status+'" data-taskid="'+this.task.task[0].pk+'">'+status+'</li>'
+      if(this.task.status == status){
+        this.status_dropdown += '<li class="taskcard-status current-status" data-status="'+status+'" data-taskid="'+this.task.id+'">'+status+'</li>'
       }
       else{
-        this.status_dropdown += '<li class="taskcard-status" data-status="" data-taskid="'+this.task.task[0].pk+'">'+status+'</li>'
+        this.status_dropdown += '<li class="taskcard-status" data-status="" data-taskid="'+this.task.id+'">'+status+'</li>'
       }
     })
   
-    return '<div class="card text-white task shadow" id="panelsStayOpen-heading'+this.task.task[0].pk+'"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="'+this.task.task[0].pk+'" value="'+this.task.task[0].fields.extend_state+'" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse'+this.task.task[0].pk+'" aria-expanded="true" aria-controls="panelsStayOpen-collapse'+this.task.task[0].pk+'"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">'+this.task.task[0].fields.name+'</div>'+this.progress_bar+'</div></div><div id="panelsStayOpen-collapse'+this.task.task[0].pk+'" class="accordion-collapse collapse'+this.extend_state+'" aria-labelledby="panelsStayOpen-heading'+this.task.task[0].pk+'"><div class="card-body"><div class="task-card-description">'+this.task_description+'</div><div class="task-card-subtasks">'+this.task_subtasks+'</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by '+this.task.created_by[0].fields.user_name+', on '+date+'</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="'+this.task.task[0].pk+'" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton'+this.task.task[0].pk+'" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton'+this.task.task[0].pk+'">'+this.status_dropdown+'</ul></div></div></div></div></div></div>'
+    return '<div class="card text-white task shadow" id="panelsStayOpen-heading'+this.task.id+'"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="'+this.task.id+'" value="'+this.task.extend_state+'" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse'+this.task.id+'" aria-expanded="true" aria-controls="panelsStayOpen-collapse'+this.task.id+'"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">'+this.task.name+'</div>'+this.progress_bar+'</div></div><div id="panelsStayOpen-collapse'+this.task.id+'" class="accordion-collapse collapse'+this.extend_state+'" aria-labelledby="panelsStayOpen-heading'+this.task.id+'"><div class="card-body"><div class="task-card-description">'+this.task_description+'</div><div class="task-card-subtasks">'+this.task_subtasks+'</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by '+this.task.created_by+', on '+date+'</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="'+this.task.id+'" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton'+this.task.id+'" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton'+this.task.id+'">'+this.status_dropdown+'</ul></div></div></div></div></div></div>'
   
   }
 
@@ -93,7 +93,7 @@ function sidebarCategory(category, total_tasks_per_category, i) {
     var total_tasks = ""
   }
 
-  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="' + category.pk + '"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="' + category.pk + '"><div class="category-name" value="' + category.pk + '">' + category.fields.name + '</div>' + total_tasks + '</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton' + category.pk + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + category.pk + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + category.fields.name + '" data-id="' + category.pk + '" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="category" data-action="delete" data-name="'+category.fields.name+'" data-source="sidebar" data-id="' + category.pk + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
+  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="' + category.id + '"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="' + category.id + '"><div class="category-name" value="' + category.id + '">' + category.name + '</div>' + total_tasks + '</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton' + category.id + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + category.id + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + category.name + '" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="category" data-action="delete" data-name="'+category.name+'" data-source="sidebar" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
 
 
 }
@@ -101,12 +101,12 @@ function sidebarCategory(category, total_tasks_per_category, i) {
 function sidebarBoard(board, total_boards) {
 
   if (total_boards > 1) {
-    del_icon = '<li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-sender="board" data-action="delete" data-name="'+board.fields.name+'" data-id="' + board.pk + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li>'
+    del_icon = '<li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-sender="board" data-action="delete" data-name="'+board.name+'" data-id="' + board.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li>'
   } else {
     del_icon = ""
   }
 
-  return '<li class="row hovered-nav-item board-item" value="' + board.pk + '"><span class="d-flex justify-content-between"><div class="fs-5 text-white board-name" value="' + board.pk + '">' + board.fields.name + '</div><div class="dropdown sidebar-dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon"type="button" id="dropdownMenuButton' + board.pk + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + board.pk + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill rename-add-icon rename-add-icon-sidebar" data-sender="board" data-action="rename" data-placeholder="" data-value="' + board.fields.name + '" data-id="' + board.pk + '" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li>' + del_icon + '</ul></div></span></li>'
+  return '<li class="row hovered-nav-item board-item" value="' + board.id + '"><span class="d-flex justify-content-between"><div class="fs-5 text-white board-name" value="' + board.id + '">' + board.name + '</div><div class="dropdown sidebar-dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon"type="button" id="dropdownMenuButton' + board.id + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + board.id + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill rename-add-icon rename-add-icon-sidebar" data-sender="board" data-action="rename" data-placeholder="" data-value="' + board.name + '" data-id="' + board.id + '" viewBox="0 0 16 16"> <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li>' + del_icon + '</ul></div></span></li>'
 
 
 }
@@ -114,7 +114,7 @@ function sidebarBoard(board, total_boards) {
 
 function reconstructSidebarBoards(json) {
   // get the data
-  boards = JSON.parse(json.boards)
+  boards = json.boards
   total_boards = json.total_boards
 
   // empty the board's div
@@ -135,9 +135,8 @@ function reconstructSidebarCategories(json) {
   // get all the data
   total_tasks = json.total_tasks;
   total_tasks_per_category = json.total_tasks_per_category;
-  categories = JSON.parse(json.categories);
+  categories = json.categories;
 
-  //$(".reload-board").load(location.href + " .reload-board>*", "");
   reloadTasks();
 
   if (total_tasks > 0) {
@@ -161,16 +160,16 @@ function reconstructSidebarCategories(json) {
 
 function reconstructTaskFormCategories(json) {
 
-  categories = JSON.parse(json.categories)
+  categories = json.categories
 
   $('.newtask-categorySelect').empty();
 
   categories.forEach((category) => {
 
-    if (json.added_category_id == category.pk) {
-      var option = '<option value="' + category.pk + '" selected=>' + category.fields.name + '</option>'
+    if (json.added_category_id == category.id) {
+      var option = '<option value="' + category.id + '" selected=>' + category.name + '</option>'
     } else {
-      var option = '<option value="' + category.pk + '">' + category.fields.name + '</option>'
+      var option = '<option value="' + category.id + '">' + category.name + '</option>'
     }
 
     $('.newtask-categorySelect').append(option)
@@ -336,20 +335,10 @@ function reloadTasks(){
     datatype: 'json',
 
     success: function (json) {
-      tasks = []
+
+      tasks = json.tasks
+
       statuses = ["Planned", "In Progress", "Testing", "Completed"]
-
-      json.tasks.forEach((task)=>{
-
-        t = JSON.parse(task.task);
-        s = JSON.parse(task.subtasks);
-        c = JSON.parse(task.created_by);
-        tasks.push({
-          'task': t,
-          'subtasks': s,
-          'created_by': c,
-        })
-      })
 
       planned = 0;
       in_progress = 0;
@@ -365,7 +354,7 @@ function reloadTasks(){
 
         let myTask = new Task(task, statuses)
        
-        if(task.task[0].fields.status == 'Planned'){
+        if(task.status == 'Planned'){
           
           $('#tasks-planned').append(
             myTask.taskCard()
@@ -374,7 +363,7 @@ function reloadTasks(){
           
         }
 
-        if(task.task[0].fields.status == 'In Progress'){
+        if(task.status == 'In Progress'){
           
           $('#tasks-in-progress').append(
             myTask.taskCard()
@@ -382,7 +371,7 @@ function reloadTasks(){
           in_progress += 1;
         }
 
-        if(task.task[0].fields.status == 'Testing'){
+        if(task.status == 'Testing'){
           
           $('#tasks-testing').append(
             myTask.taskCard()
@@ -390,7 +379,7 @@ function reloadTasks(){
           testing += 1;
         }
 
-        if(task.task[0].fields.status == 'Completed'){
+        if(task.status == 'Completed'){
           
           $('#tasks-completed').append(
             myTask.taskCard()
@@ -398,7 +387,7 @@ function reloadTasks(){
           completed += 1;
         }
 
-        setSubtaskProgressBar(myTask.subtasks_complete(), task.subtasks.length, task.task[0].pk)
+        setSubtaskProgressBar(myTask.subtasks_complete(), task.subtask.length, task.id)
        
       })
 

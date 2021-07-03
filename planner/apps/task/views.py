@@ -1,11 +1,12 @@
-from django.core import serializers
-from django.http import JsonResponse, response
-from django.shortcuts import redirect, render
+
+from django.http import JsonResponse
+
 
 from planner.apps.dashboard.dashboard import Dashboard, Sidebar
 from planner.apps.dashboard.models import Board, Category
-
+from planner.apps.dashboard.serializers import CategorySerializer
 from .models import Subtask, Task
+from .serializers import TaskSerializer
 
 
 def new_task(request):
@@ -21,7 +22,7 @@ def new_task(request):
         active_category_id = dashboard.get_active_category_id()
 
         if categories:
-            categories_json = serializers.serialize("json", active_board.category.all())
+            categories_json = CategorySerializer(active_board.category.all(), many=True)
 
             if (
                 active_category_id == -1
@@ -37,7 +38,7 @@ def new_task(request):
             categories_json = None
 
         response = {
-            "categories": categories_json,
+            "categories": categories_json.data,
             "category_id": active_category,
             "board_name": active_board.name,
             "is_edit": "False",
@@ -60,17 +61,17 @@ def edit_task(request):
         t = Task.objects.get(pk=task_id)
         statuses = ["Planned", "In Progress", "Testing", "Completed"]
 
-        categories = serializers.serialize("json", active_board.category.all())
-        task = serializers.serialize("json", [t])
-        subtasks = serializers.serialize("json", t.subtask.all())
+        categories = CategorySerializer(active_board.category.all(), many=True)
+        task = TaskSerializer(t, many=False)
+        #subtasks = SubtaskSerializer("json", t.subtask.all())
 
         response = {
             "board_name": t.board.name,
             "category_id": t.category.id,
-            "categories": categories,
+            "categories": categories.data,
             "statuses": statuses,
-            "task": task,
-            "subtasks": subtasks,
+            "task": task.data,
+           #"subtasks": subtasks,
             "is_edit": "True",
             "button": "Update",
         }
