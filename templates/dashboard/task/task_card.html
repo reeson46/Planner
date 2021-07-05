@@ -5,9 +5,9 @@
     <div class="d-flex justify-content-between task-card-header">
       <div class="card-subtitle fs-3 task-title-text">{{ task.name }}</div>
       {% if task.subtask.all %}
-      <div class="subtask-circular-progress sub-progress-bar{{task.id}}" data-taskid="{{task.id}}" data-totalsubs="{{task.subtask.all|length}}" data-completed="">
+      <div class="subtask-circular-progress sub-progress-bar{{task.id}}" data-taskid="{{task.id}}" data-totalsubs="{{task.subtask.all|length}}" data-completed="" data-modulo="" data-toggle="">
         <div class="inner"></div>
-        <div class="number">100%</div>
+        <div class="number"></div>
         <div class="circle">
           <div class="bar left">
             <div class="sub-progress"></div>

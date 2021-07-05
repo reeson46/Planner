@@ -1,84 +1,177 @@
-function updateSubtaskProgressBar(subs_completed, total_subs, task_id) {
-  rot_left = 0;
-  rot_right = 0;
+function updateSubtaskProgressBar(subs_completed, total_subs, task_id, sub_progress, modulo, toggle, bar) {
+
   var left_side = $(".sub-progress-bar" + task_id + " .circle .left .sub-progress");
   var right_side = $(".sub-progress-bar" + task_id + " .circle .right .sub-progress");
 
   progress = subs_completed / total_subs * 360;
+  transition = 500;
+  delay = transition / 2;
+  rot_reminder = 0;
 
-  if (progress <= 180) {
+  if (progress < 180) {
+
+    rot_right = 0;
+
+    right_side.css({
+      'transform': 'rotate(' + rot_right + 'deg)'
+    });
 
     rot_left = progress
-    rot_right -= rot_right
+
+    rot_reminder = 180 - rot_left
+
+    if (rot_reminder != 0 && modulo != 0 && toggle == 0) {
+
+      bar.css({
+        'transition': 'all ' + delay / 1000 + 's ease-in'
+      });
+
+      setTimeout(function () {
+        bar.css({
+          'transition': 'all ' + delay / 1000 + 's ease-out'
+        });
+        left_side.css({
+
+          'transform': 'rotate(' + rot_left + 'deg)'
+        });
+      }, delay);
+
+      toggle = 1 - toggle
+      sub_progress.data('toggle', toggle);
+
+    } else {
+      bar.css({
+        'transition': 'all ' + transition / 1000 + 's ease-in-out'
+      });
+      left_side.css({
+        'transform': 'rotate(' + rot_left + 'deg)'
+      });
+
+    }
 
   } else {
 
-    rest_left = 180 - rot_left
-    rot_left += rest_left
-    rot_right = progress - 180
+    rot_left = 180;
 
+    left_side.css({
+      'transform': 'rotate(' + rot_left + 'deg)'
+    });
+
+    rot_right = progress - 180;
+
+    rot_reminder = rot_right
+
+    if (rot_reminder != 0 && modulo != 0 && toggle == 1) {
+
+      bar.css({
+        'transition': 'all ' + delay / 1000 + 's ease-in'
+      });
+
+      setTimeout(function () {
+        bar.css({
+          'transition': 'all ' + delay / 1000 + 's ease-out'
+        });
+        right_side.css({
+
+          'transform': 'rotate(' + rot_right + 'deg)'
+        });
+      }, delay);
+
+      toggle = 1 - toggle
+      sub_progress.data('toggle', toggle);
+
+    } else {
+      bar.css({
+        'transition': 'all ' + transition / 1000 + 's ease-in-out'
+      });
+      right_side.css({
+        'transform': 'rotate(' + rot_right + 'deg)'
+      });
+    }
   }
-
-  left_side.css({
-    'transform': 'rotate(' + rot_left + 'deg)'
-  });
-  right_side.css({
-    'transform': 'rotate(' + rot_right + 'deg)'
-  });
-
 }
 
-function setSubtaskProgressBar(subs_completed, total_subs, task_id) {
-
-  
+function setSubtaskProgressBar(current_progress, task_id) {
 
   var left_side = $(".sub-progress-bar" + task_id + " .circle .left .sub-progress");
   var right_side = $(".sub-progress-bar" + task_id + " .circle .right .sub-progress");
 
-  progress = subs_completed / total_subs * 360
+  if (current_progress < 180) {
 
-  if (progress <= 180) {
-
-    rot_left = progress
+    rot_left = current_progress
     rot_right = 0
+
+    left_side.css({
+      'transform': 'rotate(' + rot_left + 'deg)'
+    });
 
   } else {
 
     rot_left = 180
-    rot_right = progress - 180
-  }
+    rot_right = current_progress - 180
 
-  left_side.css({
-    'transform': 'rotate(' + rot_left + 'deg)'
-  });
-  right_side.css({
-    'transform': 'rotate(' + rot_right + 'deg)'
-  });
+    left_side.css({
+      'transform': 'rotate(' + rot_left + 'deg)'
+    });
+
+    right_side.css({
+      'transform': 'rotate(' + rot_right + 'deg)'
+    });
+  }
 
 }
 
-function subtasksProgressBar(task_ids, completed_subtasks) {
+function subtasksProgressBar(task_ids, completed_subtasks, progress_bar) {
+
+  var modulo = 0;
+  var current_progress = 0;
+  var percent_progress = 0;
+
+  progress_bar.css({
+    'transition': 'none'
+  });
 
   task_ids.forEach((id, i) => {
 
     sub_progress = $('.sub-progress-bar' + id)
     sub_progress.data('completed', completed_subtasks[i])
 
+
     total_subs = sub_progress.data('totalsubs')
-    setSubtaskProgressBar(completed_subtasks[i], total_subs, id)
+    current_progress = completed_subtasks[i] / total_subs * 360
+
+    percent_progress = parseInt(completed_subtasks[i] / total_subs * 100);
+
+    number = $('.sub-progress-bar' + id + ' .number')
+    number.html(percent_progress + '%')
+
+    setSubtaskProgressBar(current_progress, id)
+
+    modulo = total_subs % 2
+    sub_progress.data('modulo', modulo)
+
+    if (current_progress > 180) {
+      sub_progress.data('toggle', 0)
+    } else {
+      sub_progress.data('toggle', 1)
+    }
 
   })
+
 }
 
 var edittask_toggle;
 var is_taskFormDisplayed;
+var progress_bar;
 
 $(document).ready(function () {
 
 
   var task_ids = JSON.parse(TASK_IDS)
   var completed_subtasks = JSON.parse(COMPLETED_SUBTASKS)
-  subtasksProgressBar(task_ids, completed_subtasks);
+  progress_bar = $('.circle .bar .sub-progress');
+
+  subtasksProgressBar(task_ids, completed_subtasks, progress_bar);
 
   // enable the task card's "edit" button
   edittask_toggle = true;
@@ -167,7 +260,8 @@ $(document).ready(function () {
     sub_progress = $('.sub-progress-bar' + task_id)
     total_subs = sub_progress.data('totalsubs')
     subs_completed = sub_progress.data('completed')
-
+    modulo = sub_progress.data('modulo')
+    toggle = sub_progress.data('toggle')
 
     if ($(this).is(':checked')) {
       is_complete = true
@@ -182,7 +276,6 @@ $(document).ready(function () {
       sub_progress.data('completed', subs_completed)
     }
 
-    updateSubtaskProgressBar(subs_completed, total_subs, task_id)
 
     subtask_id = $(this).data('subtaskid')
 
@@ -196,7 +289,15 @@ $(document).ready(function () {
       },
       datatype: 'json',
 
-      success: function (json) {
+      success: function () {
+
+        
+        percent_progress = parseInt(subs_completed / total_subs * 100);
+        
+        number = $('.sub-progress-bar' + task_id + ' .number')
+        number.html(percent_progress + '%')
+        
+        updateSubtaskProgressBar(subs_completed, total_subs, task_id, sub_progress, modulo, toggle, progress_bar)
 
       },
 

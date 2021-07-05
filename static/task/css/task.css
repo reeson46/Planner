@@ -66,6 +66,10 @@
     box-shadow: none;
 }
 
+.custom-subtask-checkbox:hover{
+    cursor: pointer;
+}
+
 
 .task-description-text,
 .task-subtask-text {
@@ -269,6 +273,7 @@
     border-radius: 100%;
     clip: rect(0px, 30px, 60px, 0px);
     background: #4158d0;
+    transition: all 0.5s ease-in-out;
 }
 
 .circle .left .sub-progress {
