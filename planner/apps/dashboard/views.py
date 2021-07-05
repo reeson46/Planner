@@ -17,7 +17,7 @@ def dashboard(request):
 
     # make the session instance
     dashboard = Dashboard(request)
-
+    import ipdb; ipdb.set_trace()
     # if there is no active board in the session
     if not dashboard.active_board_check():
 
@@ -58,10 +58,18 @@ def dashboard(request):
 
         dashboard.set_active_board_id(active_board.id)
 
-        # get the category id
-        active_category_id = dashboard.get_active_category_id()
+         # if there is no active category
+        if not dashboard.active_category_check():
 
-        highlighted_category = active_category_id
+            # set active category as ALL (-1)
+            dashboard.set_active_category_id(category_id=-1)
+
+            highlighted_category = -1
+        else:
+            # get the category id
+            active_category_id = dashboard.get_active_category_id()
+            highlighted_category = active_category_id
+            
         highlighted_board = active_board.id
 
         # if the active category is ALL
@@ -154,7 +162,7 @@ def set_active_category(request):
 
 def board_manager(request):
     dashboard = Dashboard(request)
-
+    
     """
     ADD
     """
