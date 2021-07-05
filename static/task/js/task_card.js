@@ -280,7 +280,7 @@ $(document).ready(function () {
     modulo = sub_progress.data('modulo')
     toggle = sub_progress.data('toggle')
 
-    start = subs_completed / total_subs * 100;
+    start = parseInt(subs_completed / total_subs * 100);
 
     if ($(this).is(':checked')) {
       is_complete = true
@@ -288,7 +288,7 @@ $(document).ready(function () {
       subs_completed += 1;
       sub_progress.data('completed', subs_completed)
 
-      end = subs_completed / total_subs * 100;
+      end = parseInt(subs_completed / total_subs * 100);
 
     } else {
       is_complete = false
@@ -296,7 +296,7 @@ $(document).ready(function () {
       subs_completed -= 1;
       sub_progress.data('completed', subs_completed)
 
-      end = subs_completed / total_subs * 100;
+      end = parseInt(subs_completed / total_subs * 100);
     }
 
 

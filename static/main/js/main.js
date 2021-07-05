@@ -207,10 +207,9 @@ function ajaxBoardManager(action, id, entered_name) {
 
     success: function (json) {
 
-
       if (action == 'rename') {
         // Update the name
-        $('.board-item[value="' + id + '"]').html(entered_name)
+        $('.board-name[value="' + id + '"]').html(entered_name)
 
         // Update the rename-add-icon's data-value attribute, so when clicking on rename again
         // the input field gets pre-populated with this new name
@@ -221,6 +220,9 @@ function ajaxBoardManager(action, id, entered_name) {
 
         reconstructSidebarBoards(json);
         reconstructSidebarCategories(json);
+
+        // Highlight the "All" category
+        $('.active-category[value="-1"]').addClass('item-selected');
 
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');

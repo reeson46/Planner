@@ -75,6 +75,9 @@ $(document).ready(function () {
 
         // function located in "main.js"
         reconstructSidebarCategories(json);
+        
+        // Highlight the "All" category
+        $('.active-category[value="-1"]').addClass('item-selected');
       },
 
       error: function (xhr, errmsg, err) {

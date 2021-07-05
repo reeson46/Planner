@@ -22,6 +22,7 @@ def new_task(request):
 
         if categories:
             categories_json = CategorySerializer(active_board.category.all(), many=True)
+            categories_data = categories_json.data
 
             if (
                 active_category_id == -1
@@ -34,10 +35,10 @@ def new_task(request):
                 active_category = active_cat.id
         else:
             active_category = None
-            categories_json = None
+            categories_data = None
 
         response = {
-            "categories": categories_json.data,
+            "categories": categories_data,
             "category_id": active_category,
             "board_name": active_board.name,
             "is_edit": "False",
