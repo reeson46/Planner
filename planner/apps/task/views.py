@@ -1,10 +1,9 @@
-
 from django.http import JsonResponse
-
 
 from planner.apps.dashboard.dashboard import Dashboard, Sidebar
 from planner.apps.dashboard.models import Board, Category
 from planner.apps.dashboard.serializers import CategorySerializer
+
 from .models import Subtask, Task
 from .serializers import TaskSerializer
 
@@ -63,7 +62,7 @@ def edit_task(request):
 
         categories = CategorySerializer(active_board.category.all(), many=True)
         task = TaskSerializer(t, many=False)
-        #subtasks = SubtaskSerializer("json", t.subtask.all())
+        # subtasks = SubtaskSerializer("json", t.subtask.all())
 
         response = {
             "board_name": t.board.name,
@@ -71,7 +70,7 @@ def edit_task(request):
             "categories": categories.data,
             "statuses": statuses,
             "task": task.data,
-           #"subtasks": subtasks,
+            # "subtasks": subtasks,
             "is_edit": "True",
             "button": "Update",
         }
@@ -165,16 +164,16 @@ def task_manager(request):
                 sidebar = Sidebar()
                 # update the response so that the sidebar categories can be reloaded
                 response.update(sidebar.categories_reload_json_response(task.board))
-                response['category_change'] = 'True'
-                response['active_category_id'] = dashboard.get_active_category_id()
+                response["category_change"] = "True"
+                response["active_category_id"] = dashboard.get_active_category_id()
 
         return JsonResponse(response)
 
 
 def delete_task(request):
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        task_id = request.POST.get('task_id')
+        task_id = request.POST.get("task_id")
         task = Task.objects.get(pk=task_id)
         board = task.board
         task.delete()
@@ -183,7 +182,7 @@ def delete_task(request):
         dashboard = Dashboard(request)
 
         response = sidebar.categories_reload_json_response(board)
-        response['active_category_id'] = dashboard.get_active_category_id()
+        response["active_category_id"] = dashboard.get_active_category_id()
         return JsonResponse(response)
 
 
@@ -200,32 +199,34 @@ def set_task_extend_state(request):
 
 
 def subtask_manager(request):
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        is_complete = request.POST.get('is_complete')
+        is_complete = request.POST.get("is_complete")
 
-        if is_complete == 'true':
+        if is_complete == "true":
             complete = True
-        if is_complete == 'false':
+        if is_complete == "false":
             complete = False
 
-        subtask_id = request.POST.get('subtask_id')
+        subtask_id = request.POST.get("subtask_id")
         subtask = Subtask.objects.get(pk=subtask_id)
 
         subtask.is_complete = complete
         subtask.save()
 
-        return JsonResponse({'message': 'Subtask "is_complete" field changed to '+is_complete})
+        return JsonResponse(
+            {"message": 'Subtask "is_complete" field changed to ' + is_complete}
+        )
 
 
 def status_manager(request):
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        task_id = request.POST.get('task_id')
-        status = request.POST.get('new_status')
+        task_id = request.POST.get("task_id")
+        status = request.POST.get("new_status")
 
         task = Task.objects.get(pk=task_id)
         task.status = status
         task.save()
 
-        return JsonResponse({'message': task.name + ' status changed to ' + status})
+        return JsonResponse({"message": task.name + " status changed to " + status})

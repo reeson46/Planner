@@ -1,9 +1,9 @@
-
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
 from planner.apps.task.models import Category
 from planner.apps.task.task import Task
+
 from .dashboard import Dashboard, Sidebar
 from .models import Board
 
@@ -80,13 +80,13 @@ def dashboard(request):
     total_tasks_per_category = [
         category.task.filter(board=active_board).count() for category in categories
     ]
-    
+
     statuses = ["Planned", "In Progress", "Testing", "Completed"]
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
     testing = tasks.filter(status="Testing")
     completed = tasks.filter(status="Completed")
-    
+
     task = Task()
     completed_subtasks = task.getCompletedSubtasks(tasks)
     task_ids = task.getTaskIds(tasks)
@@ -96,7 +96,7 @@ def dashboard(request):
         "total_tasks": total_tasks,
         "boards": boards,
         "categories": categories,
-        'statuses': statuses,
+        "statuses": statuses,
         "planned": planned,
         "in_progress": in_progress,
         "testing": testing,
@@ -104,8 +104,8 @@ def dashboard(request):
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
         "total_tasks_per_category": total_tasks_per_category,
-        'completed_subtasks': completed_subtasks,
-        'task_ids': task_ids
+        "completed_subtasks": completed_subtasks,
+        "task_ids": task_ids,
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -144,9 +144,9 @@ def set_active_category(request):
         completed_subtasks = task.getCompletedSubtasks(tasks)
 
         response = {
-            'task_ids': task_ids,
-            'completed_subtasks': completed_subtasks,
-            "message": "Active category set!"
+            "task_ids": task_ids,
+            "completed_subtasks": completed_subtasks,
+            "message": "Active category set!",
         }
 
         return JsonResponse(response)
@@ -275,7 +275,7 @@ def category_manager(request):
 
 
 def reload_tasks(request):
-    if request.method == 'GET':
+    if request.method == "GET":
 
         dashboard = Dashboard(request)
         active_category_id = dashboard.get_active_category_id()

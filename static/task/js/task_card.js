@@ -160,6 +160,23 @@ function subtasksProgressBar(task_ids, completed_subtasks, progress_bar) {
 
 }
 
+function animateValue(task_id, start, end, duration) {
+
+  if (start === end) return;
+  var range = end - start;
+  var current = start;
+  var increment = end > start ? 1 : -1;
+  var stepTime = Math.abs(Math.floor(duration / range));
+  var obj = $('.sub-progress-bar' + task_id + ' .number');
+  var timer = setInterval(function () {
+    current += increment;
+    obj.html(current+'%');
+    if (current == end) {
+      clearInterval(timer);
+    }
+  }, stepTime);
+}
+
 var edittask_toggle;
 var is_taskFormDisplayed;
 var progress_bar;
@@ -263,17 +280,23 @@ $(document).ready(function () {
     modulo = sub_progress.data('modulo')
     toggle = sub_progress.data('toggle')
 
+    start = subs_completed / total_subs * 100;
+
     if ($(this).is(':checked')) {
       is_complete = true
 
       subs_completed += 1;
       sub_progress.data('completed', subs_completed)
 
+      end = subs_completed / total_subs * 100;
+
     } else {
       is_complete = false
 
       subs_completed -= 1;
       sub_progress.data('completed', subs_completed)
+
+      end = subs_completed / total_subs * 100;
     }
 
 
@@ -291,12 +314,11 @@ $(document).ready(function () {
 
       success: function () {
 
-        
+
         percent_progress = parseInt(subs_completed / total_subs * 100);
-        
-        number = $('.sub-progress-bar' + task_id + ' .number')
-        number.html(percent_progress + '%')
-        
+
+        animateValue(task_id, start, end, 500);
+
         updateSubtaskProgressBar(subs_completed, total_subs, task_id, sub_progress, modulo, toggle, progress_bar)
 
       },
@@ -343,9 +365,6 @@ $(document).ready(function () {
   });
 
 });
-
-
-
 
 // Close the new/edit task on pressing ESC
 // this should only be possible if "new/edit" task window is open AND 

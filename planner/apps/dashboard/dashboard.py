@@ -1,5 +1,6 @@
 from .serializers import BoardSerializer, CategorySerializer
 
+
 class Dashboard:
     def __init__(self, request):
         self.session = request.session
@@ -76,5 +77,5 @@ class Sidebar:
         serialize = BoardSerializer(boards, many=True)
 
         response = {"total_boards": total_boards, "boards": serialize.data}
-        
+
         return response

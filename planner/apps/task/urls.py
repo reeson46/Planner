@@ -14,6 +14,6 @@ urlpatterns = [
         views.set_task_extend_state,
         name="set_task_extend_state",
     ),
-    path('subtask_manager/', views.subtask_manager),
-    path('status_manager/', views.status_manager),
-]   
+    path("subtask_manager/", views.subtask_manager),
+    path("status_manager/", views.status_manager),
+]

@@ -334,10 +334,6 @@ function reloadTasks() {
 
       tasks = json.tasks
 
-      var modulo = 0;
-      var current_progress = 0;
-      var percent_progress = 0;
-
       statuses = ["Planned", "In Progress", "Testing", "Completed"]
 
       planned = 0;
