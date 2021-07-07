@@ -14,81 +14,57 @@ def dashboard(request):
 
     user = request.user
     boards = user.board.all()
-
+    
     # make the session instance
     dashboard = Dashboard(request)
-    import ipdb; ipdb.set_trace()
-    # if there is no active board in the session
-    if not dashboard.active_board_check():
+
+    # if the session in not empty
+    if not dashboard.session_check():
+
+        #add all board to the session
+        dashboard.add_all_boards(boards)
 
         # grab the first board from the Board model
-        first_board = boards.first()
-
-        # if there is no active category
-        if not dashboard.active_category_check():
-
-            # set active category as ALL (-1)
-            dashboard.set_active_category_id(category_id=-1)
-
-            highlighted_category = -1
-
-        # save the board id as "active board" into the session
-        dashboard.set_active_board_id(board_id=first_board.id)
-
-        highlighted_board = first_board.id
-
         # and set the first board as active
-        active_board = first_board
+        active_board = boards.first()
 
-        tasks = active_board.task.all()
-
-    # but if there is already "active board" in the session
-    else:
-        # grab the id from the session
-        active_board_id = dashboard.get_active_board_id()
-
-        # if for some reason the "active board" has been deleted
-        if not boards.filter(pk=active_board_id).exists():
-
-            # get the last entry and set it as "active board"
-            active_board = boards.order_by("-id")[0]
-        else:
-            # else just get whichever is active
-            active_board = boards.get(pk=active_board_id)
-
+        # save the board's id as "active board" into the session
         dashboard.set_active_board_id(active_board.id)
-
-         # if there is no active category
-        if not dashboard.active_category_check():
-
-            # set active category as ALL (-1)
-            dashboard.set_active_category_id(category_id=-1)
-
-            highlighted_category = -1
-        else:
-            # get the category id
-            active_category_id = dashboard.get_active_category_id()
-            highlighted_category = active_category_id
-            
         highlighted_board = active_board.id
 
-        # if the active category is ALL
-        if int(dashboard.get_active_category_id()) == -1:
+        # set active category as ALL (-1)
+        dashboard.set_active_category_id(active_board.id, -1)
+        highlighted_category = -1
 
-            # get all the tasks
-            tasks = active_board.task.all()
+        # get the tasks
+        tasks = active_board.task.all()
+     
+    # but if there is already something in the session
+    else:
+        # get the active board
+        if not Board.objects.filter(pk=dashboard.get_active_board_id()).exists():
+            active_board = boards.order_by("-id")[0]
+
         else:
-            # get only the tasks associated with active category
-            tasks = active_board.task.filter(category=active_category_id)
+            active_board = Board.objects.get(pk=dashboard.get_active_board_id())
 
-    total_tasks = active_board.task.all()
+        highlighted_board = active_board.id
+
+        # get the active category
+        active_category_id = int(dashboard.get_active_category_id(active_board.id))
+        if active_category_id == -1:
+            tasks = active_board.task.all()
+            highlighted_category = -1
+        else: 
+            category = Category.objects.get(pk=active_category_id)
+            highlighted_category = category.id
+                
+            # get the tasks
+            tasks = category.task.all()
+
 
     categories = active_board.category.all()
-
-    total_tasks_per_category = [
-        category.task.filter(board=active_board).count() for category in categories
-    ]
-
+ 
     statuses = ["Planned", "In Progress", "Testing", "Completed"]
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
@@ -101,7 +77,6 @@ def dashboard(request):
 
     context = {
         "tasks": tasks,
-        "total_tasks": total_tasks,
         "boards": boards,
         "categories": categories,
         "statuses": statuses,
@@ -111,9 +86,8 @@ def dashboard(request):
         "completed": completed,
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
-        "total_tasks_per_category": total_tasks_per_category,
+        'task_ids': task_ids,
         "completed_subtasks": completed_subtasks,
-        "task_ids": task_ids,
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -124,38 +98,45 @@ def set_active_board(request):
     if request.POST.get("action") == "post":
 
         dashboard = Dashboard(request)
-        sidebar = Sidebar()
+        board_id = request.POST.get("board_id")
 
-        board_id = int(request.POST.get("board_id"))
-        dashboard.set_active_board_id(board_id=board_id)
-        dashboard.set_active_category_id(category_id=-1)
+        if (board_id != dashboard.get_active_board_id()):
 
-        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-        response = sidebar.categories_reload_json_response(active_board)
+            sidebar = Sidebar()
+            dashboard.set_active_board_id(board_id)
+            active_category_id = dashboard.get_active_category_id(board_id)
+
+            active_board = Board.objects.get(pk=board_id)
+            response = sidebar.categories_reload_json_response(active_board)
+            response.update({
+                'reload': True,
+                'active_category_id': active_category_id,
+            })
+
+        else:
+            response = {"reload": False}
 
         return JsonResponse(response)
 
 
 def set_active_category(request):
-    dashboard = Dashboard(request)
 
     if request.POST.get("action") == "post":
-        category_id = int(request.POST.get("category_id"))
-        dashboard.set_active_category_id(category_id=category_id)
+        category_id = request.POST.get("category_id")
 
-        active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+        dashboard = Dashboard(request)
+        board_id = dashboard.get_active_board_id()
 
-        task = Task()
-        tasks = task.getTasks(category_id, active_board)
+        if (category_id != dashboard.get_active_category_id(board_id)):
+            dashboard.set_active_category_id(
+                board_id,
+                category_id
+            )
 
-        task_ids = task.getTaskIds(tasks)
-        completed_subtasks = task.getCompletedSubtasks(tasks)
+            response = {"reload": True}
+        else:
 
-        response = {
-            "task_ids": task_ids,
-            "completed_subtasks": completed_subtasks,
-            "message": "Active category set!",
-        }
+            response = {"reload": False}
 
         return JsonResponse(response)
 
@@ -171,6 +152,7 @@ def board_manager(request):
         user = request.user
         board = Board.objects.create(name=name, created_by=user)
 
+        dashboard.add_board(board.id)
         dashboard.set_active_board_id(board.id)
 
         sidebar = Sidebar()
@@ -197,26 +179,37 @@ def board_manager(request):
     DELETE
     """
     if request.POST.get("action") == "delete":
-        board = Board.objects.get(pk=request.POST.get("id"))
-        board.delete()
 
+        board_id = request.POST.get("id")
+        
+        board = Board.objects.get(pk=board_id)
+        board.delete()
+        
         user = request.user
         boards = user.board.all()
 
         # check if the active board is the same as the one we just deleted
-        if int(dashboard.get_active_board_id()) == int(request.POST.get("id")):
+        if dashboard.get_active_board_id() == board_id:
             # if so, then grab the last created board and set it as active
             active_board = boards.order_by("-id")[0]
             dashboard.set_active_board_id(active_board.id)
         else:
             active_board = boards.get(pk=dashboard.get_active_board_id())
+            dashboard.set_active_board_id(active_board.id)
+        
+        active_category_id = dashboard.get_active_category_id(active_board.id)
+
+        # remove deleted board from session
+        dashboard.remove_board(board_id)
 
         sidebar = Sidebar()
         response = sidebar.boards_reload_json_response(request)
         response.update(sidebar.categories_reload_json_response(active_board))
-        response.update(
-            {"message": "Board deleted", "active_board_id": active_board.id}
-        )
+        response.update({
+            "message": "Board deleted", 
+            "active_board_id": active_board.id,
+            'active_category_id': active_category_id
+        })
 
     return JsonResponse(response)
 
@@ -238,7 +231,7 @@ def category_manager(request):
             name=name, board=active_board, created_by=user
         )
 
-        active_category_id = dashboard.get_active_category_id()
+        active_category_id = dashboard.get_active_category_id(active_board.id)
 
         response = {
             "message": 'Category "' + name + '" created',
@@ -273,8 +266,8 @@ def category_manager(request):
         category = Category.objects.get(pk=pk)
         category.delete()
 
-        dashboard.set_active_category_id(-1)
         active_board = Board.objects.get(pk=dashboard.get_active_board_id())
+        dashboard.set_active_category_id( active_board.id, -1)
 
         sidebar = Sidebar()
         response = sidebar.categories_reload_json_response(active_board)
@@ -286,8 +279,10 @@ def reload_tasks(request):
     if request.method == "GET":
 
         dashboard = Dashboard(request)
-        active_category_id = dashboard.get_active_category_id()
-        active_aboard = Board.objects.get(pk=dashboard.get_active_board_id())
+        active_aboard_id = dashboard.get_active_board_id()
+        active_category_id = int(dashboard.get_active_category_id(active_aboard_id))
+
+        active_aboard = Board.objects.get(pk=active_aboard_id)
 
         task = Task()
         response = task.tasks_reload_json_response(active_category_id, active_aboard)

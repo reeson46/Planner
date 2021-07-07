@@ -1,3 +1,24 @@
+function convertDateAndTime(date) {
+  var offset = Math.abs(date.getTimezoneOffset() / 60)
+  var hours = date.getHours();
+  date.setHours(hours - offset)
+  var date_options = {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }
+  var time_options = {
+    hour: 'numeric',
+    minute: '2-digit'
+  }
+  var time = date.toLocaleTimeString('en-US', time_options).toLowerCase();
+  var a = time.split(" ")[0];
+  var b = time.split(" ")[1];
+  var formatted_time = a + ' ' + b.split('').join('.')+'.'
+
+  return date.toLocaleDateString(undefined, date_options) + ', ' + formatted_time;
+}
+
 class Task {
   constructor(task, statuses) {
     this.task = task;
@@ -39,12 +60,12 @@ class Task {
     }
 
     if (this.task.description != '') {
-      this.task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">' + this.task.fields.description + '</div><hr>';
+      this.task_description = '<div class="task-description-text fs-5 mb-2">Description:</div><div class="card-text">' + this.task.description + '</div><hr>';
     } else {
       this.task_description = '';
     }
-
-    let date = new Date(this.task.date_created)
+    var date = new Date(this.task.date_created)
+    var formatted_date = convertDateAndTime(date)
 
     this.status_dropdown = '';
 
@@ -56,7 +77,7 @@ class Task {
       }
     })
 
-    return '<div class="card text-white task shadow" id="panelsStayOpen-heading' + this.task.id + '"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="' + this.task.id + '" value="' + this.task.extend_state + '" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' + this.task.id + '" aria-expanded="true" aria-controls="panelsStayOpen-collapse' + this.task.id + '"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">' + this.task.name + '</div>' + this.progress_bar + '</div></div><div id="panelsStayOpen-collapse' + this.task.id + '" class="accordion-collapse collapse' + this.extend_state + '" aria-labelledby="panelsStayOpen-heading' + this.task.id + '"><div class="card-body"><div class="task-card-description">' + this.task_description + '</div><div class="task-card-subtasks">' + this.task_subtasks + '</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by ' + this.task.created_by + ', on ' + date + '</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="' + this.task.id + '" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton' + this.task.id + '" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton' + this.task.id + '">' + this.status_dropdown + '</ul></div></div></div></div></div></div>'
+    return '<div class="card text-white task shadow" id="panelsStayOpen-heading' + this.task.id + '"><div class="card-header task-card-header-wrapper task-extend p-0" data-index="' + this.task.id + '" value="' + this.task.extend_state + '" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' + this.task.id + '" aria-expanded="true" aria-controls="panelsStayOpen-collapse' + this.task.id + '"><div class="d-flex justify-content-between task-card-header"><div class="card-subtitle fs-3 task-title-text">' + this.task.name + '</div>' + this.progress_bar + '</div></div><div id="panelsStayOpen-collapse' + this.task.id + '" class="accordion-collapse collapse' + this.extend_state + '" aria-labelledby="panelsStayOpen-heading' + this.task.id + '"><div class="card-body"><div class="task-card-description">' + this.task_description + '</div><div class="task-card-subtasks">' + this.task_subtasks + '</div></div><div class="card-footer"><h6 class="card-subtitle fw-light mt-1">Created by ' + this.task.created_by + ' , on ' + formatted_date + '</h6><hr><div class="d-flex justify-content-between"><div class=""><button class="btn btn-block fw500 w-100" value="' + this.task.id + '" id="edit-task">Edit</button></div><div class=""><div class="dropdown"><button data-display="static" class="btn dropdown-toggle task-status-button" type="button" id="dropdownMenuButton' + this.task.id + '" data-bs-toggle="dropdown" aria-expanded="false">Move to</button><ul class="dropdown-menu dropdown-menu-taskcard bg-dark" aria-labelledby="dropdownMenuButton' + this.task.id + '">' + this.status_dropdown + '</ul></div></div></div></div></div></div>'
 
   }
 
@@ -132,8 +153,6 @@ function reconstructSidebarCategories(json) {
   total_tasks = json.total_tasks;
   total_tasks_per_category = json.total_tasks_per_category;
   categories = json.categories;
-
-  reloadTasks();
 
   if (total_tasks > 0) {
     $("#sidebar-all-tasks").html(
@@ -221,14 +240,13 @@ function ajaxBoardManager(action, id, entered_name) {
         reconstructSidebarBoards(json);
         reconstructSidebarCategories(json);
 
-        // Highlight the "All" category
-        $('.active-category[value="-1"]').addClass('item-selected');
-
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
-        // Reload tasks
-        //$(".reload-board").load(location.href + " .reload-board>*", "");
+        // Highlight the active category
+        $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+
+
         reloadTasks();
       }
 
@@ -246,8 +264,6 @@ function ajaxBoardManager(action, id, entered_name) {
         // Highlight the active board
         $('.board-item[value="' + json.active_board_id + '"]').addClass('item-selected');
 
-        // Reload tasks
-        //$(".reload-board").load(location.href + " .reload-board>*", "");
         reloadTasks();
       }
 
@@ -393,7 +409,7 @@ function reloadTasks() {
         total_subs = sub_progress.data('totalsubs')
         current_progress = subtasks_completed / total_subs * 360
 
-        percent_progress = parseInt(subtasks_completed/total_subs*100)
+        percent_progress = parseInt(subtasks_completed / total_subs * 100)
 
         number = $('.sub-progress-bar' + task.id + ' .number')
         number.html(percent_progress + '%')

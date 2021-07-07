@@ -108,9 +108,9 @@
           <div class="all-tasks-text">All</div>
           
 
-          {% if total_tasks|length > 0 %}
+          {% if tasks %}
           <div class="total-number">
-            <div class="number">{{ total_tasks|length }}</div>
+            <div class="number">{{ tasks|length }}</div>
           </div>
           {% endif %}
         </span>
@@ -125,6 +125,11 @@
               <div class="category-name" value="{{ category.id }}">
                 {{ category.name }}
               </div>
+              {% if category.task.all%}
+              <div class="total-number">
+                <div class="number">{{ category.task.all|length }}</div>
+              </div>
+              {% endif %}
             </span>
           </div>
           <div class="dropdown d-flex">
@@ -183,6 +188,5 @@
   var CSRF_TOKEN = '{{ csrf_token }}';
   var HIGHLIGHTED_BOARD = '{{ highlighted_board }}';
   var HIGHLIGHTED_CATEGORY = '{{ highlighted_category }}';
-  var TOTAL_TASKS_PER_CATEGORY = '{{ total_tasks_per_category }}';
 </script>
 <script src="{% static 'dashboard/sidebar/js/sidebar.js' %}" data-rel-js></script>

@@ -1,3 +1,4 @@
+from typing import Tuple
 from .serializers import BoardSerializer, CategorySerializer
 
 
@@ -10,40 +11,73 @@ class Dashboard:
             dashboard = self.session["dashboard"] = {}
 
         self.dashboard = dashboard
+    
+    """
+    SESSION
+    """
+    def session_check(self):
+        if self.dashboard:
+            return True
+        else:
+            return False
 
-    ###
-    # Active board
-    ###
+    """
+    BOARD
+    """
+    def add_all_boards(self, boards):
+        for board in boards:
+            board_ = str(board.id)
+            self.dashboard[board_] = {}
+        
+        self.session.modified = True
+
+    def add_board(self, board_id):
+        board = str(board_id)
+
+        self.dashboard[board] = {}
+        self.session.modified = True
+
+    def remove_board(self, board_id):
+        board = str(board_id)
+
+        del self.dashboard[board]
+        self.session.modified = True
+        
     def set_active_board_id(self, board_id):
+        board = str(board_id)
 
-        self.dashboard["active_board"] = board_id
+        for k, v in self.dashboard.items():
+            if k == board:
+                v['active'] = True
+            else:
+                v['active'] = False
+
         self.session.modified = True
-
-    def active_board_check(self):
-        if "active_board" in self.dashboard:
-            return True
-        else:
-            return False
-
+            
     def get_active_board_id(self):
-        return self.dashboard.get("active_board")
+        for k, v in self.dashboard.items():
+            if v['active']:
+                return k
 
-    ###
-    # Active category
-    ###
-    def set_active_category_id(self, category_id):
+    """
+    CATEGORY
+    """
+    def set_active_category_id(self, board_id,  category_id):
+        board = str(board_id)
 
-        self.dashboard["active_category"] = category_id
+        self.dashboard[board]['category'] = category_id
         self.session.modified = True
+        
 
-    def active_category_check(self):
-        if "active_category" in self.dashboard:
-            return True
+    def get_active_category_id(self, board_id):
+        board = str(board_id)
+
+        if 'category' not in self.dashboard[board]:  
+            self.dashboard[board]['category'] = -1      
+            self.session.modified = True
+            return -1
         else:
-            return False
-
-    def get_active_category_id(self):
-        return self.dashboard.get("active_category")
+           return self.dashboard[board]['category']
 
 
 class Sidebar:

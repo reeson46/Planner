@@ -46,14 +46,6 @@ $(document).ready(function () {
     $(this).parent().addClass('item-selected');
   });
 
-  // ### SET TOTAL TASK NUMBER FOR EACH CATEGORY ###
-  var tasks = JSON.parse(TOTAL_TASKS_PER_CATEGORY)
-  $('.total-tasks-number').each(function (i) {
-    if (tasks[i] != 0) {
-      $(this).append('<div class="total-number"><div class="number">' + tasks[i] + '</div></div>');
-    }
-  });
-
   // ### ACTIVE BOARD ###
 
   // POST selected board id
@@ -73,11 +65,18 @@ $(document).ready(function () {
 
       success: function (json) {
 
-        // function located in "main.js"
-        reconstructSidebarCategories(json);
-        
-        // Highlight the "All" category
-        $('.active-category[value="-1"]').addClass('item-selected');
+        if (json.reload){
+
+          // function located in "main.js"
+          reconstructSidebarCategories(json);
+          
+          // Highlight the active category category
+          $('.active-category[value="-1"]').removeClass('item-selected');
+          $('.active-category[value="'+json.active_category_id+'"]').addClass('item-selected');
+  
+          reloadTasks();
+        }
+
       },
 
       error: function (xhr, errmsg, err) {
@@ -107,8 +106,9 @@ $(document).ready(function () {
 
       success: function (json) {
 
-        reloadTasks();
-        //$(".reload-board").load(location.href + " .reload-board>*", "");
+        if (json.reload){
+          reloadTasks();
+        }
 
       },
 

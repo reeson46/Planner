@@ -18,7 +18,7 @@ def new_task(request):
 
         categories = active_board.category.all()
 
-        active_category_id = dashboard.get_active_category_id()
+        active_category_id = int(dashboard.get_active_category_id(active_board.id))
 
         if categories:
             categories_json = CategorySerializer(active_board.category.all(), many=True)
@@ -105,7 +105,7 @@ def task_manager(request):
 
             active_board = Board.objects.get(pk=dashboard.get_active_board_id())
             active_category_id = category.id
-            dashboard.set_active_category_id(active_category_id)
+            dashboard.set_active_category_id(active_board.id, active_category_id)
 
             task = Task.objects.create(
                 board=active_board,
@@ -134,7 +134,7 @@ def task_manager(request):
         """
         # if update is "true", meaning we are updating/editing existing task
         if is_edit == "True":
-
+      
             deleted_subtasks = request.POST.getlist("deleted_subtasks[]")
 
             # if any existing subtasks were added to the "deletion" array
@@ -153,10 +153,14 @@ def task_manager(request):
 
             if subtasks:
                 for sub in subtasks:
-                    if Subtask.objects.filter(name=sub, task=task).exists():
-                        pass
-                    else:
-                        Subtask.objects.create(name=sub, task=task)
+                    Subtask.objects.create(name=sub, task=task)
+
+            # if subtasks:
+            #     for sub in subtasks:
+            #         if Subtask.objects.filter(name=sub, task=task).exists():
+            #             pass
+            #         else:
+            #             Subtask.objects.create(name=sub, task=task)
 
             response = {"message": "Task Updated!"}
 
@@ -166,7 +170,7 @@ def task_manager(request):
                 # update the response so that the sidebar categories can be reloaded
                 response.update(sidebar.categories_reload_json_response(task.board))
                 response["category_change"] = "True"
-                response["active_category_id"] = dashboard.get_active_category_id()
+                response["active_category_id"] = dashboard.get_active_category_id(task.board.id)
 
         return JsonResponse(response)
 
@@ -183,7 +187,7 @@ def delete_task(request):
         dashboard = Dashboard(request)
 
         response = sidebar.categories_reload_json_response(board)
-        response["active_category_id"] = dashboard.get_active_category_id()
+        response["active_category_id"] = dashboard.get_active_category_id(board.id)
         return JsonResponse(response)
 
 
