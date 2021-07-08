@@ -16,9 +16,10 @@
     background-color: #454545;
 }
 
+
 .task-extend:hover {
     cursor: pointer;
-    background-color: #5d5c66;
+    background-color: #55535c;
 }
 
 .task:not(:last-child) {
@@ -271,7 +272,7 @@
     -webkit-border-radius: 100%;
     border-radius: 100%;
     clip: rect(0px, 30px, 60px, 0px);
-    background: green;
+    background: #00A62F;
     transition: all 0.5s ease-in-out;
 }
 

@@ -183,6 +183,22 @@ var progress_bar;
 
 $(document).ready(function () {
 
+  // Change the progress bar inner circle color on hover, so 
+  // it matches with the rest of the task card
+  $(document).on('mouseenter', '.task-extend',function(){
+
+    $(this).find('div[class="inner"]').css({
+      'background': '#55535c'
+    })
+  });
+  $(document).on('mouseleave', '.task-extend',function(){
+
+    $(this).find('div[class="inner"]').css({
+      'background': '#454545'
+    })
+
+  });
+  
 
   var task_ids = JSON.parse(TASK_IDS)
   var completed_subtasks = JSON.parse(COMPLETED_SUBTASKS)

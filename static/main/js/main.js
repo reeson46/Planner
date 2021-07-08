@@ -1,7 +1,15 @@
 function convertDateAndTime(date) {
+  var sign = Math.sign(date.getTimezoneOffset())
   var offset = Math.abs(date.getTimezoneOffset() / 60)
   var hours = date.getHours();
-  date.setHours(hours - offset)
+
+  if (sign == 1){
+    date.setHours(hours + offset)
+  }
+  else if (sign == -1){
+    date.setHours(hours - offset)
+  }
+
   var date_options = {
     day: 'numeric',
     month: 'long',
