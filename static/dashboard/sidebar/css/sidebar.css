@@ -214,3 +214,83 @@
     cursor: pointer;
     fill: yellow;
 }
+
+/* Account tab */
+#account-wrapper{
+    height: 45px;
+    border: 3px solid #157d83;
+    border-radius: 5px;
+}
+
+.user-name-wrapper{
+    margin: auto 10px;
+}
+
+.user-name{
+    color:rgb(255, 196, 86);
+}
+
+#accountDropdown{
+    box-shadow: none;
+}
+
+.dropdown-menu-account{
+    transform: translate(-49px, 39px) !important;
+    border: 3px solid #157d83;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-width: 100px;
+}
+
+.dropdown-caret{
+    fill: orange
+}
+.dropdown-caret:hover{
+    fill: yellow
+}
+
+li.account-dropdown-item{
+    text-indent: 0;
+    text-align: center;
+    padding: 0 5px 0 5px;
+}
+
+.account-dropdown-item:hover{
+    background-color: #343a41;
+    cursor: pointer;
+}
+
+.account-dropdown-item:first-child{
+    border-bottom: 1px grey solid;
+}
+
+#account-btn{
+    color: rgb(40, 212, 54);
+    text-decoration: none;
+}
+
+#logout-btn{
+    color: orange;
+    text-decoration: none;
+}
+
+#loginDropdown{
+    box-shadow: none;
+}
+
+#login-btn{
+    color: rgb(40, 212, 54);
+    text-decoration: none;
+}
+
+#tryforfree-btn{
+    color: rgb(20 222 255);
+    text-decoration: none;
+}
+
+.dropdown-menu-login{
+    transform: translate(33px, 39px) !important;
+    border: 3px solid #157d83;
+    padding: 0;
+    min-width: 100px;
+}

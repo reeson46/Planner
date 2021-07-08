@@ -451,6 +451,13 @@ function reloadTasks() {
 
 }
 
+function ajaxLogout(){
+
+  $(document).on('click', '#logout-btn', function(){
+    
+  })
+}
+
 $(document).ready(function () {
 
   // initialize the popover
