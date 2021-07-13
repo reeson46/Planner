@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -8,9 +8,9 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from planner.apps.account.models import UserAccount
 
-from .forms import UserRegistrationForm
+from .forms import UserLoginForm, UserRegistrationForm
 from .token import account_activation_token
-
+from .account import Account
 
 def account_register(request):
     if request.user.is_authenticated:
@@ -19,12 +19,16 @@ def account_register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+
+            account = Account(request)
+            user = account.getUser()
+            user.ip_address = None
             user.email = form.cleaned_data["email"]
-            user.user_name = form.cleaned_data["user_name"]
+            user.username = form.cleaned_data["username"]
             user.set_password(form.cleaned_data["password"])
             user.is_active = False
             user.save()
+                
             # Setup email
             current_site = get_current_site(request)
             subject = "Acctivate you Account"
@@ -59,3 +63,24 @@ def account_activate(request, uidb64, token):
         return redirect("/")
     else:
         return render(request, "account/registration/activation_invalid.html")
+
+
+def account_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            request.session.clear()
+            login(request, user)
+            return redirect("/")
+        else:
+            HttpResponse('Error')
+    else:
+        form = UserLoginForm()
+    
+    return render(request, 'account/login.html', {'form': form})
+

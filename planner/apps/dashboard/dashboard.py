@@ -1,4 +1,4 @@
-from typing import Tuple
+from planner.apps.account.account import Account
 from .serializers import BoardSerializer, CategorySerializer
 
 
@@ -104,7 +104,9 @@ class Sidebar:
     # returns needed data for refreshing the sidebar boards
     def boards_reload_json_response(self, request):
 
-        user = request.user
+        account = Account(request)
+        user = account.getUser()
+
         total_boards = user.board.all().count()
         boards = user.board.all()
 

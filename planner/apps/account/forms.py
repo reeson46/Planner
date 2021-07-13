@@ -26,9 +26,7 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    user_name = forms.CharField(
-        label="Username", min_length=4, max_length=50, help_text="Required"
-    )
+    username = forms.CharField(label="Username", min_length=4, max_length=50, help_text="Required")
     email = forms.EmailField(
         label="Email",
         max_length=100,
@@ -40,14 +38,14 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = UserAccount
-        fields = ["user_name", "email"]
+        fields = ["username", "email"]
 
     def clean_username(self):
-        user_name = self.cleaned_data["user_name"].lower()
-        r = UserAccount.objects.filter(user_name=user_name)
+        username = self.cleaned_data["username"].lower()
+        r = UserAccount.objects.filter(username=username)
         if r.count():
             raise forms.ValidationError("Username already exists")
-        return user_name
+        return username
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -64,7 +62,7 @@ class UserRegistrationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
-        self.fields["user_name"].widget.attrs.update(
+        self.fields["username"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
                 "placeholder": "Enter username",

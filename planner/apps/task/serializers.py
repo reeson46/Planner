@@ -11,7 +11,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     subtask = SubtaskSerializer(many=True)
-    created_by = serializers.ReadOnlyField(source="created_by.user_name")
+    created_by = serializers.ReadOnlyField(source="created_by.username")
 
     class Meta:
         model = Task

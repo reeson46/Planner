@@ -136,7 +136,6 @@ function sidebarBoard(board, total_boards) {
 
 }
 
-
 function reconstructSidebarBoards(json) {
   // get the data
   boards = json.boards
@@ -451,17 +450,13 @@ function reloadTasks() {
 
 }
 
-function ajaxLogout(){
-
-  $(document).on('click', '#logout-btn', function(){
-    
-  })
-}
 
 $(document).ready(function () {
 
+
   // initialize the popover
   renameAddPopover();
+
 
   sender = ""
   action = ""

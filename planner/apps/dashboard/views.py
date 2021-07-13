@@ -1,22 +1,25 @@
+from planner.apps.account.account import Account
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
 from planner.apps.task.models import Category
 from planner.apps.task.task import Task
-
 from .dashboard import Dashboard, Sidebar
 from .models import Board
 
 
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return render(request, "dashboard/dashboard.html")
+    # if not request.user.is_authenticated:
+    #     return render(request, "dashboard/dashboard.html")
 
-    user = request.user
-    boards = user.board.all()
-    
-    # make the session instance
+
     dashboard = Dashboard(request)
+    account = Account(request)
+
+    user = account.getUser()
+    boards = user.board.all()
+
+    # make the session instance
 
     # if the session in not empty
     if not dashboard.session_check():
@@ -149,7 +152,10 @@ def board_manager(request):
     """
     if request.POST.get("action") == "add":
         name = request.POST.get("name")
-        user = request.user
+        
+        account = Account(request)
+        user = account.getUser()
+
         board = Board.objects.create(name=name, created_by=user)
 
         dashboard.add_board(board.id)
@@ -221,9 +227,11 @@ def category_manager(request):
     ADD
     """
     if request.POST.get("action") == "add":
+        
+        account = Account(request)
+        user = account.getUser()
 
         name = request.POST.get("name")
-        user = request.user
 
         active_board = Board.objects.get(pk=dashboard.get_active_board_id())
 

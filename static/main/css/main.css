@@ -110,3 +110,9 @@ hr.new4 {
     border: 2px solid orange;
 }
 
+/* Add input */
+.add-input{
+    height: 35px;
+    width: 220px;
+    font-size: 20px;
+}

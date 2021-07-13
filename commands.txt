@@ -1,5 +1,6 @@
-# Reset migrations
+# Delete migrations/pycache
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 # Visualize database connetions
 python manage.py graph_models -a > my_project.dot

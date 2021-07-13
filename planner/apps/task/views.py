@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from planner.apps.dashboard.dashboard import Dashboard, Sidebar
 from planner.apps.dashboard.models import Board, Category
 from planner.apps.dashboard.serializers import CategorySerializer
-
+from planner.apps.account.account import Account
 from .models import Subtask, Task
 from .serializers import TaskSerializer
 
@@ -63,7 +63,7 @@ def edit_task(request):
 
         categories = CategorySerializer(active_board.category.all(), many=True)
         task = TaskSerializer(t, many=False)
-        # subtasks = SubtaskSerializer("json", t.subtask.all())
+   
 
         response = {
             "board_name": t.board.name,
@@ -71,7 +71,6 @@ def edit_task(request):
             "categories": categories.data,
             "statuses": statuses,
             "task": task.data,
-            # "subtasks": subtasks,
             "is_edit": "True",
             "button": "Update",
         }
@@ -93,7 +92,9 @@ def task_manager(request):
 
         name = request.POST.get("name")
         description = request.POST.get("description")
-        user = request.user
+
+        account = Account(request)
+        user = account.getUser()
         subtasks = request.POST.getlist("subtasks[]")
         is_edit = request.POST.get("is_edit")
 

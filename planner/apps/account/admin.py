@@ -9,25 +9,25 @@ class UserAdminConfig(UserAdmin):
     model = UserAccount
     search_fields = (
         "email",
-        "user_name",
+        "username",
         "first_name",
     )
     list_filter = (
         "email",
-        "user_name",
+        "username",
         "first_name",
         "is_active",
         "is_staff",
     )
     ordering = ("-date_created",)
-    list_display = ("email", "user_name", "first_name", "is_staff", "is_active")
+    list_display = ("email", "username", "first_name", "is_staff", "is_active")
     fieldsets = (
         (
             None,
             {
                 "fields": (
                     "email",
-                    "user_name",
+                    "username",
                     "first_name",
                     "last_name",
                     "password",
@@ -45,9 +45,7 @@ class UserAdminConfig(UserAdmin):
         ),
         ("Personal", {"fields": ("about",)}),
     )
-    formfield_overrides = {
-        UserAccount.about: {"widget": Textarea(attrs={"rows": 10, "cols": 40})}
-    }
+    formfield_overrides = {UserAccount.about: {"widget": Textarea(attrs={"rows": 10, "cols": 40})}}
     add_fieldsets = (
         (
             None,
@@ -55,7 +53,7 @@ class UserAdminConfig(UserAdmin):
                 "classes": ("wide",),
                 "fields": (
                     "email",
-                    "user_name",
+                    "username",
                     "first_name",
                     "password1",
                     "password2",
