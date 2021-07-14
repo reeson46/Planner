@@ -27,9 +27,14 @@ $(document).ready(function () {
 
     if(TOTAL_CATEGORIES >= 3){
       var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
-      $('.category-div').attr('title', content).tooltip();
+      $('.category-tooltip-div').attr('title', content).tooltip();
     }
 
+    if(TOTAL_TASKS >= 10){
+      var content = "To add more Tasks you must Sign Up. Don't worry, it's free!"
+      $('.sidebar-add-newtask').attr('title', content).tooltip();
+    }
+    
   }
 
   // init the delete  popover

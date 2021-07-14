@@ -292,6 +292,10 @@ $(document).ready(function () {
             taskForm_toggle = true;
             edittask_toggle = true;
           }
+
+          if(json.is_guest){
+            guestTaskLimit(json);
+          }
         }
 
         if (is_edit == "True") {
@@ -395,6 +399,10 @@ $(document).ready(function () {
 
             // re-highlight the active category
             $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+
+            if(json.is_guest){
+              guestTaskLimit(json);
+            }
 
           },
 

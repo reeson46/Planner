@@ -119,12 +119,15 @@
 
 /* Task Form*/
 .add-icon-task {
-    position: relative;
-    left: 10px;
     display: inherit;
 }
 
-.add-icon-task svg:hover {
+.taskform-add-category-guest {
+    display: inherit;
+    fill: gray;
+}
+
+.add-icon-task:hover {
     cursor: pointer;
     fill: yellow;
 }

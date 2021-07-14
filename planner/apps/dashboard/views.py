@@ -258,6 +258,8 @@ def category_manager(request):
                 'total_categories': user.category.all().count(),
                 'is_guest': True
             })
+        else:
+            response['is_guest'] = False
 
     """
     RENAME
@@ -297,6 +299,8 @@ def category_manager(request):
                 'total_categories': user.category.all().count(),
                 'is_guest': True
             })
+        else:
+            response['is_guest'] = False
 
     return JsonResponse(response)
 

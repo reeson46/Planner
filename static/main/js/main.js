@@ -1,27 +1,44 @@
 function guestCategoryLimit(json) {
-  var add_icon = $('#sidebar-add-category');
-  var tooltip = $('.category-div');
+  var add_icon = $('.global-add-category-icon');
+  var tooltip = $('.category-tooltip-div');
+
 
   if (json.total_categories >= 3) {
     add_icon.popover('disable');
 
-    add_icon.removeClass('sidebar-add-icon')
+    add_icon.removeClass('category-add-icon')
     add_icon.removeClass('rename-add-icon')
-    add_icon.addClass('sidebar-add-category-guest')
+    add_icon.addClass('add-category-guest')
 
     var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
     tooltip.attr('title', content).tooltip();
 
-
   } else {
     add_icon.popover('enable')
 
-    add_icon.addClass('sidebar-add-icon')
+    add_icon.addClass('category-add-icon')
     add_icon.addClass('rename-add-icon')
-    add_icon.removeClass('sidebar-add-category-guest')
+    add_icon.removeClass('add-category-guest')
 
     tooltip.tooltip('dispose');
+  }
+}
 
+function guestTaskLimit(json){
+  var add_icon = $('.sidebar-add-newtask');
+  var tooltip = $('.sidebar-add-newtask');
+
+  if (json.total_tasks >= 10){
+    add_icon.removeClass('newtask-icon')
+    add_icon.addClass('sidebar-add-task-guest')
+
+    var content = "To add more Tasks you must Sign Up. Don't worry, it's free!"
+    tooltip.attr('title', content).tooltip();
+  }else{
+    add_icon.addClass('newtask-icon')
+    add_icon.removeClass('sidebar-add-task-guest')
+
+    tooltip.tooltip('dispose');
   }
 }
 
@@ -355,14 +372,13 @@ function ajaxCategoryManager(action, id, entered_name, source) {
         if (action == 'add') {
 
           reconstructSidebarCategories(json)
-
+          
+          // re-highlight the active category
+          $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+          
           if (json.is_guest) {
             guestCategoryLimit(json);
           }
-
-          // re-highlight the active category
-          $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
-
         }
       }
 
@@ -376,6 +392,10 @@ function ajaxCategoryManager(action, id, entered_name, source) {
 
         // re-highlight the active category
         $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
+
+        if (json.is_guest) {
+          guestCategoryLimit(json);
+        }
       }
 
     },
