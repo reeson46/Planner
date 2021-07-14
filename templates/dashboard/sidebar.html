@@ -166,6 +166,11 @@
       <li class="row hovered-nav-item active-category" value="-1">
         <span class="category-link category-item fs-5 d-flex " id="sidebar-all-tasks" value="-1">
           <div class="all-tasks-text">All</div>
+          {% if total_tasks %}
+          <div class="total-number">
+            <div class="number">{{ total_tasks|length }}</div>
+          </div>
+          {% endif %}
 
         </span>
       </li>

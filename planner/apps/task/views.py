@@ -132,10 +132,7 @@ def task_manager(request):
             response.update(sidebar.categories_reload_json_response(active_board))
 
             if not request.user.is_authenticated:
-                response.update({
-                    'total_tasks': user.task.all().count(),
-                    'is_guest': True
-                })
+                response['is_guest'] = True
             else:
                 response['is_guest'] = False
 
@@ -200,13 +197,7 @@ def delete_task(request):
         response["active_category_id"] = dashboard.get_active_category_id(board.id)
 
         if not request.user.is_authenticated:
-            account = Account(request)
-            user = account.getUser()
-
-            response.update({
-                'total_tasks': user.task.all().count(),
-                'is_guest': True
-            })
+            response['is_guest'] = True
         else:
             response['is_guest'] = False
               
