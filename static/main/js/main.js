@@ -10,7 +10,7 @@ function guestCategoryLimit(json) {
     add_icon.removeClass('rename-add-icon')
     add_icon.addClass('add-category-guest')
 
-    var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
+    var content = "To add a new Category you must Sign Up. Don't worry, it's free!"
     tooltip.attr('title', content).tooltip();
 
   } else {
@@ -32,7 +32,7 @@ function guestTaskLimit(json){
     add_icon.removeClass('newtask-icon')
     add_icon.addClass('sidebar-add-task-guest')
 
-    var content = "To add more Tasks you must Sign Up. Don't worry, it's free!"
+    var content = "To add a new Task you must Sign Up. Don't worry, it's free!"
     tooltip.attr('title', content).tooltip();
   }else{
     add_icon.addClass('newtask-icon')

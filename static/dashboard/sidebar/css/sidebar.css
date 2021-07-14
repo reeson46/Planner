@@ -210,6 +210,14 @@
     height: 100%;
 }
 
+.sidebar-add-icon{
+    height: 100%;
+}
+.sidebar-add-icon:hover{
+    cursor: pointer;
+    fill: yellow;
+}
+
 .sidebar-add-board-guest,
 .add-category-guest {
     height: 100%;
@@ -302,6 +310,6 @@ li.account-dropdown-item {
     border: 3px solid #157d83;
     padding-top: 0;
     padding-bottom: 0;
-    min-width: 200px;
+    min-width: 100px;
     position: fixed !important;
 }

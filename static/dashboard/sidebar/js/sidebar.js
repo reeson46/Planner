@@ -26,12 +26,12 @@ $(document).ready(function () {
     $('.sidebar-add-board-guest').attr('title', content).tooltip();
 
     if(TOTAL_CATEGORIES >= 3){
-      var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
+      var content = "To add a new Category you must Sign Up. Don't worry, it's free!"
       $('.category-tooltip-div').attr('title', content).tooltip();
     }
 
     if(TOTAL_TASKS >= 10){
-      var content = "To add more Tasks you must Sign Up. Don't worry, it's free!"
+      var content = "To add a new Task you must Sign Up. Don't worry, it's free!"
       $('.sidebar-add-newtask').attr('title', content).tooltip();
     }
     
