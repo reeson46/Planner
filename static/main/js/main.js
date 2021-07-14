@@ -1,12 +1,38 @@
+function guestCategoryLimit(json) {
+  var add_icon = $('#sidebar-add-category');
+  var tooltip = $('.category-div');
+
+  if (json.total_categories >= 3) {
+    add_icon.popover('disable');
+
+    add_icon.removeClass('sidebar-add-icon')
+    add_icon.removeClass('rename-add-icon')
+    add_icon.addClass('sidebar-add-category-guest')
+
+    var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
+    tooltip.attr('title', content).tooltip();
+
+
+  } else {
+    add_icon.popover('enable')
+
+    add_icon.addClass('sidebar-add-icon')
+    add_icon.addClass('rename-add-icon')
+    add_icon.removeClass('sidebar-add-category-guest')
+
+    tooltip.tooltip('dispose');
+
+  }
+}
+
 function convertDateAndTime(date) {
   var sign = Math.sign(date.getTimezoneOffset())
   var offset = Math.abs(date.getTimezoneOffset() / 60)
   var hours = date.getHours();
 
-  if (sign == 1){
+  if (sign == 1) {
     date.setHours(hours + offset)
-  }
-  else if (sign == -1){
+  } else if (sign == -1) {
     date.setHours(hours - offset)
   }
 
@@ -22,7 +48,7 @@ function convertDateAndTime(date) {
   var time = date.toLocaleTimeString('en-US', time_options).toLowerCase();
   var a = time.split(" ")[0];
   var b = time.split(" ")[1];
-  var formatted_time = a + ' ' + b.split('').join('.')+'.'
+  var formatted_time = a + ' ' + b.split('').join('.') + '.'
 
   return date.toLocaleDateString(undefined, date_options) + ', ' + formatted_time;
 }
@@ -118,7 +144,7 @@ function sidebarCategory(category, total_tasks_per_category, i) {
     var total_tasks = ""
   }
 
-  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="' + category.id + '"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="' + category.id + '"><div class="category-name" value="' + category.id + '">' + category.name + '</div>' + total_tasks + '</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton' + category.id + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + category.id + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + category.name + '" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="category" data-action="delete" data-name="' + category.name + '" data-source="sidebar" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
+  return '<li class="row hovered-nav-item"><span class="d-flex justify-content-between active-category" value="' + category.id + '"><div class="category-item"><span class="category-link fs-5 text-white total-tasks-number d-flex" value="' + category.id + '"><div class="category-name" value="' + category.id + '">' + category.name + '</div>' + total_tasks + '</span></div><div class="dropdown d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical dot-icon" type="button" id="dropdownMenuButton' + category.id + '" data-bs-toggle="dropdown" aria-expanded="false" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" /></svg><ul class="dropdown-menu dropdown-menu-sidebar dropdown-menu-dark" aria-labelledby="dropdownMenuButton' + category.id + '"><li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill bs-icon rename-add-icon rename-add-icon-sidebar" data-sender="category" data-sender="sidebar" data-action="rename" data-placeholder="" data-value="' + category.name + '" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z" /></svg></li><li class="d-flex mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-type="category" data-sender="category" data-action="delete" data-name="' + category.name + '" data-source="sidebar" data-id="' + category.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li></ul></div></span></li>'
 
 
 }
@@ -126,7 +152,7 @@ function sidebarCategory(category, total_tasks_per_category, i) {
 function sidebarBoard(board, total_boards) {
 
   if (total_boards > 1) {
-    del_icon = '<li class="d-flex"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-sender="board" data-action="delete" data-name="' + board.name + '" data-id="' + board.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li>'
+    del_icon = '<li class="d-flex mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="orange" class="bi bi-x-lg delete-icon" data-sender="board" data-action="delete" data-name="' + board.name + '" data-id="' + board.id + '" viewBox="0 0 16 16"><path d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" /></svg></li>'
   } else {
     del_icon = ""
   }
@@ -313,12 +339,29 @@ function ajaxCategoryManager(action, id, entered_name, source) {
 
       if (source == 'sidebar') {
 
-        if (action == 'delete' || action == 'add') {
+        if (action == 'delete') {
 
           reconstructSidebarCategories(json)
 
+          if (json.is_guest) {
+            guestCategoryLimit(json);
+          }
+
           // re-highlight the "All" category
           $('.active-category[value="-1"]').addClass('item-selected');
+
+        }
+
+        if (action == 'add') {
+
+          reconstructSidebarCategories(json)
+
+          if (json.is_guest) {
+            guestCategoryLimit(json);
+          }
+
+          // re-highlight the active category
+          $('.active-category[value="' + json.active_category_id + '"]').addClass('item-selected');
 
         }
       }
@@ -453,10 +496,8 @@ function reloadTasks() {
 
 $(document).ready(function () {
 
-
   // initialize the popover
   renameAddPopover();
-
 
   sender = ""
   action = ""

@@ -9,17 +9,17 @@ from .models import Board
 
 
 def dashboard(request):
-    # if not request.user.is_authenticated:
-    #     return render(request, "dashboard/dashboard.html")
-
-
     dashboard = Dashboard(request)
     account = Account(request)
+
+    if request.user.is_authenticated:
+        is_guest = False
+    else:
+        is_guest = True
 
     user = account.getUser()
     boards = user.board.all()
 
-    # make the session instance
 
     # if the session in not empty
     if not dashboard.session_check():
@@ -79,6 +79,7 @@ def dashboard(request):
     task_ids = task.getTaskIds(tasks)
 
     context = {
+        'total_tasks': user.task.all(),
         "tasks": tasks,
         "boards": boards,
         "categories": categories,
@@ -91,6 +92,7 @@ def dashboard(request):
         "highlighted_category": highlighted_category,
         'task_ids': task_ids,
         "completed_subtasks": completed_subtasks,
+        'is_guest': is_guest
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -245,10 +247,17 @@ def category_manager(request):
             "message": 'Category "' + name + '" created',
             "added_category_id": category.id,
             "active_category_id": active_category_id,
+            
         }
 
         sidebar = Sidebar()
         response.update(sidebar.categories_reload_json_response(active_board))
+
+        if not request.user.is_authenticated:
+            response.update({
+                'total_categories': user.category.all().count(),
+                'is_guest': True
+            })
 
     """
     RENAME
@@ -269,6 +278,9 @@ def category_manager(request):
     """
     if request.POST.get("action") == "delete":
 
+        account = Account(request)
+        user = account.getUser()
+
         pk = request.POST.get("id")
 
         category = Category.objects.get(pk=pk)
@@ -279,6 +291,12 @@ def category_manager(request):
 
         sidebar = Sidebar()
         response = sidebar.categories_reload_json_response(active_board)
+
+        if not request.user.is_authenticated:
+            response.update({
+                'total_categories': user.category.all().count(),
+                'is_guest': True
+            })
 
     return JsonResponse(response)
 
@@ -296,3 +314,7 @@ def reload_tasks(request):
         response = task.tasks_reload_json_response(active_category_id, active_aboard)
 
         return JsonResponse(response)
+
+
+def guest_limitation(request):
+    pass

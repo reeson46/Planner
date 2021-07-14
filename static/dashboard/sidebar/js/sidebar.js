@@ -16,8 +16,21 @@ function deletePopover() {
 
 var is_deleteBoardCategory_popover_open;
 var taskForm_toggle;
+var category_limit;
 
 $(document).ready(function () {
+
+  // if the user is guest, init the tooltips
+  if (IS_GUEST == "True"){
+    var content = "To add a new Board you must Sign Up. Don't worry, it's free!";
+    $('.sidebar-add-board-guest').attr('title', content).tooltip();
+
+    if(TOTAL_CATEGORIES >= 3){
+      var content = "To add more Categories you must Sign Up. Don't worry, it's free!"
+      $('.category-div').attr('title', content).tooltip();
+    }
+
+  }
 
   // init the delete  popover
   deletePopover();
