@@ -116,3 +116,19 @@ hr.new4 {
     width: 220px;
     font-size: 20px;
 }
+
+/* Tooltip */
+.tooltip.show{
+    opacity: 1;
+}
+
+.tooltip .tooltip-inner{
+    background-color: #343a40;
+    color: rgb(255, 217, 0);
+    font-size: 1rem;
+    border: 1px solid lightblue;
+}
+
+.tooltip .tooltip-arrow{
+    display: none;
+}

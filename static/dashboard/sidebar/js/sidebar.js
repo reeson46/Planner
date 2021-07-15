@@ -22,16 +22,16 @@ $(document).ready(function () {
 
   // if the user is guest, init the tooltips
   if (IS_GUEST == "True"){
-    var content = "To add a new Board you must Sign Up. Don't worry, it's free!";
+    var content = "As a Guest user, you can have only 1 board. Sign Up for free to add more.";
     $('.sidebar-add-board-guest').attr('title', content).tooltip();
 
     if(TOTAL_CATEGORIES >= 3){
-      var content = "To add a new Category you must Sign Up. Don't worry, it's free!"
+      var content = "As a Guest user, you can have only 3 categories. Sign Up for free to add more."
       $('.category-tooltip-div').attr('title', content).tooltip();
     }
 
     if(TOTAL_TASKS >= 10){
-      var content = "To add a new Task you must Sign Up. Don't worry, it's free!"
+      var content = "As a Guest user, you can have only 10 tasks. Sign Up for free to add more."
       $('.sidebar-add-newtask').attr('title', content).tooltip();
     }
     
