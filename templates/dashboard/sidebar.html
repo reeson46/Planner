@@ -20,7 +20,7 @@
             d="M5.795 12.456A.5.5 0 0 1 5.5 12V4a.5.5 0 0 1 .832-.374l4.5 4a.5.5 0 0 1 0 .748l-4.5 4a.5.5 0 0 1-.537.082z" />
         </svg>
         <ul class="dropdown-menu dropdown-menu-user bg-dark" aria-labelledby="accountDropdown">
-          <li class="account-dropdown-item"><a id="account-btn" href="#">Account</a></li>
+          <li class="account-dropdown-item"><a id="account-btn" href="{% url 'account:profile' %}">Account</a></li>
           <li class="account-dropdown-item"><a id="logout-btn" href="{% url 'account:logout' %}">Logout</a></li>
         </ul>
       </div>
@@ -50,7 +50,7 @@
   </div>
   <div class="bg-dark mb-3" id="sidebar-new-task-wrapper">
     <div class="text-white fs-4 text-center mt-2 new-task-text">New Task</div>
-    <div class="container" id="sidebar-new-task">
+    <div class="" id="sidebar-new-task">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange"
         class="bi bi-plus-square 
         {% if not user.is_authenticated and total_tasks|length >= 10 %}

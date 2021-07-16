@@ -14,3 +14,44 @@
 .link-decor:hover {
     text-decoration: underline;
 }
+
+/* Profile */
+#profile-wrapper{
+    width: 440px;
+    height: 600px;
+}
+
+.profile-title{
+    color: orange;
+}
+
+.profile-mid{
+    border-right: 1px solid gray;
+}
+
+#profile-username,
+#profile-email{
+    width: 330px;
+}
+
+
+#profile-last_name,
+#profile-first_name,
+#profile-about{
+    width: 400px;
+}
+
+#profile-about{
+    height: 100px;
+}
+
+.profile-edit-icon{
+    fill: rgb(2, 168, 2);
+    height: 100%;
+    margin-left: 2rem;
+}
+
+.profile-edit-icon:hover{
+    cursor: pointer;
+    fill: rgb(0, 243, 0);
+}

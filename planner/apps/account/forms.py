@@ -3,6 +3,54 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from .models import UserAccount
 
+class UserProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = UserAccount
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'about'
+        ]
+    
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+
+        self.fields["username"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "id": 'profile-username'
+            }
+        )
+        self.fields["email"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "id": 'profile-email'
+            }
+        )
+
+        self.fields["first_name"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "id": 'profile-first_name'
+            }
+        )
+        self.fields["last_name"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "id": 'profile-last_name'
+            }
+        )
+        self.fields["about"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "id": 'profile-about'
+            }
+        )
+    
+
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(

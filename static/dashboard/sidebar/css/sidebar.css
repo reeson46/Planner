@@ -162,6 +162,7 @@
 }
 
 .sidebar-add-task-guest {
+    outline: none;
     width: 110px;
     height: 110px;
     left: 45px;
@@ -279,6 +280,10 @@
 
 .dropdown-caret:hover {
     fill: yellow;
+}
+
+.dropdown-caret:active {
+    transform: scale(0.9);
 }
 
 li.account-dropdown-item {
