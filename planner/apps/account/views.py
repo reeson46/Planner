@@ -44,7 +44,7 @@ def account_register(request):
                 },
             )
             user.email_user(subject=subject, message=message)
-            return HttpResponse("Account activation email sent")
+            return render(request, 'account/registration/registration_successful.html')
     else:
         form = UserRegistrationForm()
 
@@ -62,7 +62,7 @@ def account_activate(request, uidb64, token):
         user.save()
         login(request, user)
 
-        return redirect("/")
+        return render(request, 'account/registration/activation_successful.html')
     else:
         return render(request, "account/registration/activation_invalid.html")
 
@@ -106,6 +106,3 @@ def update_account(request):
     
     
     return render(request, 'account/account.html', {'form': form})
-
-def test(request):
-    return render(request, 'account/registration/activation_successful.html')
