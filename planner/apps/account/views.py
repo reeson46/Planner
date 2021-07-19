@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
@@ -87,35 +88,21 @@ def account_login(request):
 
 
 @login_required
-def profile(request):
+def update_account(request):
 
     user = request.user
-    user_qs = UserAccount.objects.filter(id=user.id)
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
+        form = UserProfileForm(data=request.POST, user=user, instance=user)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            about = form.cleaned_data['about']
-            user_qs.update(
-                username=username,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                about=about
-            )
-            return redirect("/")
+            form.save()
+            messages.success(request, 'You account was successfully updated.')
+            return redirect("account:update_account")
+        else:
+            print(form.errors)
 
     else:
         form = UserProfileForm(instance=user)
     
     
-    return render(request, 'account/profile/profile.html', {'form': form})
-
-
-@login_required
-def update_profile(request):
-    pass
+    return render(request, 'account/account.html', {'form': form})

@@ -20,7 +20,7 @@
             d="M5.795 12.456A.5.5 0 0 1 5.5 12V4a.5.5 0 0 1 .832-.374l4.5 4a.5.5 0 0 1 0 .748l-4.5 4a.5.5 0 0 1-.537.082z" />
         </svg>
         <ul class="dropdown-menu dropdown-menu-user bg-dark" aria-labelledby="accountDropdown">
-          <li class="account-dropdown-item"><a id="account-btn" href="{% url 'account:profile' %}">Account</a></li>
+          <li class="account-dropdown-item"><a id="account-btn" href="{% url 'account:update_account' %}">Account</a></li>
           <li class="account-dropdown-item"><a id="logout-btn" href="{% url 'account:logout' %}">Logout</a></li>
         </ul>
       </div>

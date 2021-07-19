@@ -1,9 +1,16 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-
 from .models import UserAccount
 
 class UserProfileForm(forms.ModelForm):
+    username = forms.CharField(label="Username", min_length=4, max_length=50, help_text="Required")
+    email = forms.EmailField(
+        label="Email",
+        max_length=100,
+        help_text="Required",
+        error_messages={"required": "Sorry, you will need an email"},
+    )
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
     
     class Meta:
         model = UserAccount
@@ -12,11 +19,12 @@ class UserProfileForm(forms.ModelForm):
             'email',
             'first_name',
             'last_name',
-            'about'
+            'about',
         ]
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.user = user
 
         self.fields["username"].widget.attrs.update(
             {
@@ -49,7 +57,20 @@ class UserProfileForm(forms.ModelForm):
                 "id": 'profile-about'
             }
         )
+        self.fields["password"].widget.attrs.update(
+            {
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "To save your changes, enter your password",
+                "id": 'profile-password'
+            }
+        )
+   
     
+    def clean_password(self):
+        valid = self.user.check_password(self.cleaned_data['password'])
+        if not valid:
+            raise forms.ValidationError('Incorrect password')
+
 
 
 class UserLoginForm(AuthenticationForm):

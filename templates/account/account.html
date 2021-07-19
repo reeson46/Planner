@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Account{% endblock title %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+  <div class="row mt-4" id="profile-wrapper">
+    <div class="card card-body shadow form-bg">
+      <p class="profile-title mb-2 fs-4">Account</p>
+
+      {% if form.errors %}
+      <p class="text-warning">Please correct the following errors:</p>
+      {% for field in form %}
+      {% if field.errors %}
+      <div class="alert alert-dark" role="alert">
+        {{ field.label }}: {{ field.errors|striptags }}
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+
+      <form action="" method="POST">
+        {% csrf_token %}
+        <label class="text-white mb-1">{{ form.username.label }}</label>
+        {{ form.username }}
+
+        <label class="text-white mb-1">{{ form.email.label }}</label>
+        {{ form.email }}
+
+        <label class="text-white mb-1">{{ form.first_name.label }}</label>
+        {{ form.first_name }}
+
+        <label class="text-white mb-1">{{ form.last_name.label }}</label>
+        {{ form.last_name }}
+
+        <label class="text-white mb-1">{{ form.about.label }}</label>
+        {{ form.about }}
+        <hr class="text-white">
+
+        
+        {{ form.password }}
+        
+        <button class="btn btn-success btn-block py-2 mb-4 mt-4 fw500 w-100" type="submit"
+          id="profile-save-btn">Save</button>
+      </form>
+
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <p{% if message.tags %} class="text-center text-white {{ message.tags }}" {% endif %}>{{ message }}</p>
+          {% endfor %}
+      </div>
+      {% endif %}
+      <p class="text-center mb-0">
+        <a class="text-white-50 link-decor" href="{% url 'dashboard:home' %}">Back to Dashboard</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'account/js/account.js' %}"></script>
+{% endblock content %}
