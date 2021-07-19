@@ -40,7 +40,7 @@
         
         {{ form.password }}
         
-        <button class="btn btn-success btn-block py-2 mb-4 mt-4 fw500 w-100" type="submit"
+        <button class="btn btn-success btn-block py-2 mb-4 mt-2 fw500 w-100" type="submit"
           id="profile-save-btn">Save</button>
       </form>
 
@@ -58,5 +58,26 @@
   </div>
 </div>
 
-<script src="{% static 'account/js/account.js' %}"></script>
+<script>
+$(document).ready(function(){
+
+    var password_input = $('#profile-password');
+    var profile_save_btn = $('#profile-save-btn');
+
+    // Disable save button if password field is empty
+    if(profile_save_btn.val() != ''){
+        password_input.removeClass('required-field')
+        profile_save_btn.attr('disabled', false)
+    }else{
+        password_input.addClass('required-field')
+        profile_save_btn.attr('disabled', true)
+    }
+
+    // Check if something had been input into password field
+    password_input.on('keyup', function(){
+        password_input.removeClass('required-field')
+        profile_save_btn.attr('disabled', false)
+    })
+})
+</script>
 {% endblock content %}

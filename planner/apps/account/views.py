@@ -106,3 +106,6 @@ def update_account(request):
     
     
     return render(request, 'account/account.html', {'form': form})
+
+def test(request):
+    return render(request, 'account/registration/activation_successful.html')

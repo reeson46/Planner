@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Activation successful{% endblock %}
+
+{% block content %}
+
+
+<div class="d-flex justify-content-center">
+  <div class="row mt-4">
+    <div class="card card-body shadow form-bg">
+      <p class="text-center fs-5 mb-0" style="color: orange;">
+        Your account has been successfully activated. You will be redirected back to Dashboard in <span class="redirect-time">5</span> seconds...
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function (){
+
+  var time = 5;
+  var element = $('.redirect-time')
+
+  var timer = setInterval(function(){
+    time -= 1;
+    element.html(time)
+    if (time == 0){
+      clearInterval(timer)
+      window.location.href = "{% url 'dashboard:home' %}"
+    }
+  }, 1000)
+
+})
+
+</script>
+{% endblock %}
