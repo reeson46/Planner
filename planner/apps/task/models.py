@@ -18,7 +18,9 @@ class Task(models.Model):
     )
     status = models.CharField(max_length=50, choices=STATUS, default="Planned")
     name = models.CharField(max_length=250)
-    created_by = models.ForeignKey(UserAccount, related_name="task", on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        UserAccount, related_name="task", on_delete=models.CASCADE
+    )
     description = models.TextField(max_length=500, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)

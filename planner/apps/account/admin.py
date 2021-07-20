@@ -45,7 +45,9 @@ class UserAdminConfig(UserAdmin):
         ),
         ("Personal", {"fields": ("about",)}),
     )
-    formfield_overrides = {UserAccount.about: {"widget": Textarea(attrs={"rows": 10, "cols": 40})}}
+    formfield_overrides = {
+        UserAccount.about: {"widget": Textarea(attrs={"rows": 10, "cols": 40})}
+    }
     add_fieldsets = (
         (
             None,

@@ -1,6 +1,10 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.core.mail import send_mail
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +17,9 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("You must provide an email address"))
 
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username, first_name=first_name, **other_fields)
+        user = self.model(
+            email=email, username=username, first_name=first_name, **other_fields
+        )
         user.set_password(password)
         user.save()
         return user

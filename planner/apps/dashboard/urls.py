@@ -11,5 +11,4 @@ urlpatterns = [
     path("board_manager/", views.board_manager),
     path("category_manager/", views.category_manager),
     path("reload_tasks/", views.reload_tasks),
-    path('guest_limitation', views.guest_limitation, name='guest_limitation')
 ]

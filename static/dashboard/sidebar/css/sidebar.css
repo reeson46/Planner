@@ -124,14 +124,14 @@
 
 
 #sidebar-boards {
-    height: 300px;
+    height: 350px;
     overflow-x: hidden;
     border-top: 1px solid #9d9a9a;
 }
 
 /* Category section */
 #sidebar-categories {
-    height: 300px;
+    height: 350px;
     overflow-x: hidden;
     border-top: 1px solid #9d9a9a;
 }
@@ -197,7 +197,6 @@
     min-width: 30px;
     border: 1px solid lightblue;
     left: 50% !important;
-    top: -35px !important;
 }
 
 .rename-add-icon-sidebar {
@@ -332,4 +331,36 @@ li.account-dropdown-item {
     padding-bottom: 0;
     min-width: 100px;
     position: fixed !important;
+}
+
+/* Misc */
+#misc-wrapper{
+    height: 100%;
+    border: 3px solid #157d83;
+    border-radius: 5px;
+}
+
+.misc-item:hover{
+    background-color: #343a41;
+}
+
+.misc-item:hover .misc-text{
+    color: white;
+}
+
+.misc-item:hover .misc-icon{
+    fill: orange;
+}
+
+.misc-link{
+    text-decoration: none;
+}
+
+.misc-text{
+    color: gray;
+}
+
+.misc-icon{
+    margin: auto 10px;
+    fill: rgb(145, 94, 0);
 }

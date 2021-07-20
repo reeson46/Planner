@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Password Reset{% endblock title %}
+{% block content %}
+
+<div class="d-flex justify-content-center">
+  <div class="row mt-4" id="">
+
+    <div class="card card-body shadow form-bg text-center">
+      {% if 'email' in request.get_full_path %}
+      <p class="mb-3 fs-4" style="color:orange;">
+          Password Reset link sent
+      </p>
+      <p class="mb-3 text-white">
+          Check you email for instructions
+      </p>
+      {% endif %}
+
+      {% if 'complete' in request.get_full_path %}
+      <p class="mb-3 fs-4" style="color:orange;">
+          Password Reset successful
+      </p>
+      <p class="text-center">
+          <a class="text-white-50 link-decor" href="{% url 'account:login' %}">Login</a>
+        </p>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}

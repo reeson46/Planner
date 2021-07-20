@@ -1,9 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordResetForm,
+    SetPasswordForm,
+)
+
 from .models import UserAccount
 
+
 class UserProfileForm(forms.ModelForm):
-    username = forms.CharField(label="Username", min_length=4, max_length=50, help_text="Required")
+    username = forms.CharField(
+        label="Username", min_length=4, max_length=50, help_text="Required"
+    )
     email = forms.EmailField(
         label="Email",
         max_length=100,
@@ -11,17 +19,17 @@ class UserProfileForm(forms.ModelForm):
         error_messages={"required": "Sorry, you will need an email"},
     )
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
-    
+
     class Meta:
         model = UserAccount
         fields = [
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'about',
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "about",
         ]
-    
+
     def __init__(self, user=None, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.user = user
@@ -29,48 +37,46 @@ class UserProfileForm(forms.ModelForm):
         self.fields["username"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
-                "id": 'profile-username'
+                "id": "profile-username",
             }
         )
         self.fields["email"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
-                "id": 'profile-email'
+                "id": "profile-email",
             }
         )
 
         self.fields["first_name"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
-                "id": 'profile-first_name'
+                "id": "profile-first_name",
             }
         )
         self.fields["last_name"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
-                "id": 'profile-last_name'
+                "id": "profile-last_name",
             }
         )
         self.fields["about"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
-                "id": 'profile-about'
+                "id": "profile-about",
             }
         )
         self.fields["password"].widget.attrs.update(
             {
                 "class": "card bg-dark text-light form-control mb-3",
                 "placeholder": "To save your changes, enter your password",
-                "id": 'profile-password'
+                "id": "profile-password",
             }
         )
-   
-    
-    def clean_password(self):
-        valid = self.user.check_password(self.cleaned_data['password'])
-        if not valid:
-            raise forms.ValidationError('Incorrect password')
 
+    def clean_password(self):
+        valid = self.user.check_password(self.cleaned_data["password"])
+        if not valid:
+            raise forms.ValidationError("Incorrect password")
 
 
 class UserLoginForm(AuthenticationForm):
@@ -95,7 +101,9 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserRegistrationForm(forms.ModelForm):
-    username = forms.CharField(label="Username", min_length=4, max_length=50, help_text="Required")
+    username = forms.CharField(
+        label="Username", min_length=4, max_length=50, help_text="Required"
+    )
     email = forms.EmailField(
         label="Email",
         max_length=100,
@@ -155,3 +163,46 @@ class UserRegistrationForm(forms.ModelForm):
                 "placeholder": "Repeat password",
             }
         )
+
+
+class PwdResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.TextInput(
+            attrs={
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Enter your email",
+                "id": "pwdreset-email",
+            }
+        ),
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        u = UserAccount.objects.filter(email=email)
+        if not u:
+            raise forms.ValidationError("Email address does not exist.")
+        return email
+
+
+class PwdResetConfirmForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "New Password",
+                "id": "form-newpass",
+            }
+        ),
+    )
+    new_password2 = forms.CharField(
+        label="Repeat password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "card bg-dark text-light form-control mb-3",
+                "placeholder": "Repeat Password",
+                "id": "form-new-pass2",
+            }
+        ),
+    )

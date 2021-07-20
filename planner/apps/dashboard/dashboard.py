@@ -1,4 +1,5 @@
 from planner.apps.account.account import Account
+
 from .serializers import BoardSerializer, CategorySerializer
 
 
@@ -11,10 +12,11 @@ class Dashboard:
             dashboard = self.session["dashboard"] = {}
 
         self.dashboard = dashboard
-    
+
     """
     SESSION
     """
+
     def session_check(self):
         if self.dashboard:
             return True
@@ -24,11 +26,12 @@ class Dashboard:
     """
     BOARD
     """
+
     def add_all_boards(self, boards):
         for board in boards:
             board_ = str(board.id)
             self.dashboard[board_] = {}
-        
+
         self.session.modified = True
 
     def add_board(self, board_id):
@@ -42,42 +45,42 @@ class Dashboard:
 
         del self.dashboard[board]
         self.session.modified = True
-        
+
     def set_active_board_id(self, board_id):
         board = str(board_id)
 
         for k, v in self.dashboard.items():
             if k == board:
-                v['active'] = True
+                v["active"] = True
             else:
-                v['active'] = False
+                v["active"] = False
 
         self.session.modified = True
-            
+
     def get_active_board_id(self):
         for k, v in self.dashboard.items():
-            if v['active']:
+            if v["active"]:
                 return k
 
     """
     CATEGORY
     """
-    def set_active_category_id(self, board_id,  category_id):
+
+    def set_active_category_id(self, board_id, category_id):
         board = str(board_id)
 
-        self.dashboard[board]['category'] = category_id
+        self.dashboard[board]["category"] = category_id
         self.session.modified = True
-        
 
     def get_active_category_id(self, board_id):
         board = str(board_id)
 
-        if 'category' not in self.dashboard[board]:  
-            self.dashboard[board]['category'] = -1      
+        if "category" not in self.dashboard[board]:
+            self.dashboard[board]["category"] = -1
             self.session.modified = True
             return -1
         else:
-           return self.dashboard[board]['category']
+            return self.dashboard[board]["category"]
 
 
 class Sidebar:

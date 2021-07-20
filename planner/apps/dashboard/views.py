@@ -1,9 +1,10 @@
-from planner.apps.account.account import Account
 from django.http.response import JsonResponse
 from django.shortcuts import render
 
+from planner.apps.account.account import Account
 from planner.apps.task.models import Category
 from planner.apps.task.task import Task
+
 from .dashboard import Dashboard, Sidebar
 from .models import Board
 
@@ -20,11 +21,10 @@ def dashboard(request):
     user = account.getUser()
     boards = user.board.all()
 
-
     # if the session in not empty
     if not dashboard.session_check():
 
-        #add all board to the session
+        # add all board to the session
         dashboard.add_all_boards(boards)
 
         # grab the first board from the Board model
@@ -41,7 +41,7 @@ def dashboard(request):
 
         # get the tasks
         tasks = active_board.task.all()
-     
+
     # but if there is already something in the session
     else:
         # get the active board
@@ -58,16 +58,15 @@ def dashboard(request):
         if active_category_id == -1:
             tasks = active_board.task.all()
             highlighted_category = -1
-        else: 
+        else:
             category = Category.objects.get(pk=active_category_id)
             highlighted_category = category.id
-                
+
             # get the tasks
             tasks = category.task.all()
 
-
     categories = active_board.category.all()
- 
+
     statuses = ["Planned", "In Progress", "Testing", "Completed"]
     planned = tasks.filter(status="Planned")
     in_progress = tasks.filter(status="In Progress")
@@ -79,7 +78,7 @@ def dashboard(request):
     task_ids = task.getTaskIds(tasks)
 
     context = {
-        'total_tasks': user.task.all(),
+        "total_tasks": user.task.all(),
         "tasks": tasks,
         "boards": boards,
         "categories": categories,
@@ -90,9 +89,9 @@ def dashboard(request):
         "completed": completed,
         "highlighted_board": highlighted_board,
         "highlighted_category": highlighted_category,
-        'task_ids': task_ids,
+        "task_ids": task_ids,
         "completed_subtasks": completed_subtasks,
-        'is_guest': is_guest
+        "is_guest": is_guest,
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -105,7 +104,7 @@ def set_active_board(request):
         dashboard = Dashboard(request)
         board_id = request.POST.get("board_id")
 
-        if (board_id != dashboard.get_active_board_id()):
+        if board_id != dashboard.get_active_board_id():
 
             sidebar = Sidebar()
             dashboard.set_active_board_id(board_id)
@@ -113,10 +112,12 @@ def set_active_board(request):
 
             active_board = Board.objects.get(pk=board_id)
             response = sidebar.categories_reload_json_response(active_board)
-            response.update({
-                'reload': True,
-                'active_category_id': active_category_id,
-            })
+            response.update(
+                {
+                    "reload": True,
+                    "active_category_id": active_category_id,
+                }
+            )
 
         else:
             response = {"reload": False}
@@ -132,11 +133,8 @@ def set_active_category(request):
         dashboard = Dashboard(request)
         board_id = dashboard.get_active_board_id()
 
-        if (category_id != dashboard.get_active_category_id(board_id)):
-            dashboard.set_active_category_id(
-                board_id,
-                category_id
-            )
+        if category_id != dashboard.get_active_category_id(board_id):
+            dashboard.set_active_category_id(board_id, category_id)
 
             response = {"reload": True}
         else:
@@ -148,13 +146,13 @@ def set_active_category(request):
 
 def board_manager(request):
     dashboard = Dashboard(request)
-    
+
     """
     ADD
     """
     if request.POST.get("action") == "add":
         name = request.POST.get("name")
-        
+
         account = Account(request)
         user = account.getUser()
 
@@ -189,10 +187,10 @@ def board_manager(request):
     if request.POST.get("action") == "delete":
 
         board_id = request.POST.get("id")
-        
+
         board = Board.objects.get(pk=board_id)
         board.delete()
-        
+
         user = request.user
         boards = user.board.all()
 
@@ -204,7 +202,7 @@ def board_manager(request):
         else:
             active_board = boards.get(pk=dashboard.get_active_board_id())
             dashboard.set_active_board_id(active_board.id)
-        
+
         active_category_id = dashboard.get_active_category_id(active_board.id)
 
         # remove deleted board from session
@@ -213,11 +211,13 @@ def board_manager(request):
         sidebar = Sidebar()
         response = sidebar.boards_reload_json_response(request)
         response.update(sidebar.categories_reload_json_response(active_board))
-        response.update({
-            "message": "Board deleted", 
-            "active_board_id": active_board.id,
-            'active_category_id': active_category_id
-        })
+        response.update(
+            {
+                "message": "Board deleted",
+                "active_board_id": active_board.id,
+                "active_category_id": active_category_id,
+            }
+        )
 
     return JsonResponse(response)
 
@@ -229,7 +229,7 @@ def category_manager(request):
     ADD
     """
     if request.POST.get("action") == "add":
-        
+
         account = Account(request)
         user = account.getUser()
 
@@ -247,19 +247,17 @@ def category_manager(request):
             "message": 'Category "' + name + '" created',
             "added_category_id": category.id,
             "active_category_id": active_category_id,
-            
         }
 
         sidebar = Sidebar()
         response.update(sidebar.categories_reload_json_response(active_board))
 
         if not request.user.is_authenticated:
-            response.update({
-                'total_categories': user.category.all().count(),
-                'is_guest': True
-            })
+            response.update(
+                {"total_categories": user.category.all().count(), "is_guest": True}
+            )
         else:
-            response['is_guest'] = False
+            response["is_guest"] = False
 
     """
     RENAME
@@ -289,18 +287,17 @@ def category_manager(request):
         category.delete()
 
         active_board = Board.objects.get(pk=dashboard.get_active_board_id())
-        dashboard.set_active_category_id( active_board.id, -1)
+        dashboard.set_active_category_id(active_board.id, -1)
 
         sidebar = Sidebar()
         response = sidebar.categories_reload_json_response(active_board)
 
         if not request.user.is_authenticated:
-            response.update({
-                'total_categories': user.category.all().count(),
-                'is_guest': True
-            })
+            response.update(
+                {"total_categories": user.category.all().count(), "is_guest": True}
+            )
         else:
-            response['is_guest'] = False
+            response["is_guest"] = False
 
     return JsonResponse(response)
 
@@ -318,7 +315,3 @@ def reload_tasks(request):
         response = task.tasks_reload_json_response(active_category_id, active_aboard)
 
         return JsonResponse(response)
-
-
-def guest_limitation(request):
-    pass

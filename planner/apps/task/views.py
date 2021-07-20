@@ -1,10 +1,12 @@
 from re import A
+
 from django.http import JsonResponse
 
+from planner.apps.account.account import Account
 from planner.apps.dashboard.dashboard import Dashboard, Sidebar
 from planner.apps.dashboard.models import Board, Category
 from planner.apps.dashboard.serializers import CategorySerializer
-from planner.apps.account.account import Account
+
 from .models import Subtask, Task
 from .serializers import TaskSerializer
 
@@ -64,7 +66,6 @@ def edit_task(request):
 
         categories = CategorySerializer(active_board.category.all(), many=True)
         task = TaskSerializer(t, many=False)
-   
 
         response = {
             "board_name": t.board.name,
@@ -132,16 +133,16 @@ def task_manager(request):
             response.update(sidebar.categories_reload_json_response(active_board))
 
             if not request.user.is_authenticated:
-                response['is_guest'] = True
+                response["is_guest"] = True
             else:
-                response['is_guest'] = False
+                response["is_guest"] = False
 
         """
         UPDATING EXISTING TASK
         """
         # if update is "true", meaning we are updating/editing existing task
         if is_edit == "True":
-      
+
             deleted_subtasks = request.POST.getlist("deleted_subtasks[]")
 
             # if any existing subtasks were added to the "deletion" array
@@ -177,7 +178,9 @@ def task_manager(request):
                 # update the response so that the sidebar categories can be reloaded
                 response.update(sidebar.categories_reload_json_response(task.board))
                 response["category_change"] = "True"
-                response["active_category_id"] = dashboard.get_active_category_id(task.board.id)
+                response["active_category_id"] = dashboard.get_active_category_id(
+                    task.board.id
+                )
 
         return JsonResponse(response)
 
@@ -197,10 +200,10 @@ def delete_task(request):
         response["active_category_id"] = dashboard.get_active_category_id(board.id)
 
         if not request.user.is_authenticated:
-            response['is_guest'] = True
+            response["is_guest"] = True
         else:
-            response['is_guest'] = False
-              
+            response["is_guest"] = False
+
         return JsonResponse(response)
 
 

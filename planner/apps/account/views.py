@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
@@ -10,9 +10,10 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from planner.apps.account.models import UserAccount
 
-from .forms import UserLoginForm, UserRegistrationForm, UserProfileForm
-from .token import account_activation_token
 from .account import Account
+from .forms import UserLoginForm, UserProfileForm, UserRegistrationForm
+from .token import account_activation_token
+
 
 def account_register(request):
     if request.user.is_authenticated:
@@ -30,7 +31,7 @@ def account_register(request):
             user.set_password(form.cleaned_data["password"])
             user.is_active = False
             user.save()
-                
+
             # Setup email
             current_site = get_current_site(request)
             subject = "Acctivate you Account"
@@ -44,7 +45,7 @@ def account_register(request):
                 },
             )
             user.email_user(subject=subject, message=message)
-            return render(request, 'account/registration/registration_successful.html')
+            return render(request, "account/registration/registration_successful.html")
     else:
         form = UserRegistrationForm()
 
@@ -62,17 +63,17 @@ def account_activate(request, uidb64, token):
         user.save()
         login(request, user)
 
-        return render(request, 'account/registration/activation_successful.html')
+        return render(request, "account/registration/activation_successful.html")
     else:
         return render(request, "account/registration/activation_invalid.html")
 
 
 def account_login(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserLoginForm(request.POST)
 
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -80,11 +81,11 @@ def account_login(request):
             login(request, user)
             return redirect("/")
         else:
-            HttpResponse('Error')
+            HttpResponse("Error")
     else:
         form = UserLoginForm()
-    
-    return render(request, 'account/login.html', {'form': form})
+
+    return render(request, "account/login.html", {"form": form})
 
 
 @login_required
@@ -92,17 +93,16 @@ def update_account(request):
 
     user = request.user
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserProfileForm(data=request.POST, user=user, instance=user)
         if form.is_valid():
             form.save()
-            messages.success(request, 'You account was successfully updated.')
+            messages.success(request, "You account was successfully updated.")
             return redirect("account:update_account")
         else:
             print(form.errors)
 
     else:
         form = UserProfileForm(instance=user)
-    
-    
-    return render(request, 'account/account.html', {'form': form})
+
+    return render(request, "account/account.html", {"form": form})
