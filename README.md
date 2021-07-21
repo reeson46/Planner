@@ -11,4 +11,4 @@ There is also a possibility to try this application as a Guest user, but it has 
 * Html
 * Bootstrap
 * CSS
-* Javascritp/Jquery
+* Javascript/Jquery
