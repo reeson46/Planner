@@ -6,7 +6,9 @@ A planner web application similar to HacknPlan, where users can create Boards, o
 There is also a possibility to try this application as a Guest user, but it has its own limitations, such as a limited number of maximum Tasks. At any point, a Guest user can be converted into a regular User by Signing Up.
 
 ### Technologies
+* Python
 * Django
+* Html
 * Bootstrap
 * CSS
 * Javascritp/Jquery
