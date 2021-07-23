@@ -1,8 +1,9 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.views.generic.base import TemplateView
-from .forms import PwdResetForm, PwdResetConfirmForm
+
 from . import views
+from .forms import PwdResetConfirmForm, PwdResetForm
 
 app_name = "account"
 

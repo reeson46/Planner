@@ -1,10 +1,6 @@
 from django.conf import settings
-
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-)
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        PermissionsMixin)
 from django.core.mail import send_mail
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -60,7 +56,13 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("User accounts")
 
     def email_user(self, subject, message):
-        send_mail(subject, message, settings.EMAIL_HOST_USER, [self.email], fail_silently=False)
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [self.email],
+            fail_silently=False,
+        )
 
     def __str__(self):
         return self.username
