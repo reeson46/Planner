@@ -1,4 +1,4 @@
-import uuid
+from django.conf import settings
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -60,7 +60,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _("User accounts")
 
     def email_user(self, subject, message):
-        send_mail(subject, message, "l@l.com", [self.email], fail_silently=False)
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [self.email], fail_silently=False)
 
     def __str__(self):
         return self.username

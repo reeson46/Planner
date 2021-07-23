@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "9ur)wo9gk$spz+ls(kr=d(fdt2o$11=prw(3^ikcrb=2&_@o9)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", 0)
 
 ALLOWED_HOSTS = []
 
@@ -69,8 +69,12 @@ WSGI_APPLICATION = "planner.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.mysql"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": os.environ.get("SQL_USER", "luka"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "kolo1234"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "3306"),
     }
 }
 
@@ -124,4 +128,10 @@ GRAPH_MODELS = {
     "group_models": True,
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "email")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "pass")

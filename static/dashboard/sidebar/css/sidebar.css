@@ -331,7 +331,7 @@ li.account-dropdown-item {
 }
 
 .dropdown-menu-guest {
-    transform: translate(210px, 8px) !important;
+    transform: translate(250px, 8px) !important;
     border: 3px solid #157d83;
     padding-top: 0;
     padding-bottom: 0;
