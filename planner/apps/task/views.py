@@ -1,5 +1,3 @@
-from re import A
-
 from django.http import JsonResponse
 
 from planner.apps.account.account import Account

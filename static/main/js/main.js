@@ -367,6 +367,8 @@ function ajaxCategoryManager(action, id, entered_name, source) {
           // re-highlight the "All" category
           $('.active-category[value="-1"]').addClass('item-selected');
 
+          reloadTasks();
+
         }
 
         if (action == 'add') {
