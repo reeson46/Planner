@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "9ur)wo9gk$spz+ls(kr=d(fdt2o$11=prw(3^ikcrb=2&_@o9)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", 0)
+DEBUG = config("DEBUG", 0)
 
 ALLOWED_HOSTS = []
 
@@ -69,12 +70,12 @@ WSGI_APPLICATION = "planner.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.mysql"),
-        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": os.environ.get("SQL_USER", "luka"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "kolo1234"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "3306"),
+        "ENGINE": config("SQL_ENGINE", "django.db.backends.mysql"),
+        "NAME": config("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": config("SQL_USER", "user"),
+        "PASSWORD": config("SQL_PASSWORD", "pass"),
+        "HOST": config("SQL_HOST", "localhost"),
+        "PORT": config("SQL_PORT", "3306"),
     }
 }
 
@@ -133,5 +134,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "email")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "pass")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", "email")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", "pass")
