@@ -30,8 +30,8 @@ $(document).ready(function () {
       $('.category-tooltip-div').attr('title', content).tooltip();
     }
 
-    if(TOTAL_TASKS >= 10){
-      var content = "As a Guest user, you can have only 10 tasks. Sign Up for free to add more."
+    if(TOTAL_TASKS >= 7){
+      var content = "As a Guest user, you can have only 7 tasks. Sign Up for free to add more."
       $('.sidebar-add-newtask').attr('title', content).tooltip();
     }
     

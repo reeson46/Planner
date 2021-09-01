@@ -25,10 +25,7 @@ def new_task(request):
             categories_json = CategorySerializer(active_board.category.all(), many=True)
             categories_data = categories_json.data
 
-            if (
-                active_category_id == -1
-                or not categories.filter(pk=active_category_id).exists()
-            ):
+            if (active_category_id == -1 or not categories.filter(pk=active_category_id).exists()):
                 active_cat = categories.first()
                 active_category = active_cat.id
             else:
