@@ -14,5 +14,5 @@ There is also a possibility to try this application as a Guest user, but it has 
 * Javascript/Jquery
 
 ### Live site
-Link to Live site can be found in [Planner-reactified][1] project.
-[1]: https://github.com/reeson46/Planner-reactified
+Link to Live site can be found in [Planner-reactified](https://github.com/reeson46/Planner-reactified) project.
+
