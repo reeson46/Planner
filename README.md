@@ -14,5 +14,4 @@ There is also a possibility to try this application as a Guest user, but it has 
 * Javascript/Jquery
 
 ### Live site
-https://devplanner.lukaloncaric.com/
-
+Link to Live site can be found in "Planner-reactified" project
