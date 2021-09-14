@@ -13,6 +13,6 @@ There is also a possibility to try this application as a Guest user, but it has 
 * CSS
 * Javascript/Jquery
 
-### DEMO
-https://user-images.githubusercontent.com/30209762/128155437-36b46601-bd50-49ad-8951-82e281ac5066.mp4
+### Live site
+https://devplanner.lukaloncaric.com/
 
